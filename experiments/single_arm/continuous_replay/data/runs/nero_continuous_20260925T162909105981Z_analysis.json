@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "report": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T162909105981Z.json",
+  "plan": "experiments/single_arm/continuous_replay/data/plans/nero_continuous_20260925T162858794115Z.json",
+  "source_sha256": "90eadd27a19b86e7b32305c3e27b503fd6d5d073a0f834181b10773d8548dba5",
+  "full_source_used": false,
+  "planned_targets": 2161,
+  "logged_targets": 2161,
+  "phase_counts": {
+    "forward": 1081,
+    "return": 1080
+  },
+  "all_targets_logged_in_order": true,
+  "changed_target_periods": 1524,
+  "moving_target_periods": 1474,
+  "feedback_moving_periods": 1473,
+  "stationary_during_target_motion_count_over_0_3_s": 0,
+  "longest_stationary_during_target_motion_s": 0.05016100000000279,
+  "period_p99_s": 0.051449,
+  "period_max_s": 0.052063,
+  "max_tracking_error_rad": 0.005547,
+  "max_flange_error_m": 0.001749,
+  "return_joint_error_rad": 3.4906585039889276e-05,
+  "all_logged_status_normal": true,
+  "can_frame_counts": {
+    "0x2A5": 22654,
+    "0x2A6": 22654,
+    "0x2A7": 22654,
+    "0x2A9": 22654,
+    "0x2A1": 22654,
+    "0x151": 3,
+    "0x155": 2161,
+    "0x156": 2161,
+    "0x157": 2161,
+    "0x170": 2161
+  },
+  "all_four_joint_command_ids_recorded_per_target": true,
+  "driver_snapshot_count": 106,
+  "run_completed_flag": true,
+  "acceptance_pass": true
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-09-25T17:08:52.025961+00:00",
+  "candidate": "C2",
+  "candidate_source": "experiments/single_arm/reachability/data/candidates/nero_init_candidates_20260925T164019191778Z.json",
+  "candidate_joint_rad": [
+    0.2687981580996467,
+    -0.6333974388412622,
+    -0.8668526795880237,
+    -0.518310427964756,
+    -0.19228292369221528,
+    0.2056695990550118,
+    -0.4694935687864747
+  ],
+  "candidate_joint_deg": [
+    15.401,
+    -36.291000000000004,
+    -49.667,
+    -29.697,
+    -11.017,
+    11.784,
+    -26.900000000000002
+  ],
+  "candidate_flange_pose_m_rad": [
+    0.39820398046463157,
+    -0.010096286204907826,
+    0.5415277746821325,
+    0.8289008164055844,
+    -0.053335378022352775,
+    -0.35965896232280326
+  ],
+  "candidate_limit_margin_rad": 0.49398057203524404,
+  "mean_grid_error_deg": 1.004142857142858,
+  "run_report": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T170640155991Z.json",
+  "plan": "experiments/single_arm/continuous_replay/data/plans/nero_continuous_20260925T165935418493Z.json",
+  "independent_run_acceptance_pass": true,
+  "hold_samples": 60,
+  "hold_duration_s": 3.0,
+  "hold_max_joint_error_to_raw_candidate_rad": 0.000436332312998583,
+  "hold_max_joint_variation_rad": 0.0002443460952791243,
+  "exact_source_joint_target": true,
+  "return_joint_error_rad": 6.981317007981325e-05,
+  "current_site_arrival_and_hold_verified": true,
+  "aesthetic_review": "AWAITING_USER",
+  "configured_as_default_start": false
+}

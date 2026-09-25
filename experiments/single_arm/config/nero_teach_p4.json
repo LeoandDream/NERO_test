@@ -1,0 +1,27 @@
+{
+  "channel": "can0",
+  "mount": "left",
+  "safe_start_name": "P4",
+  "safe_start_source": "experiments/single_arm/pose_recording/data/poses/nero_poses_20260923T140013Z_held_candidates.csv",
+  "safe_start_joint_rad": [
+    0.10745992204529087,
+    -0.5218359930537846,
+    0.06464699549386997,
+    -0.34086280291449256,
+    -1.8419332260922157,
+    0.20612338466053032,
+    0.3707253864161155
+  ],
+  "start_max_joint_error_rad": 0.05,
+  "zero_exclusion_radius_rad": 0.25,
+  "max_teach_seconds": 120,
+  "record_rate_hz": 50,
+  "return_speed_percent": 10,
+  "max_recorded_step_rad": 0.15,
+  "return_max_joint_step_rad": 0.05,
+  "return_path_tolerance_rad": 0.005,
+  "return_target_tolerance_rad": 0.025,
+  "return_waypoint_timeout_s": 5,
+  "return_max_seconds": 600,
+  "return_countdown_seconds": 5
+}

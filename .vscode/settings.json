@@ -1,0 +1,4 @@
+{
+    "python.defaultInterpreterPath": "/home/leo/miniconda3/envs/nero-py310/bin/python",
+    "ros.distro": "noetic"
+}

@@ -1,0 +1,963 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-25T16:49:24.139001+00:00",
+  "segments": [
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164043660688Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164033050547Z.json",
+      "axis": "x",
+      "delta_m": 0.002,
+      "feedback_count": 30,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.0001256785355471572,
+      "max_joint_change_rad": 0.032236231284335226,
+      "max_rotation_change_rad": 0.0006283185307179306,
+      "final_position_error_m": 1.0049875621089514e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.017296212887263806,
+        -0.57869882008376,
+        0.02811725424962865,
+        -0.2994461397646671,
+        0.01117010721276371,
+        0.2056695990550118,
+        -0.47322857338574253
+      ],
+      "initial_flange_pose": [
+        0.38200999999999996,
+        -0.014098999999999999,
+        0.572464,
+        1.4611547431846128,
+        -0.21183061131455178,
+        0.22982495590261334
+      ],
+      "final_joint_rad": [
+        0.017941984710501707,
+        -0.5962917389438627,
+        0.0273318560862312,
+        -0.2672448150653718,
+        0.014329153158873446,
+        0.2056346924699719,
+        -0.48830821812297354
+      ],
+      "final_flange_pose": [
+        0.384009,
+        -0.014107,
+        0.572458,
+        1.461137289892093,
+        -0.21167353168187228,
+        0.22972023614749368
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164106396377Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164101733622Z.json",
+      "axis": "x",
+      "delta_m": 0.005,
+      "feedback_count": 38,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.0003920331286886614,
+      "max_joint_change_rad": 0.10829768008624815,
+      "max_rotation_change_rad": 0.0015707963267948821,
+      "final_position_error_m": 1.0344080432823262e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.01795943800302165,
+        -0.5963440988214225,
+        0.02738421596379103,
+        -0.2671051887252122,
+        0.014329153158873446,
+        0.20565214576249183,
+        -0.48825585824541373
+      ],
+      "initial_flange_pose": [
+        0.38400399999999996,
+        -0.014097,
+        0.572471,
+        1.461137289892093,
+        -0.21183061131455178,
+        0.22980750261009336
+      ],
+      "final_joint_rad": [
+        0.020053833105414847,
+        -0.653119659388798,
+        0.025499260371637154,
+        -0.15891222839408373,
+        0.025394540616517497,
+        0.20498892064673402,
+        -0.5405982825127237
+      ],
+      "final_flange_pose": [
+        0.389005,
+        -0.014102,
+        0.57248,
+        1.4612769162322525,
+        -0.21200514423975123,
+        0.2298947690726931
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164132606603Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164127947960Z.json",
+      "axis": "y",
+      "delta_m": 0.002,
+      "feedback_count": 30,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.000162718658722838,
+      "max_joint_change_rad": 0.005166174585903214,
+      "max_rotation_change_rad": 0.000436332312998583,
+      "final_position_error_m": 2.154065922854796e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.02000147322785502,
+        -0.6529974863411585,
+        0.02548180707911721,
+        -0.1592787475370025,
+        0.02515019452123829,
+        0.2050238272317739,
+        -0.5405284693426439
+      ],
+      "initial_flange_pose": [
+        0.38902,
+        -0.014088999999999999,
+        0.572457,
+        1.461102383307053,
+        -0.21177825143699194,
+        0.22980750261009336
+      ],
+      "final_joint_rad": [
+        0.025185101106278175,
+        -0.6537654312120359,
+        0.025516713664157097,
+        -0.15776031108776745,
+        0.021537362969610025,
+        0.20111428970730658,
+        -0.5411393345808418
+      ],
+      "final_flange_pose": [
+        0.38900799999999996,
+        -0.012105,
+        0.572465,
+        1.461119836599573,
+        -0.2117957047295119,
+        0.22963296968489394
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164152230864Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164147756081Z.json",
+      "axis": "y",
+      "delta_m": 0.005,
+      "feedback_count": 38,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.0001613616908496627,
+      "max_joint_change_rad": 0.013369222070276566,
+      "max_rotation_change_rad": 0.0006806784082777906,
+      "final_position_error_m": 9.43398113212157e-06,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.025185101106278175,
+        -0.653747977919516,
+        0.02546435378659727,
+        -0.15784757755036719,
+        0.021519909677090086,
+        0.20142844897266557,
+        -0.5411044279958019
+      ],
+      "initial_flange_pose": [
+        0.389019,
+        -0.012105,
+        0.5724509999999999,
+        1.461102383307053,
+        -0.21174334485195206,
+        0.22954570322229423
+      ],
+      "final_joint_rad": [
+        0.03827507049623565,
+        -0.6563310652124676,
+        0.02546435378659727,
+        -0.15275121613454373,
+        0.012880529879718152,
+        0.19161969857645747,
+        -0.5432860895607949
+      ],
+      "final_flange_pose": [
+        0.38901199999999997,
+        -0.007107,
+        0.572457,
+        1.461084930014533,
+        -0.21174334485195206,
+        0.22952824992977428
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164211576813Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164206608339Z.json",
+      "axis": "z",
+      "delta_m": 0.002,
+      "feedback_count": 30,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.0010817367439074589,
+      "max_joint_change_rad": 0.10180505526882924,
+      "max_rotation_change_rad": 0.004939281783143956,
+      "final_position_error_m": 8.29759001156212e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.03834488366631542,
+        -0.6562961586274277,
+        0.025394540616517497,
+        -0.15275121613454373,
+        0.012950343049797926,
+        0.19165460516149732,
+        -0.5432686362682749
+      ],
+      "initial_flange_pose": [
+        0.38900199999999996,
+        -0.007114,
+        0.572467,
+        1.4610500234294932,
+        -0.21177825143699194,
+        0.22952824992977428
+      ],
+      "final_joint_rad": [
+        0.040107666210829694,
+        -0.7014827329615609,
+        0.02377138441216277,
+        -0.051033427328314195,
+        0.024015730507441976,
+        0.1904677812701412,
+        -0.6009692213392075
+      ],
+      "final_flange_pose": [
+        0.38906199999999996,
+        -0.00712,
+        0.57441,
+        1.461102383307053,
+        -0.21165607838935235,
+        0.22938862358961473
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164249410059Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164245203030Z.json",
+      "axis": "z",
+      "delta_m": -0.002,
+      "feedback_count": 29,
+      "driver_snapshot_count": 3,
+      "max_line_error_m": 0.0012953787091039989,
+      "max_joint_change_rad": 0.10197958819402866,
+      "max_rotation_change_rad": 0.005707226654021458,
+      "final_position_error_m": 6.337980750996039e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.040107666210829694,
+        -0.7012907467438415,
+        0.02387610416728243,
+        -0.051033427328314195,
+        0.023893557459802373,
+        0.19055504773274093,
+        -0.6009343147541676
+      ],
+      "initial_flange_pose": [
+        0.388978,
+        -0.007117,
+        0.574487,
+        1.4609976635519333,
+        -0.21186551789959168,
+        0.22947589005221444
+      ],
+      "final_joint_rad": [
+        0.03822271061867582,
+        -0.6560343592396286,
+        0.02548180707911721,
+        -0.15301301552234287,
+        0.012740903539558606,
+        0.19165460516149732,
+        -0.5431639165131553
+      ],
+      "final_flange_pose": [
+        0.388932,
+        -0.007091,
+        0.572522,
+        1.4609627569668935,
+        -0.2118829711921116,
+        0.22956315651481418
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164316568390Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164312234573Z.json",
+      "axis": "y",
+      "delta_m": -0.007,
+      "feedback_count": 42,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.0002428087346341292,
+      "max_joint_change_rad": 0.01832595714594046,
+      "max_rotation_change_rad": 0.0006806784082777906,
+      "final_position_error_m": 6.182232606429662e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.03824016391119576,
+        -0.656226345457348,
+        0.025411993909037436,
+        -0.15275121613454373,
+        0.012950343049797926,
+        0.19161969857645747,
+        -0.5432162763907151
+      ],
+      "initial_flange_pose": [
+        0.388972,
+        -0.007094,
+        0.5724929999999999,
+        1.4611547431846128,
+        -0.21193533106967144,
+        0.22963296968489394
+      ],
+      "final_joint_rad": [
+        0.019966566642815133,
+        -0.652840406708479,
+        0.02548180707911721,
+        -0.1596278133874014,
+        0.025132741228718343,
+        0.2048667475990944,
+        -0.5403888430024844
+      ],
+      "final_flange_pose": [
+        0.389013,
+        -0.014098999999999999,
+        0.5724469999999999,
+        1.4612245563546928,
+        -0.21174334485195206,
+        0.22966787626993385
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164344079689Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164339627599Z.json",
+      "axis": "x",
+      "delta_m": -0.007,
+      "feedback_count": 42,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.0006604446045743437,
+      "max_joint_change_rad": 0.14027211198278428,
+      "max_rotation_change_rad": 0.00308923277602996,
+      "final_position_error_m": 2.7874719729577387e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.019984019935335072,
+        -0.6529102198785587,
+        0.025499260371637154,
+        -0.15941837387716207,
+        0.025080381351158518,
+        0.20484929430657445,
+        -0.5404586561725641
+      ],
+      "initial_flange_pose": [
+        0.388999,
+        -0.014091,
+        0.5724659999999999,
+        1.461172196477133,
+        -0.21183061131455178,
+        0.22965042297741387
+      ],
+      "final_joint_rad": [
+        0.01733111947230369,
+        -0.5785941003286402,
+        0.028082347664588763,
+        -0.29955085951978677,
+        0.011100294042683936,
+        0.2055125194223323,
+        -0.4731762135081827
+      ],
+      "final_flange_pose": [
+        0.38197699999999996,
+        -0.014093,
+        0.572483,
+        1.4611896497696526,
+        -0.2118829711921116,
+        0.22965042297741387
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164626831238Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164622593241Z.json",
+      "axis": "y",
+      "delta_m": 0.01,
+      "feedback_count": 48,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.0002151061233265848,
+      "max_joint_change_rad": 0.02658136450787364,
+      "max_rotation_change_rad": 0.0004712388980384341,
+      "final_position_error_m": 4.9122296363210084e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.01733111947230369,
+        -0.5786464602062,
+        0.028047441079548877,
+        -0.29955085951978677,
+        0.011065387457644049,
+        0.20552997271485224,
+        -0.47312385363062287
+      ],
+      "initial_flange_pose": [
+        0.382002,
+        -0.01409,
+        0.572461,
+        1.4611547431846128,
+        -0.21186551789959168,
+        0.22963296968489394
+      ],
+      "final_joint_rad": [
+        0.04391248398017733,
+        -0.5818578660298696,
+        0.027942721324429216,
+        -0.2938785394508052,
+        -0.005497787143782138,
+        0.1851619803440784,
+        -0.4752706086105759
+      ],
+      "final_flange_pose": [
+        0.38203899999999996,
+        -0.004102,
+        0.572431,
+        1.461137289892093,
+        -0.21176079814447202,
+        0.22956315651481418
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164647305976Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164642981840Z.json",
+      "axis": "y",
+      "delta_m": 0.01,
+      "feedback_count": 47,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.00015948637982124127,
+      "max_joint_change_rad": 0.026755897433073078,
+      "max_rotation_change_rad": 0.0006283185307179584,
+      "final_position_error_m": 3.034798181098935e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.04396484385773716,
+        -0.58171823968971,
+        0.027942721324429216,
+        -0.29386108615828527,
+        -0.005462880558742251,
+        0.1851619803440784,
+        -0.47532296848813577
+      ],
+      "initial_flange_pose": [
+        0.38198099999999996,
+        -0.004084,
+        0.5724819999999999,
+        1.4611547431846128,
+        -0.2118829711921116,
+        0.22963296968489394
+      ],
+      "final_joint_rad": [
+        0.07068583470577035,
+        -0.5871287603708925,
+        0.027663468644110123,
+        -0.2839476160069575,
+        -0.021729349187329404,
+        0.16498597419102395,
+        -0.47977355808072125
+      ],
+      "final_flange_pose": [
+        0.381967,
+        0.005941,
+        0.572492,
+        1.4610674767220133,
+        -0.21186551789959168,
+        0.22959806309985406
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164707571438Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164703560632Z.json",
+      "axis": "y",
+      "delta_m": 0.01,
+      "feedback_count": 47,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.0003003043784077605,
+      "max_joint_change_rad": 0.026581364507873642,
+      "max_rotation_change_rad": 0.0007853981633974549,
+      "final_position_error_m": 1.7029386365946692e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.0705811149506507,
+        -0.5871462136634124,
+        0.027733281814189895,
+        -0.2839650692994774,
+        -0.021642082724729686,
+        0.1650383340685838,
+        -0.47977355808072125
+      ],
+      "initial_flange_pose": [
+        0.38197899999999996,
+        0.005901,
+        0.5724819999999999,
+        1.461119836599573,
+        -0.21183061131455178,
+        0.22961551639237401
+      ],
+      "final_joint_rad": [
+        0.09721483933608416,
+        -0.5951747282225863,
+        0.02748893571891069,
+        -0.2691472239500456,
+        -0.03766420525803763,
+        0.1452463003509681,
+        -0.48677232838121853
+      ],
+      "final_flange_pose": [
+        0.381968,
+        0.015901,
+        0.572495,
+        1.4610500234294932,
+        -0.21186551789959168,
+        0.22963296968489394
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164730860500Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164726909611Z.json",
+      "axis": "y",
+      "delta_m": 0.007,
+      "feedback_count": 42,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.0002053466000241033,
+      "max_joint_change_rad": 0.01867502299633933,
+      "max_rotation_change_rad": 0.0008726646259971382,
+      "final_position_error_m": 5.739337940908717e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.0972322926286041,
+        -0.5951747282225863,
+        0.027436575841350862,
+        -0.2691995838276054,
+        -0.037629298672997746,
+        0.14519394047340828,
+        -0.48677232838121853
+      ],
+      "initial_flange_pose": [
+        0.38197699999999996,
+        0.015903999999999998,
+        0.5724819999999999,
+        1.461084930014533,
+        -0.21181315802203185,
+        0.22959806309985406
+      ],
+      "final_joint_rad": [
+        0.11590731562494343,
+        -0.6024876577884426,
+        0.027122416575991883,
+        -0.25544638932189007,
+        -0.04867723283812185,
+        0.1316152788928924,
+        -0.4934220328313169
+      ],
+      "final_flange_pose": [
+        0.381938,
+        0.022907,
+        0.5725239999999999,
+        1.4610151168444534,
+        -0.21197023765471132,
+        0.22959806309985406
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164802552090Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164758608837Z.json",
+      "axis": "y",
+      "delta_m": -0.007,
+      "feedback_count": 42,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.00016999643670275876,
+      "max_joint_change_rad": 0.01864011641129945,
+      "max_rotation_change_rad": 0.0011170107212763736,
+      "final_position_error_m": 1.1575836902780823e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.11588986233242349,
+        -0.6025051110809625,
+        0.027192229746071654,
+        -0.2556558288321294,
+        -0.04867723283812185,
+        0.13159782560037245,
+        -0.4934220328313169
+      ],
+      "initial_flange_pose": [
+        0.381986,
+        0.022914999999999998,
+        0.5724699999999999,
+        1.461084930014533,
+        -0.21176079814447202,
+        0.22963296968489394
+      ],
+      "final_joint_rad": [
+        0.0972322926286041,
+        -0.5951572749300664,
+        0.027436575841350862,
+        -0.26933921016776496,
+        -0.03769911184307752,
+        0.14521139376592823,
+        -0.4866850619186188
+      ],
+      "final_flange_pose": [
+        0.381992,
+        0.015908,
+        0.5724629999999999,
+        1.461032570136973,
+        -0.21177825143699194,
+        0.2295806098073341
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164822406514Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164818153540Z.json",
+      "axis": "y",
+      "delta_m": -0.01,
+      "feedback_count": 48,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.00019780171526455887,
+      "max_joint_change_rad": 0.02663372438543346,
+      "max_rotation_change_rad": 0.0006283185307179584,
+      "final_position_error_m": 9.165151389920088e-06,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.09726719921364399,
+        -0.5951572749300664,
+        0.027436575841350862,
+        -0.26930430358272506,
+        -0.03761184538047781,
+        0.14521139376592823,
+        -0.4867199685036587
+      ],
+      "initial_flange_pose": [
+        0.381988,
+        0.015922,
+        0.572467,
+        1.461102383307053,
+        -0.2117957047295119,
+        0.22965042297741387
+      ],
+      "final_joint_rad": [
+        0.07061602153569058,
+        -0.5870764004933327,
+        0.027715828521669955,
+        -0.2841570555171968,
+        -0.021694442602289518,
+        0.16509069394614362,
+        -0.4796688383256016
+      ],
+      "final_flange_pose": [
+        0.38198,
+        0.00592,
+        0.572471,
+        1.4610674767220133,
+        -0.2117957047295119,
+        0.2297027828549737
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164847391141Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164843003105Z.json",
+      "axis": "y",
+      "delta_m": -0.01,
+      "feedback_count": 47,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.00019238676632736862,
+      "max_joint_change_rad": 0.026808257310632903,
+      "max_rotation_change_rad": 0.0005934119456780518,
+      "final_position_error_m": 8.976636341076961e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.07061602153569058,
+        -0.5871287603708925,
+        0.02769837522915001,
+        -0.2841221489321569,
+        -0.021729349187329404,
+        0.16498597419102395,
+        -0.47970374491064144
+      ],
+      "initial_flange_pose": [
+        0.381997,
+        0.005915999999999999,
+        0.572456,
+        1.461084930014533,
+        -0.21176079814447202,
+        0.22956315651481418
+      ],
+      "final_joint_rad": [
+        0.04387757739513745,
+        -0.5814913468869508,
+        0.02790781473938933,
+        -0.29417524542364426,
+        -0.005550147021341968,
+        0.18521434022163824,
+        -0.47518334214797614
+      ],
+      "final_flange_pose": [
+        0.381932,
+        -0.004116,
+        0.5725089999999999,
+        1.4610151168444534,
+        -0.21190042448463156,
+        0.22954570322229423
+      ],
+      "accepted": true,
+      "errors": []
+    },
+    {
+      "report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164907439405Z.json",
+      "plan": "experiments/single_arm/reachability/data/plans/nero_probe_20260925T164902810822Z.json",
+      "axis": "y",
+      "delta_m": -0.01,
+      "feedback_count": 47,
+      "driver_snapshot_count": 4,
+      "max_line_error_m": 0.00016256484779778336,
+      "max_joint_change_rad": 0.026616271092913524,
+      "max_rotation_change_rad": 0.0005585053606381729,
+      "final_position_error_m": 4.687216658099343e-05,
+      "can_command_frame_counts": {
+        "0X152": 1,
+        "0X153": 1,
+        "0X154": 1
+      },
+      "initial_joint_rad": [
+        0.04396484385773716,
+        -0.5816309732271103,
+        0.027942721324429216,
+        -0.29410543225356445,
+        -0.0056374134839416844,
+        0.18514452705155848,
+        -0.4752880619030958
+      ],
+      "initial_flange_pose": [
+        0.38198099999999996,
+        -0.0040809999999999996,
+        0.5724699999999999,
+        1.461032570136973,
+        -0.21174334485195206,
+        0.22954570322229423
+      ],
+      "final_joint_rad": [
+        0.017366026057343577,
+        -0.5785417404510804,
+        0.028012534494508988,
+        -0.2999173786627056,
+        0.010890854532444616,
+        0.2055125194223323,
+        -0.47312385363062287
+      ],
+      "final_flange_pose": [
+        0.382011,
+        -0.014081999999999999,
+        0.572434,
+        1.4610500234294932,
+        -0.21160371851179252,
+        0.22954570322229423
+      ],
+      "accepted": true,
+      "errors": []
+    }
+  ],
+  "connections": [
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164043660688Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164106396377Z.json",
+      "joint_gap_rad": 0.00013962634015957098,
+      "flange_gap_m": 1.7146428199438287e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164106396377Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164132606603Z.json",
+      "joint_gap_rad": 0.00036651914291876975,
+      "flange_gap_m": 3.0380915061917096e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164132606603Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164152230864Z.json",
+      "joint_gap_rad": 0.0003141592653589931,
+      "flange_gap_m": 1.780449381484346e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164152230864Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164211576813Z.json",
+      "joint_gap_rad": 6.981317007977335e-05,
+      "flange_gap_m": 1.5779733838037025e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164211576813Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164249410059Z.json",
+      "joint_gap_rad": 0.00019198621771943092,
+      "flange_gap_m": 0.00011399122773263956,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164249410059Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164316568390Z.json",
+      "joint_gap_rad": 0.00026179938779913314,
+      "flange_gap_m": 4.949747468307902e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164316568390Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164344079689Z.json",
+      "joint_gap_rad": 0.00020943951023932872,
+      "flange_gap_m": 2.49198715887552e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164344079689Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164626831238Z.json",
+      "joint_gap_rad": 5.2359877559804424e-05,
+      "flange_gap_m": 3.3436506994618335e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164626831238Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164647305976Z.json",
+      "joint_gap_rad": 0.00013962634015951547,
+      "flange_gap_m": 7.930321557157269e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164647305976Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164707571438Z.json",
+      "joint_gap_rad": 0.00010471975511965048,
+      "flange_gap_m": 4.294182110717097e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164707571438Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164730860500Z.json",
+      "joint_gap_rad": 5.235987755983218e-05,
+      "flange_gap_m": 1.609347693945343e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164730860500Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164802552090Z.json",
+      "joint_gap_rad": 0.00020943951023932872,
+      "flange_gap_m": 7.269112738153865e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164802552090Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164822406514Z.json",
+      "joint_gap_rad": 8.726646259971105e-05,
+      "flange_gap_m": 1.5099668870543734e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164822406514Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164847391141Z.json",
+      "joint_gap_rad": 0.00010471975511966436,
+      "flange_gap_m": 2.302172886642652e-05,
+      "accepted": true
+    },
+    {
+      "from_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164847391141Z.json",
+      "to_report": "experiments/single_arm/reachability/data/runs/nero_probe_20260925T164907439405Z.json",
+      "joint_gap_rad": 0.00013962634015951547,
+      "flange_gap_m": 7.174259543672463e-05,
+      "accepted": true
+    }
+  ],
+  "accepted": true,
+  "note": "反馈和 CAN 证明这些离散连接已执行；不证明包围盒内任意点可达，也没有现场目视观察。"
+}

@@ -1,0 +1,22 @@
+{
+  "recording": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+  "safe_start_name": "现场确认的起点 S1",
+  "safe_start_source": "2026-09-23 现场确认安全，CAN 关节反馈 20260923T145941Z",
+  "original_joint_rad": [
+    0.017383479349863524,
+    -0.5787686332538396,
+    0.028012534494508988,
+    -0.29928906013198764,
+    0.011222467090323538,
+    0.2056695990550118,
+    -0.4734729194810217
+  ],
+  "max_teach_seconds": 20.0,
+  "mount": "left",
+  "started_at_utc": "2026-09-24T10:11:30.304047+00:00",
+  "recorded_samples": 1022,
+  "post_stop_samples": 24,
+  "stop_reason": "time_limit",
+  "return_completed": true,
+  "finished_at_utc": "2026-09-24T10:12:35.602572+00:00"
+}

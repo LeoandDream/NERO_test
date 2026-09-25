@@ -1,0 +1,22 @@
+{
+  "recording": "data/recordings/nero_session_20260923T145322Z.csv",
+  "safe_start_name": "P4",
+  "safe_start_source": "data/poses/nero_poses_20260923T140013Z_held_candidates.csv",
+  "original_joint_rad": [
+    0.10745992204529087,
+    -0.5218359930537846,
+    0.06466444878638991,
+    -0.34088025620701246,
+    -1.8419506793847356,
+    0.20612338466053032,
+    0.37062066666099586
+  ],
+  "max_teach_seconds": 5.0,
+  "mount": "left",
+  "started_at_utc": "2026-09-23T14:53:22.467480+00:00",
+  "recorded_samples": 245,
+  "stop_reason": "time_limit",
+  "return_completed": false,
+  "error": "当前姿态与最后一个记录点差距过大，不能安全倒放",
+  "finished_at_utc": "2026-09-23T14:53:27.769546+00:00"
+}

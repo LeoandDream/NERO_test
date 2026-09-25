@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+*.egg-info/
+data/recordings/
+/endless-frontier-aews/
+/experiments/single_arm/can_setup/data/monitoring/active_*.log
+/experiments/single_arm/can_setup/data/monitoring/active_*.pid
+/experiments/single_arm/can_setup/data/monitoring/nero_host_20260925T122511Z.csv
+/experiments/single_arm/can_setup/data/monitoring/nero_state_20260925T120647Z.csv

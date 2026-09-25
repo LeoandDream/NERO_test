@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-25T16:07:57.351121+00:00",
+  "source_sha256": "90eadd27a19b86e7b32305c3e27b503fd6d5d073a0f834181b10773d8548dba5",
+  "score_definition": "mean of seven absolute errors to nearest 5 degree grid; lower is tidier",
+  "selection_constraints": "max |q-S1| in 0.10..1.25 rad, min SDK limit margin >=0.25 rad, flange base X>=0.25m, pairwise max joint separation>=0.12rad",
+  "old_replay_evidence": "experiments/single_arm/replay/data/replays/nero_replay_20260925T152748Z.json",
+  "candidates": [
+    {
+      "source_row": 160,
+      "source_elapsed_s": 3.1999999999999997,
+      "joint_rad": [
+        0.2687981580996467,
+        -0.6333974388412622,
+        -0.8668526795880237,
+        -0.518310427964756,
+        -0.19228292369221528,
+        0.2056695990550118,
+        -0.4694935687864747
+      ],
+      "joint_deg": [
+        15.401,
+        -36.291000000000004,
+        -49.667,
+        -29.697,
+        -11.017,
+        11.784,
+        -26.900000000000002
+      ],
+      "flange_pose_m_rad": [
+        0.39820398046463157,
+        -0.010096286204907826,
+        0.5415277746821325,
+        0.8289008164055844,
+        -0.053335378022352775,
+        -0.35965896232280326
+      ],
+      "limit_margin_rad": 0.49398057203524404,
+      "max_joint_distance_from_s1_rad": 0.8949001206675726,
+      "grid_deg": 5,
+      "per_joint_grid_error_deg": [
+        0.4009999999999998,
+        1.291000000000004,
+        0.3329999999999984,
+        0.3030000000000008,
+        1.0169999999999995,
+        1.7840000000000007,
+        1.9000000000000021
+      ],
+      "mean_grid_error_deg": 1.004142857142858,
+      "max_grid_error_deg": 1.9000000000000021,
+      "nearest_old_replay_forward_step": 33,
+      "nearest_old_replay_max_joint_error_rad": 0.0,
+      "source": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+      "evidence_level": "historical_manual_sample_only",
+      "path_evidence": "old_replay_nearby",
+      "current_site_arrival_verified": false,
+      "usable_initial_pose": false,
+      "name": "C1"
+    },
+    {
+      "source_row": 305,
+      "source_elapsed_s": 6.1,
+      "joint_rad": [
+        0.3243170816055863,
+        -0.538346807777651,
+        -1.1617609632975057,
+        -0.7173826824472292,
+        -0.08819148710327347,
+        0.2056695990550118,
+        -0.4691794095211157
+      ],
+      "joint_deg": [
+        18.582,
+        -30.845000000000002,
+        -66.56400000000001,
+        -41.103,
+        -5.053,
+        11.784,
+        -26.882
+      ],
+      "flange_pose_m_rad": [
+        0.3480907117385222,
+        -0.06598993591031652,
+        0.5573339391004388,
+        0.8943263419670605,
+        -0.046272573890705486,
+        -0.5924966001075704
+      ],
+      "limit_margin_rad": 0.2949083175527708,
+      "max_joint_distance_from_s1_rad": 1.1898084043770545,
+      "grid_deg": 5,
+      "per_joint_grid_error_deg": [
+        1.4179999999999993,
+        0.8450000000000024,
+        1.5640000000000072,
+        1.1030000000000015,
+        0.052999999999999936,
+        1.7840000000000007,
+        1.8820000000000014
+      ],
+      "mean_grid_error_deg": 1.2355714285714303,
+      "max_grid_error_deg": 1.8820000000000014,
+      "nearest_old_replay_forward_step": 75,
+      "nearest_old_replay_max_joint_error_rad": 0.0,
+      "source": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+      "evidence_level": "historical_manual_sample_only",
+      "path_evidence": "old_replay_nearby",
+      "current_site_arrival_verified": false,
+      "usable_initial_pose": false,
+      "name": "C2"
+    },
+    {
+      "source_row": 190,
+      "source_elapsed_s": 3.8,
+      "joint_rad": [
+        0.4162959331856875,
+        -0.4999495642337757,
+        -0.9496860058876746,
+        -0.675302794181646,
+        -0.19228292369221528,
+        0.2056695990550118,
+        -0.4694935687864747
+      ],
+      "joint_deg": [
+        23.852,
+        -28.645,
+        -54.413000000000004,
+        -38.692,
+        -11.017,
+        11.784,
+        -26.900000000000002
+      ],
+      "flange_pose_m_rad": [
+        0.3557439296327603,
+        -0.006782601824359788,
+        0.5625461481195865,
+        0.8984685587761928,
+        -0.042764572721025386,
+        -0.3517239557506847
+      ],
+      "limit_margin_rad": 0.3369882058183541,
+      "max_joint_distance_from_s1_rad": 0.9777334469672235,
+      "grid_deg": 5,
+      "per_joint_grid_error_deg": [
+        1.1479999999999997,
+        1.3550000000000004,
+        0.5869999999999962,
+        1.3079999999999998,
+        1.0169999999999995,
+        1.7840000000000007,
+        1.9000000000000021
+      ],
+      "mean_grid_error_deg": 1.2998571428571426,
+      "max_grid_error_deg": 1.9000000000000021,
+      "nearest_old_replay_forward_step": 43,
+      "nearest_old_replay_max_joint_error_rad": 0.01664171441776585,
+      "source": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+      "evidence_level": "historical_manual_sample_only",
+      "path_evidence": "historical_teaching_only",
+      "current_site_arrival_verified": false,
+      "usable_initial_pose": false,
+      "name": "C3"
+    },
+    {
+      "source_row": 335,
+      "source_elapsed_s": 6.7,
+      "joint_rad": [
+        0.2890788840078208,
+        -0.7803192552741448,
+        -1.1617609632975057,
+        -0.6944141494909839,
+        -0.05412266010434416,
+        0.2056695990550118,
+        -0.4684987311128379
+      ],
+      "joint_deg": [
+        16.563,
+        -44.709,
+        -66.56400000000001,
+        -39.787,
+        -3.101,
+        11.784,
+        -26.843000000000004
+      ],
+      "flange_pose_m_rad": [
+        0.4333516874217696,
+        -0.04807056670129592,
+        0.47484542026184057,
+        0.7312011641038657,
+        0.08979958743294081,
+        -0.6026554411474715
+      ],
+      "limit_margin_rad": 0.31787685050901615,
+      "max_joint_distance_from_s1_rad": 1.1898084043770545,
+      "grid_deg": 5,
+      "per_joint_grid_error_deg": [
+        1.5629999999999988,
+        0.2909999999999968,
+        1.5640000000000072,
+        0.21300000000000097,
+        1.899,
+        1.7840000000000007,
+        1.8430000000000035
+      ],
+      "mean_grid_error_deg": 1.3081428571428582,
+      "max_grid_error_deg": 1.899,
+      "nearest_old_replay_forward_step": 87,
+      "nearest_old_replay_max_joint_error_rad": 0.0,
+      "source": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+      "evidence_level": "historical_manual_sample_only",
+      "path_evidence": "old_replay_nearby",
+      "current_site_arrival_verified": false,
+      "usable_initial_pose": false,
+      "name": "C4"
+    },
+    {
+      "source_row": 135,
+      "source_elapsed_s": 2.6999999999999997,
+      "joint_rad": [
+        0.16437510895282598,
+        -0.6593679381109379,
+        -0.6298544204597136,
+        -0.5155004478690453,
+        -0.1924050967398549,
+        0.2056695990550118,
+        -0.4714483375487083
+      ],
+      "joint_deg": [
+        9.418000000000001,
+        -37.779,
+        -36.088,
+        -29.536000000000005,
+        -11.024000000000001,
+        11.784,
+        -27.012
+      ],
+      "flange_pose_m_rad": [
+        0.4214173710334122,
+        -0.027197737479235803,
+        0.516683880339259,
+        0.9380406283940594,
+        0.040479106841182354,
+        -0.2754148815312823
+      ],
+      "limit_margin_rad": 0.4967905521309548,
+      "max_joint_distance_from_s1_rad": 0.6579018615392626,
+      "grid_deg": 5,
+      "per_joint_grid_error_deg": [
+        0.581999999999999,
+        2.2209999999999965,
+        1.088000000000001,
+        0.4639999999999951,
+        1.024000000000001,
+        1.7840000000000007,
+        2.0120000000000005
+      ],
+      "mean_grid_error_deg": 1.3107142857142848,
+      "max_grid_error_deg": 2.2209999999999965,
+      "nearest_old_replay_forward_step": 25,
+      "nearest_old_replay_max_joint_error_rad": 0.00725184304203641,
+      "source": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+      "evidence_level": "historical_manual_sample_only",
+      "path_evidence": "old_replay_nearby",
+      "current_site_arrival_verified": false,
+      "usable_initial_pose": false,
+      "name": "C5"
+    }
+  ],
+  "warning": "历史拖动样本和旧路径近邻不证明当前现场可安全到位；当前全部为未实机验证候选。"
+}

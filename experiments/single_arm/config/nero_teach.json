@@ -1,0 +1,28 @@
+{
+  "channel": "can0",
+  "mount": "left",
+  "safe_start_name": "现场确认的起点 S1",
+  "safe_start_source": "2026-09-23 现场确认安全，CAN 关节反馈 20260923T145941Z",
+  "safe_start_joint_rad": [
+    0.017383479349863524,
+    -0.5787511799613198,
+    0.028047441079548877,
+    -0.2995159529347469,
+    0.011239920382843483,
+    0.2056695990550118,
+    -0.47343801289598186
+  ],
+  "start_max_joint_error_rad": 0.05,
+  "zero_exclusion_radius_rad": 0.25,
+  "flange_workspace_m": null,
+  "max_teach_seconds": 120,
+  "record_rate_hz": 50,
+  "return_speed_percent": 10,
+  "max_recorded_step_rad": 0.15,
+  "return_max_joint_step_rad": 0.05,
+  "return_path_tolerance_rad": 0.005,
+  "return_target_tolerance_rad": 0.025,
+  "return_waypoint_timeout_s": 5,
+  "return_max_seconds": 600,
+  "return_countdown_seconds": 5
+}

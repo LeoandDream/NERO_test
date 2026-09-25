@@ -1,0 +1,2 @@
+time_utc,elapsed_s,can_present,can_operstate,rx_packets,rx_errors,rx_dropped,tx_packets,tx_errors,tx_dropped,project_processes
+2026-09-25T12:23:24.387285+00:00,0.0,True,up,62174638,0,214880,38,0,0,55815:experiments.single_arm.can_setup.monitor_state;58908:experiments.single_arm.can_setup.monitor_host

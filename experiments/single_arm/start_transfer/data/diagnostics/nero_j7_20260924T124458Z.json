@@ -1,0 +1,231 @@
+{
+  "purpose": "read_only_j7_diagnostics",
+  "samples": [
+    {
+      "captured_at_utc": "2026-09-24T12:44:56.657258+00:00",
+      "status": {
+        "control_mode": 1,
+        "arm_status": 0,
+        "teach_status": 0,
+        "motion_status": "REACH_TARGET_POS_SUCCESSFULLY(0x0)",
+        "joint_error_code": 0
+      },
+      "joint_rad": [
+        0.2239431963233924,
+        0.07812093731926618,
+        0.06729989595690135,
+        -0.08246680715673207,
+        0.010838494654884786,
+        0.11309733552923257,
+        0.4490383099531011
+      ],
+      "j7_driver": {
+        "voltage_v": 23.900000000000002,
+        "drive_temperature_c": 34.0,
+        "motor_temperature_c": 29.0,
+        "bus_current_a": 0.0,
+        "enable": true,
+        "undervoltage": false,
+        "motor_overheating": false,
+        "drive_overcurrent": false,
+        "drive_overheating": false,
+        "collision": false,
+        "drive_error": false,
+        "stall": false
+      },
+      "j7_motor": {
+        "position_rad": 0.449,
+        "velocity_rad_s": 0.0,
+        "current_a": 0.0,
+        "torque_nm": 0.0
+      },
+      "feedback_unix_s": {
+        "status": 1790253896.6520002,
+        "joints": 1790253896.6538491,
+        "j7_driver": 1790253896.6558058,
+        "j7_motor": 1790253896.651422
+      }
+    },
+    {
+      "captured_at_utc": "2026-09-24T12:44:57.157872+00:00",
+      "status": {
+        "control_mode": 1,
+        "arm_status": 0,
+        "teach_status": 0,
+        "motion_status": "REACH_TARGET_POS_SUCCESSFULLY(0x0)",
+        "joint_error_code": 0
+      },
+      "joint_rad": [
+        0.2239431963233924,
+        0.07812093731926618,
+        0.06729989595690135,
+        -0.08246680715673207,
+        0.010838494654884786,
+        0.11309733552923257,
+        0.4490383099531011
+      ],
+      "j7_driver": {
+        "voltage_v": 23.900000000000002,
+        "drive_temperature_c": 34.0,
+        "motor_temperature_c": 29.0,
+        "bus_current_a": 0.0,
+        "enable": true,
+        "undervoltage": false,
+        "motor_overheating": false,
+        "drive_overcurrent": false,
+        "drive_overheating": false,
+        "collision": false,
+        "drive_error": false,
+        "stall": false
+      },
+      "j7_motor": {
+        "position_rad": 0.449,
+        "velocity_rad_s": 0.0,
+        "current_a": 0.004,
+        "torque_nm": 0.0065485426944
+      },
+      "feedback_unix_s": {
+        "status": 1790253897.150449,
+        "joints": 1790253897.1537337,
+        "j7_driver": 1790253897.1559718,
+        "j7_motor": 1790253897.1577094
+      }
+    },
+    {
+      "captured_at_utc": "2026-09-24T12:44:57.658580+00:00",
+      "status": {
+        "control_mode": 1,
+        "arm_status": 0,
+        "teach_status": 0,
+        "motion_status": "REACH_TARGET_POS_SUCCESSFULLY(0x0)",
+        "joint_error_code": 0
+      },
+      "joint_rad": [
+        0.2239431963233924,
+        0.07812093731926618,
+        0.06729989595690135,
+        -0.08246680715673207,
+        0.010838494654884786,
+        0.11309733552923257,
+        0.4490383099531011
+      ],
+      "j7_driver": {
+        "voltage_v": 23.900000000000002,
+        "drive_temperature_c": 34.0,
+        "motor_temperature_c": 29.0,
+        "bus_current_a": 0.0,
+        "enable": true,
+        "undervoltage": false,
+        "motor_overheating": false,
+        "drive_overcurrent": false,
+        "drive_overheating": false,
+        "collision": false,
+        "drive_error": false,
+        "stall": false
+      },
+      "j7_motor": {
+        "position_rad": 0.449,
+        "velocity_rad_s": 0.0,
+        "current_a": 0.001,
+        "torque_nm": 0.0016371356736
+      },
+      "feedback_unix_s": {
+        "status": 1790253897.6563122,
+        "joints": 1790253897.6575024,
+        "j7_driver": 1790253897.6383882,
+        "j7_motor": 1790253897.6557627
+      }
+    },
+    {
+      "captured_at_utc": "2026-09-24T12:44:58.159259+00:00",
+      "status": {
+        "control_mode": 1,
+        "arm_status": 0,
+        "teach_status": 0,
+        "motion_status": "REACH_TARGET_POS_SUCCESSFULLY(0x0)",
+        "joint_error_code": 0
+      },
+      "joint_rad": [
+        0.2239431963233924,
+        0.07812093731926618,
+        0.06729989595690135,
+        -0.08246680715673207,
+        0.010838494654884786,
+        0.11309733552923257,
+        0.4490383099531011
+      ],
+      "j7_driver": {
+        "voltage_v": 23.900000000000002,
+        "drive_temperature_c": 34.0,
+        "motor_temperature_c": 29.0,
+        "bus_current_a": 0.0,
+        "enable": true,
+        "undervoltage": false,
+        "motor_overheating": false,
+        "drive_overcurrent": false,
+        "drive_overheating": false,
+        "collision": false,
+        "drive_error": false,
+        "stall": false
+      },
+      "j7_motor": {
+        "position_rad": 0.449,
+        "velocity_rad_s": 0.0,
+        "current_a": -0.002,
+        "torque_nm": -0.0032742713472
+      },
+      "feedback_unix_s": {
+        "status": 1790253898.154728,
+        "joints": 1790253898.1584256,
+        "j7_driver": 1790253898.1398718,
+        "j7_motor": 1790253898.1570134
+      }
+    },
+    {
+      "captured_at_utc": "2026-09-24T12:44:58.659962+00:00",
+      "status": {
+        "control_mode": 1,
+        "arm_status": 0,
+        "teach_status": 0,
+        "motion_status": "REACH_TARGET_POS_SUCCESSFULLY(0x0)",
+        "joint_error_code": 0
+      },
+      "joint_rad": [
+        0.2239431963233924,
+        0.07812093731926618,
+        0.06729989595690135,
+        -0.08246680715673207,
+        0.010838494654884786,
+        0.11309733552923257,
+        0.4490383099531011
+      ],
+      "j7_driver": {
+        "voltage_v": 23.900000000000002,
+        "drive_temperature_c": 34.0,
+        "motor_temperature_c": 29.0,
+        "bus_current_a": 0.0,
+        "enable": true,
+        "undervoltage": false,
+        "motor_overheating": false,
+        "drive_overcurrent": false,
+        "drive_overheating": false,
+        "collision": false,
+        "drive_error": false,
+        "stall": false
+      },
+      "j7_motor": {
+        "position_rad": 0.449,
+        "velocity_rad_s": 0.0,
+        "current_a": -0.006,
+        "torque_nm": -0.0098228140416
+      },
+      "feedback_unix_s": {
+        "status": 1790253898.6561167,
+        "joints": 1790253898.656994,
+        "j7_driver": 1790253898.643806,
+        "j7_motor": 1790253898.6556284
+      }
+    }
+  ],
+  "max_joint_change_from_first_rad": 0.0
+}

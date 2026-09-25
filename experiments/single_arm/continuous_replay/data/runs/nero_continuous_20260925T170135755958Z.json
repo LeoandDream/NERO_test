@@ -1,0 +1,1635 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-09-25T17:01:35.755990+00:00",
+  "plan": "experiments/single_arm/continuous_replay/data/plans/nero_continuous_20260925T165935418493Z.json",
+  "recording": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+  "source_sha256": "90eadd27a19b86e7b32305c3e27b503fd6d5d073a0f834181b10773d8548dba5",
+  "source_used_rows": 161,
+  "source_used_duration_s": 3.1999999999999997,
+  "planned_target_count": 1469,
+  "planned_duration_s": 73.39999999999999,
+  "frequency_hz": 20,
+  "turnaround_hold_s": 3.0,
+  "samples_csv": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T170135755958Z.csv",
+  "can_trace_csv": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T170135755958Z.can.csv",
+  "last_published_index": 763,
+  "last_attempted_index": 763,
+  "completed": false,
+  "driver_snapshots": [
+    {
+      "time_utc": "2026-09-25T17:01:36.103860+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:41.363018+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:42.412958+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:43.413143+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.8,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:44.463049+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:45.512870+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.8,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:46.513037+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:47.562868+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.8,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:48.563096+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.8,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:49.613114+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:50.662950+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:51.663043+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:52.713053+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:53.713146+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:54.762978+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:55.763225+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:56.812934+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:57.862962+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:58.913041+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:01:59.963030+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:01.013032+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:02.062941+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:03.112907+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:04.113134+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:05.163084+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:06.213083+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:07.262921+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:08.263084+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:09.312935+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:10.313271+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.400000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:11.362927+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:12.412938+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:13.463120+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:14.512882+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:15.513056+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:16.563006+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.8,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:17.563121+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "time_utc": "2026-09-25T17:02:18.613022+00:00",
+      "drivers": [
+        {
+          "joint": 1,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 2,
+          "voltage_v": 23.700000000000003,
+          "enabled": true
+        },
+        {
+          "joint": 3,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 4,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        },
+        {
+          "joint": 5,
+          "voltage_v": 23.5,
+          "enabled": true
+        },
+        {
+          "joint": 6,
+          "voltage_v": 23.6,
+          "enabled": true
+        },
+        {
+          "joint": 7,
+          "voltage_v": 23.900000000000002,
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "actual_start_joint_rad": [
+    0.017366026057343577,
+    -0.5785242871585604,
+    0.028047441079548877,
+    -0.29974284573750615,
+    0.010943214410004447,
+    0.20554742600737222,
+    -0.4732111200932226
+  ],
+  "joint_plan_offset_rad": [
+    -1.7453292519946373e-05,
+    0.00024434609527923534,
+    3.4906585039889276e-05,
+    -0.00045378560551850855,
+    -0.00027925268031909166,
+    -0.00012217304763958992,
+    0.00026179938779913314
+  ],
+  "actual_plan_flange_xyz_range_m": {
+    "x": [
+      0.38197755348244167,
+      0.4255173482745054
+    ],
+    "y": [
+      -0.029318795840619367,
+      -0.0012542506899595324
+    ],
+    "z": [
+      0.5131571870247885,
+      0.5724851824738809
+    ]
+  },
+  "motion_started_at_utc": "2026-09-25T17:01:41.162172+00:00",
+  "last_attempted_target_joint_rad": [
+    0.26878070480712674,
+    -0.633153092745983,
+    -0.8668177730029838,
+    -0.5187642135702746,
+    -0.19256217637253437,
+    0.20554742600737222,
+    -0.46923176939867556
+  ],
+  "last_published_target_joint_rad": [
+    0.26878070480712674,
+    -0.633153092745983,
+    -0.8668177730029838,
+    -0.5187642135702746,
+    -0.19256217637253437,
+    0.20554742600737222,
+    -0.46923176939867556
+  ],
+  "turnaround_settle_periods": 0,
+  "error": "源前缀终点未连续停稳至少 0.5 秒，不反向",
+  "failure_snapshot": {
+    "time_utc": "2026-09-25T17:02:19.563407+00:00",
+    "status": {
+      "arm_status": 0,
+      "control_mode": 1,
+      "teach_status": 0,
+      "motion_status": 0,
+      "error_code": 0,
+      "feedback_unix_s": 1790355739.5629532
+    },
+    "joints": [
+      0.26878070480712674,
+      -0.633153092745983,
+      -0.8669050394655835,
+      -0.5187467602777547,
+      -0.19256217637253437,
+      0.20556487929989214,
+      -0.4691968628136356
+    ],
+    "joints_feedback_unix_s": 1790355739.5622349,
+    "flange": [
+      0.39813499999999996,
+      -0.010201,
+      0.5415329999999999,
+      0.8288394084795873,
+      -0.05345943498858632,
+      -0.3599392516387906
+    ],
+    "flange_feedback_unix_s": 1790355739.55104
+  },
+  "stop_action": "move_j_hold_current_confirmed",
+  "hold_joint_rad": [
+    0.26878070480712674,
+    -0.633153092745983,
+    -0.8669050394655835,
+    -0.5187467602777547,
+    -0.19256217637253437,
+    0.20556487929989214,
+    -0.4691968628136356
+  ],
+  "can_trace_frames": 47530,
+  "finished_at_utc": "2026-09-25T17:02:20.601044+00:00"
+}

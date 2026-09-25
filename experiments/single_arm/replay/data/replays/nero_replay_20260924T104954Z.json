@@ -1,0 +1,42 @@
+{
+  "source_recording": "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv",
+  "started_at_utc": "2026-09-24T10:49:54.299766+00:00",
+  "requested_cycles": 1,
+  "completed_cycles": 0,
+  "speed_percent": 5,
+  "flange_xyz_envelope_m": {
+    "x": [
+      0.24286934880387073,
+      0.44062089853509356
+    ],
+    "y": [
+      -0.13327154988888607,
+      0.005837237517962234
+    ],
+    "z": [
+      0.43430814209885704,
+      0.6107930267220347
+    ]
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "started_at_utc": "2026-09-24T10:49:59.633099+00:00",
+      "actual_start_joint_rad": [
+        0.017296212887263806,
+        -0.57869882008376,
+        0.028012534494508988,
+        -0.29928906013198764,
+        0.01117010721276371,
+        0.20568705234753173,
+        -0.4734729194810217
+      ],
+      "forward_steps": 322,
+      "total_steps": 644,
+      "completed": false,
+      "error": "关节未在规定时间到达小步目标",
+      "finished_at_utc": "2026-09-24T10:51:59.718531+00:00"
+    }
+  ],
+  "finished_at_utc": "2026-09-24T10:51:59.718831+00:00"
+}

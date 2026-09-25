@@ -1,0 +1,4 @@
+time_utc,elapsed_s,can_present,can_operstate,rx_packets,rx_errors,rx_dropped,tx_packets,tx_errors,tx_dropped,project_processes
+2026-09-25T12:23:03.616683+00:00,0.0,True,up,62110287,0,214880,38,0,0,55815:experiments.single_arm.can_setup.monitor_state;58832:experiments.single_arm.can_setup.monitor_host
+2026-09-25T12:23:04.617350+00:00,1.001,True,up,62113384,0,214880,38,0,0,55815:experiments.single_arm.can_setup.monitor_state;58832:experiments.single_arm.can_setup.monitor_host
+2026-09-25T12:23:05.617351+00:00,2.001,True,up,62116485,0,214880,38,0,0,55815:experiments.single_arm.can_setup.monitor_state;58832:experiments.single_arm.can_setup.monitor_host

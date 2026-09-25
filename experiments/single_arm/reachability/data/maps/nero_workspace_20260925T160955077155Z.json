@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-25T16:09:55.086808+00:00",
+  "installation": "left mount; current table, base, tool and cable layout only",
+  "source_sha256": "90eadd27a19b86e7b32305c3e27b503fd6d5d073a0f834181b10773d8548dba5",
+  "levels": {
+    "historical_controlled_path_sample": {
+      "samples": 273,
+      "sources": [
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg1_20260925T134628Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg1_20260925T135804Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg2_20260925T135513Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg2_20260925T140121Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg3_20260925T140854Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg4_20260925T141343Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg5_20260925T141613Z.json",
+        "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg6_20260925T141927Z.json"
+      ],
+      "coordinate_ranges_m": {
+        "x": [
+          0.264433,
+          0.39927799999999997
+        ],
+        "y": [
+          -0.111496,
+          0.022913
+        ],
+        "z": [
+          0.533795,
+          0.6196809999999999
+        ]
+      },
+      "joint_ranges_rad": [
+        [
+          -0.2504198410761464,
+          0.11417943966546903
+        ],
+        [
+          -0.6474298860272966,
+          -0.20354029736757873
+        ],
+        [
+          0.025656340004316644,
+          0.061557762717840005
+        ],
+        [
+          -0.7706326779255763,
+          -0.1710073601104044
+        ],
+        [
+          -0.9449038037372102,
+          0.17282250253247852
+        ],
+        [
+          -0.05866051615952942,
+          0.3568151122777207
+        ],
+        [
+          -0.6121044219669313,
+          -0.473385653018422
+        ]
+      ]
+    },
+    "historical_hand_guided": {
+      "samples": 1022,
+      "sources": [
+        "experiments/single_arm/teaching/data/recordings/nero_session_20260924T101130Z.csv"
+      ],
+      "coordinate_ranges_m": {
+        "x": [
+          0.24273599999999998,
+          0.44070499999999996
+        ],
+        "y": [
+          -0.13402899999999998,
+          0.006366
+        ],
+        "z": [
+          0.43462599999999996,
+          0.610757
+        ]
+      },
+      "joint_ranges_rad": [
+        [
+          0.01619665545850738,
+          0.6589490590904592
+        ],
+        [
+          -0.8306545509016613,
+          -0.23197171088256635
+        ],
+        [
+          -1.2249418822197002,
+          0.028012534494508988
+        ],
+        [
+          -0.9534035571944224,
+          -0.29928906013198764
+        ],
+        [
+          -0.1924050967398549,
+          0.011222467090323538
+        ],
+        [
+          0.2056346924699719,
+          0.20573941222509157
+        ],
+        [
+          -0.4734729194810217,
+          -0.46799258562975954
+        ]
+      ]
+    }
+  },
+  "contact_event": {
+    "source": "experiments/single_arm/control_interfaces/data/runs/nero_point_demo_leg7_20260925T142300Z.json",
+    "user_observation": "2026-09-25 move_p X-negative leg7: flange contacted table during motion",
+    "last_logged_flange_xyz_m": [
+      0.35862499999999997,
+      -0.018926,
+      0.5864429999999999
+    ],
+    "last_logged_point_is_not_exact_contact_location": true,
+    "result": "实测法兰或关节超出本次运动范围；已发送阻尼电子急停，请支撑并检查状态"
+  },
+  "interpretation": "Separate observations by level. Axis-aligned bounding boxes are summaries, not collision-free workspace. New controlled exploration remains unverified until new probe reports exist."
+}
