@@ -1,6 +1,18 @@
 # 限时拖动示教实验
 
-自动回位的总时限现在仅在小步到位后暂停；目标未执行、连续反馈确认仍停在上一步时暂停并保存未完成状态，不由软件超时主动请求电子急停。真实状态异常、移动中偏离或反馈缺失仍会触发急停。会话元数据中的 `pause_reason` 和 `emergency_stop_requested` 可区分这两类退出；暂停后不会自动回 S1，须先只读核对当前位置。
+**S1 限时示教有条件解锁：**2026-09-26 从桌边低位切入拖动发生突然大幅上抬。`--run` 仅在实时 S1、七轴使能、状态正常且停稳时发送模式帧；安装方向帧后再次核对姿态，启动后前 0.5 秒监测关节突变并在异常时请求退出。桌边低位和无时限手动拖动仍锁定。S1 的限时切换和零目标收尾已实机平稳完成；**真正拖动后的自动回位尚未由这次试验验证**。运行时应扶稳机械臂，切入模式后先保持静止 0.5 秒。见[CAN 拖动事故说明](../can_setup/README.md#四通过-can-拖动示教)。
+
+2026-09-26 14:11Z 已从 S1 做一次 1 秒切换试验，现场平稳且首 0.5 秒反馈未突变。由于没有拖动，自动回位规划为 0 个目标；原代码未切回 CAN 导致会话最终验收失败。零目标分支现已修复，本次用独立命令切回 CAN、未发送关节目标；修复后的完整会话仍待实机复测。失败 CSV 的 `return_completed=false`，不能用于正式回放。
+
+随后 [5 秒完整会话](data/recordings/nero_session_20260926T164431516657Z.json)完成：225 条拖动期采样、27 条退出后采样，现场确认平稳且基本没有手动移动；法兰相对起点最大位移约 1.6 mm。程序规划 0 个 `move_j` 回位目标，成功切回 CAN，最终状态 `NORMAL`、七轴使能，元数据 `return_completed=true`。这验证了零目标分支，**不代表一条实际拖动轨迹的自动回位已经验收**。
+
+新录制完成后，脚本现在打印记录 ID、CSV 路径和快速回放的只读命令；同名 JSON 包含 CSV/配置 SHA-256。统一入口使用 `python -m experiments.single_arm.lab.cli teach --max-seconds 5` 先预检，再用相同命令加 `--run` 显式示教；随后 `python -m experiments.single_arm.lab.cli records latest` 校验最近一次示教尝试。若最近一次失败，`latest` 会报告原始错误并拒绝回放；要用更早的完整记录，必须显式写记录 ID。完整步骤见[新手指南](../../../docs/quickstart_cli.md#b-新示教与快速回放)。旧记录缺少新封存字段，不能冒充新记录。
+
+2026-09-26 一次 20 秒拖动在 J4 接近 SDK 下限时中断，记录 `nero_session_20260926T183143020488Z` 的 `return_completed=false`、`post_stop_samples=0`，退出拖动后仍为控制模式 2。该 CSV 不能作为回放源。现场使用绑定这次事故的 `lab.recover_teach_limit` 一次性脚本先切回 CAN、低速让 J4 离开下限，再用实时规划的 4 个 `move_j` 目标回 S1；独立状态为 NORMAL、七轴使能，现场反馈全程平稳。通用示教失败仍须先读状态并根据实时姿态处理，不能套用这条一次性命令。
+
+随后一次 5 秒示教正常结束并补录了停稳反馈，但自动回位预检报告“当前未停稳或控制器/七轴状态不允许回位”，因此没有发布回位目标，控制器留在空闲示教模式 2。旧报告没有保存该次预检快照，无法确定是哪一项瞬时状态触发。现已将回位预检改为逐项报告并保存实时状态；仅当短暂关节变化超过 0.002 rad、其余状态正常且累计姿态变化不超过 0.01 rad 时，最多进行三次只读复测。驱动失能、故障、错误码或仍在拖动时立即退出。此失败记录仍标记 `return_completed=false`；只有按[新手指南](../../../docs/quickstart_cli.md#b-新示教与快速回放)独立回 S1 并生成可核验的完成凭证后，`latest` 才可将其用于回放预检。
+
+新版示教结束后先退出拖动、补录停稳反馈，再从**实时七轴角**生成少量 `move_j` 回 S1 目标；原始示教 CSV 不参与回位规划。若起点、状态或关节盒法兰 X 门槛不满足，停止回位并保留 CSV/JSON 及失败原因。目标未执行而机械臂稳定停在上一点时暂停；真实运动异常仍可能触发电子急停。失败后须从实时姿态重新规划，不复用旧计划。
 
 在工作区根目录、`nero-py310` 环境中运行。默认配置为 [S1](../config/nero_teach.json)，原 P4 配置单独保留。脚本要求机械臂在 S1 附近；它不会从任意位置自动移动到 S1。
 
@@ -16,15 +28,16 @@ python -m experiments.single_arm.teaching.teach_session
 python -m experiments.single_arm.teaching.teach_session --run --max-seconds 5
 ```
 
-会话记录起点、拖动轨迹、退出拖动后的停稳过程，并尝试沿本次记录倒序返回示教前的实际位置。默认最长 120 秒；命令行可设 1–300 秒。CSV 和同名 JSON 写入 `experiments/single_arm/teaching/data/recordings/`。反馈断档、关节或法兰边界、起点不符、未停稳时会拒绝自动回位。若运动途中检测到异常，会发电子急停；不能假设失败后已自动回到起点。
+会话记录起点、拖动轨迹和退出拖动后的停稳过程，并独立规划回配置中的 S1。默认最长 120 秒；命令行可设 1–300 秒。CSV 和同名 JSON 写入 `experiments/single_arm/teaching/data/recordings/`；元数据中的 `return_plan` 记录实时起点、关节目标及预测法兰范围。当前左侧安装的自动回位要求关节盒预测法兰基座 X 不低于 0.15 m；起点更低或规划不通过时保留原始文件、拒绝运动。软件预测不覆盖桌面、支撑和线缆，现场仍须核对完整扫过空间。
 
-完整记录在退出拖动后被中断时，可先只读复核，现场确认后再加 `--run`：
+示教结束未回位时，从当前姿态重新规划；默认只读，确认现场范围后再执行：
 
 ```bash
-python -m experiments.single_arm.teaching.return_session experiments/single_arm/teaching/data/recordings/记录名.csv --config experiments/single_arm/config/nero_teach.json
+python -m experiments.single_arm.lab.cli return plan
+python -m experiments.single_arm.lab.cli return run --plan 上一步输出的计划.json
 ```
 
-历史过程、失败样本和回位结果见[实验报告](report.md)。20 秒中断记录缺少可用的停稳轨迹，不得用于自动回位。
+`teaching.return_session` 只保留历史记录的只读检查；`--run` 已停用，不能倒放运动。停机支撑位目前没有经过现场选定的关节目标，不能把 S1 当成断电支撑位；确定目标后方可加入命名位置与现场限制。历史过程、失败样本和回位结果见[实验报告](report.md)。
 
 ## 使用已完成的示教记录
 

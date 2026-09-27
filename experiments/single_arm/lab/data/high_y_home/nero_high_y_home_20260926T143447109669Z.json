@@ -1,0 +1,263 @@
+{
+  "kind": "high_y_s1_h0_move_j_trial",
+  "stage": "outer-to-h0",
+  "started_at_utc": "2026-09-26T14:34:47.109642+00:00",
+  "completed": true,
+  "automatic_disable": false,
+  "completed_targets": [
+    {
+      "index": 1,
+      "joint_rad": [
+        0.22769565421518026,
+        0.31152381818846786,
+        -0.02818706741970842,
+        -0.0002617993877991494,
+        1.6435416500180204,
+        0.13133602621257331,
+        0.5926789073922344
+      ],
+      "speed_percent": 2
+    },
+    {
+      "index": 2,
+      "joint_rad": [
+        0.20149826214274535,
+        0.31012755478687243,
+        -0.028082347664588763,
+        -0.11386528040011006,
+        1.6763189333704738,
+        0.13177235852557187,
+        0.5924345612969553
+      ],
+      "speed_percent": 2
+    }
+  ],
+  "emergency_stop_requested": false,
+  "start_state": {
+    "captured_at_utc": "2026-09-26T14:34:47.414745+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.44809583215702414,
+      0.3381924491589412,
+      -0.20182987470062427,
+      -0.023282692221604357,
+      1.612893668353,
+      -0.38782961308566,
+      0.034016467121369486
+    ],
+    "flange_pose_m_rad": [
+      -0.145259,
+      -0.075017,
+      0.685318,
+      -2.290343217514599,
+      -1.4541385195915957,
+      -0.5528854004467637
+    ],
+    "joint_variation_0_25s_rad": 0.0,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.8
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.700000000000003
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "preflight_passed": true,
+  "execution_requested": true,
+  "route_joint_rad": [
+    [
+      0.44809583215702414,
+      0.33824480903650106,
+      -0.20182987470062427,
+      -0.023282692221604357,
+      1.6129111216455196,
+      -0.3877947065006201,
+      0.03396410724380965
+    ],
+    [
+      0.22769565421518026,
+      0.31152381818846786,
+      -0.02818706741970842,
+      -0.0002617993877991494,
+      1.6435416500180204,
+      0.13133602621257331,
+      0.5926789073922344
+    ],
+    [
+      0.20149826214274535,
+      0.31012755478687243,
+      -0.028082347664588763,
+      -0.11386528040011006,
+      1.6763189333704738,
+      0.13177235852557187,
+      0.5924345612969553
+    ]
+  ],
+  "joint_box_flange_ranges_m": [
+    {
+      "x": [
+        -0.16724163512513276,
+        -0.13205610585973918
+      ],
+      "y": [
+        -0.07773822833262947,
+        -0.03272433507342415
+      ],
+      "z": [
+        0.6839148329219293,
+        0.7015220818376351
+      ]
+    },
+    {
+      "x": [
+        -0.15373958887353256,
+        -0.12185461531288845
+      ],
+      "y": [
+        -0.034318781071490896,
+        -0.02411889163903726
+      ],
+      "z": [
+        0.700157795252108,
+        0.7056050618596118
+      ]
+    }
+  ],
+  "speed_percent_by_target": [
+    2,
+    2
+  ],
+  "home_config_sha256": "d3a3790f03c1e5e9858786fa56821196fee3f1bd90782b4d2b7e7818ea1ba48e",
+  "source_sha256": "2d633392ea49f64f9ccdd4b69b7155363de718eefeb3401deb5a80e0cf61cc82",
+  "final_state": {
+    "captured_at_utc": "2026-09-26T14:35:03.011611+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.20144590226518552,
+      0.31005774161679267,
+      -0.028047441079548877,
+      -0.11414453308042916,
+      1.676266573492914,
+      0.13171999864801207,
+      0.5924345612969553
+    ],
+    "flange_pose_m_rad": [
+      -0.122636,
+      -0.024092,
+      0.705604,
+      -1.0159736108784192,
+      -0.9143256352422694,
+      -1.7449103729738509
+    ],
+    "joint_variation_0_25s_rad": 0.0008203047484373338,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.8
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "final_max_joint_error_rad": 0.00027925268031910033,
+  "finished_at_utc": "2026-09-26T14:35:03.036002+00:00"
+}

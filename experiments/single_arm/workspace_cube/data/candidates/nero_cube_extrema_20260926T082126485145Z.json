@@ -1,0 +1,456 @@
+{
+  "schema_version": 1,
+  "status": "EXTREMA_CANDIDATE_ONLY",
+  "geometry_valid": false,
+  "motion_region_verified": false,
+  "six_faces_sampled": false,
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center",
+  "source_map_csv": "experiments/single_arm/workspace_cube/data/candidates/nero_drag_map_20260926T082044601204Z.csv",
+  "source_map_sha256": "a1c6d3079c73ba5794b8a4066bce66450c512db1776447127c1368bf214ad4ca",
+  "source_recording_csv": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+  "source_recording_sha256": "def8192e161af9a1a51b9554775a3c0f9c6d57588c340870521b287380865f95",
+  "evidence_level": "new_hand_guided_sweep",
+  "sample_count": 599,
+  "axis_ranges_m": {
+    "x": [
+      0.172944,
+      0.5342009999999999
+    ],
+    "y": [
+      -0.149502,
+      0.28099999999999997
+    ],
+    "z": [
+      0.311131,
+      0.666264
+    ]
+  },
+  "axis_spans_m": {
+    "x": 0.36125699999999994,
+    "y": 0.43050199999999994,
+    "z": 0.355133
+  },
+  "axis_extrema": {
+    "x": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.172944,
+          0.2652,
+          0.609829
+        ],
+        "joint_rad": [
+          1.301439663334612,
+          -0.49190359638208186,
+          -1.0318212004865277,
+          -0.32154200809491534,
+          1.1950618454255575,
+          -0.058485983234329984,
+          -0.2693741167528048
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "246",
+        "time_utc": "2026-09-26T07:26:23.365505+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.5342009999999999,
+          0.00556,
+          0.329625
+        ],
+        "joint_rad": [
+          0.2294235301746546,
+          -1.1094010857376757,
+          -1.0330080243778839,
+          -0.421968253254669,
+          1.1950618454255575,
+          0.20498892064673402,
+          -0.4684987311128379
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "160",
+        "time_utc": "2026-09-26T07:26:19.065469+00:00"
+      }
+    },
+    "y": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.405559,
+          -0.149502,
+          0.43904899999999997
+        ],
+        "joint_rad": [
+          0.0861494518784401,
+          -0.7659901021152713,
+          -1.2042073707060075,
+          -0.7437371541523436,
+          1.630713480015862,
+          -0.17798867711838173,
+          -0.5232497097479
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "389",
+        "time_utc": "2026-09-26T07:26:30.515723+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.20507999999999998,
+          0.28099999999999997,
+          0.580465
+        ],
+        "joint_rad": [
+          1.248381654073984,
+          -0.5457993636836668,
+          -1.0319259202416473,
+          -0.39079667281405034,
+          1.1950618454255575,
+          -0.10761700167797036,
+          -0.2690774107799658
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "249",
+        "time_utc": "2026-09-26T07:26:23.515599+00:00"
+      }
+    },
+    "z": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.531449,
+          -0.001932,
+          0.311131
+        ],
+        "joint_rad": [
+          0.26190410755426907,
+          -1.1092265528124763,
+          -1.0330080243778839,
+          -0.5296550681027192,
+          1.1950618454255575,
+          0.20498892064673402,
+          -0.2695486496780043
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "169",
+        "time_utc": "2026-09-26T07:26:19.515622+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.19216899999999998,
+          -0.038933999999999996,
+          0.666264
+        ],
+        "joint_rad": [
+          0.3767293190429761,
+          -0.22499039387458902,
+          -1.2041899174134878,
+          -0.36362189636049863,
+          1.6566490727004977,
+          -0.12871803233458182,
+          -0.5234766025506593
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+        "source_index": "370",
+        "time_utc": "2026-09-26T07:26:29.565861+00:00"
+      }
+    }
+  },
+  "axis_extrema_distinct_source_rows": 6,
+  "inset_axis_ranges_m": {
+    "x": [
+      0.20294399999999999,
+      0.5242009999999999
+    ],
+    "y": [
+      -0.139502,
+      0.27099999999999996
+    ],
+    "z": [
+      0.321131,
+      0.656264
+    ]
+  },
+  "physical_bottom_in_base": "-X (left mount, on-site confirmed)",
+  "bottom_inset_m": 0.03,
+  "recommended_measured_extrema": {
+    "-X": {
+      "flange_xyz_base_m": [
+        0.205263,
+        -0.051642999999999994,
+        0.653669
+      ],
+      "joint_rad": [
+        0.3588571475025541,
+        -0.22799236018801927,
+        -1.2041899174134878,
+        -0.4327194814469541,
+        1.847413559943478,
+        -0.19580848878124382,
+        -0.5233544295030197
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "498",
+      "time_utc": "2026-09-26T07:26:35.965685+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.032319000000000014,
+      "observed_point_only": true
+    },
+    "+X": {
+      "flange_xyz_base_m": [
+        0.523479,
+        -0.033364,
+        0.33883599999999997
+      ],
+      "joint_rad": [
+        0.18971728969178364,
+        -1.0582978452392817,
+        -1.0331301974255236,
+        -0.4956386009813497,
+        1.1950618454255575,
+        0.20498892064673402,
+        -0.2673495348204914
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "173",
+      "time_utc": "2026-09-26T07:26:19.715647+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.010721999999999898,
+      "observed_point_only": true
+    },
+    "-Y": {
+      "flange_xyz_base_m": [
+        0.42427499999999996,
+        -0.137372,
+        0.433295
+      ],
+      "joint_rad": [
+        0.06415830330331156,
+        -0.803654307373309,
+        -1.2041899174134878,
+        -0.6650926180574791,
+        1.7523803821723867,
+        -0.12836896648418294,
+        -0.5231624432853003
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "350",
+      "time_utc": "2026-09-26T07:26:28.565731+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.012130000000000002,
+      "observed_point_only": true
+    },
+    "+Y": {
+      "flange_xyz_base_m": [
+        0.27158299999999996,
+        0.258934,
+        0.5488799999999999
+      ],
+      "joint_rad": [
+        1.085280635475114,
+        -0.5960124862635436,
+        -1.0319259202416473,
+        -0.4742583176444192,
+        1.1950618454255575,
+        -0.12712978271526695,
+        -0.26899014431736606
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "251",
+      "time_utc": "2026-09-26T07:26:23.615635+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.022065999999999975,
+      "observed_point_only": true
+    },
+    "-Z": {
+      "flange_xyz_base_m": [
+        0.523479,
+        -0.033364,
+        0.33883599999999997
+      ],
+      "joint_rad": [
+        0.18971728969178364,
+        -1.0582978452392817,
+        -1.0331301974255236,
+        -0.4956386009813497,
+        1.1950618454255575,
+        0.20498892064673402,
+        -0.2673495348204914
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "173",
+      "time_utc": "2026-09-26T07:26:19.715647+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.02770499999999998,
+      "observed_point_only": true
+    },
+    "+Z": {
+      "flange_xyz_base_m": [
+        0.224989,
+        -0.042553999999999995,
+        0.656202
+      ],
+      "joint_rad": [
+        0.2135759405665461,
+        -0.320424997373639,
+        -1.2042073707060075,
+        -0.28728119487826664,
+        1.6351291630234077,
+        -0.17835519626130053,
+        -0.5234591492581393
+      ],
+      "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+      "source_index": "406",
+      "time_utc": "2026-09-26T07:26:31.365528+00:00",
+      "coordinate_offset_from_raw_extremum_m": 0.010062000000000015,
+      "observed_point_only": true
+    }
+  },
+  "candidate_center_base_m": [
+    0.36357249999999997,
+    0.06574899999999999,
+    0.4886975
+  ],
+  "candidate_side_length_m": 0.3212569999999999,
+  "candidate_cube_bounds_base_m": {
+    "x": [
+      0.202944,
+      0.5242009999999999
+    ],
+    "y": [
+      -0.09487949999999996,
+      0.22637749999999995
+    ],
+    "z": [
+      0.32806900000000006,
+      0.649326
+    ]
+  },
+  "candidate_vertices_base_m": [
+    {
+      "corner": "---",
+      "xyz_base_m": [
+        0.202944,
+        -0.09487949999999996,
+        0.32806900000000006
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "--+",
+      "xyz_base_m": [
+        0.202944,
+        -0.09487949999999996,
+        0.649326
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "-+-",
+      "xyz_base_m": [
+        0.202944,
+        0.22637749999999995,
+        0.32806900000000006
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "-++",
+      "xyz_base_m": [
+        0.202944,
+        0.22637749999999995,
+        0.649326
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "+--",
+      "xyz_base_m": [
+        0.5242009999999999,
+        -0.09487949999999996,
+        0.32806900000000006
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "+-+",
+      "xyz_base_m": [
+        0.5242009999999999,
+        -0.09487949999999996,
+        0.649326
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "++-",
+      "xyz_base_m": [
+        0.5242009999999999,
+        0.22637749999999995,
+        0.32806900000000006
+      ],
+      "observed_point": false
+    },
+    {
+      "corner": "+++",
+      "xyz_base_m": [
+        0.5242009999999999,
+        0.22637749999999995,
+        0.649326
+      ],
+      "observed_point": false
+    }
+  ],
+  "construction_method": "一条实测轨迹的 XYZ 六个单轴极值；按余量内缩后取最窄轴边长，构造基座轴对齐等边立方体",
+  "candidate_vertices_observed": false,
+  "inset_from_narrowest_extrema_m": null,
+  "ordinary_inset_m": 0.01,
+  "candidate_face_centers": {
+    "+X": {
+      "candidate_center_xyz_base_m": [
+        0.5242009999999999,
+        0.06574899999999999,
+        0.4886975
+      ],
+      "nearest_recorded_distance_m": 0.07825713844915358,
+      "plane_in_base": "Y-Z"
+    },
+    "-X": {
+      "candidate_center_xyz_base_m": [
+        0.202944,
+        0.06574899999999999,
+        0.4886975
+      ],
+      "nearest_recorded_distance_m": 0.123938429545682,
+      "plane_in_base": "Y-Z"
+    },
+    "+Y": {
+      "candidate_center_xyz_base_m": [
+        0.36357249999999997,
+        0.22637749999999995,
+        0.4886975
+      ],
+      "nearest_recorded_distance_m": 0.02087185048695965,
+      "plane_in_base": "X-Z"
+    },
+    "-Y": {
+      "candidate_center_xyz_base_m": [
+        0.36357249999999997,
+        -0.09487949999999996,
+        0.4886975
+      ],
+      "nearest_recorded_distance_m": 0.02631787082478366,
+      "plane_in_base": "X-Z"
+    },
+    "+Z": {
+      "candidate_center_xyz_base_m": [
+        0.36357249999999997,
+        0.06574899999999999,
+        0.649326
+      ],
+      "nearest_recorded_distance_m": 0.07283029238750859,
+      "plane_in_base": "X-Y"
+    },
+    "-Z": {
+      "candidate_center_xyz_base_m": [
+        0.36357249999999997,
+        0.06574899999999999,
+        0.32806900000000006
+      ],
+      "nearest_recorded_distance_m": 0.14563974476512234,
+      "plane_in_base": "X-Y"
+    }
+  },
+  "interpretation": "六个单轴极值来自已记录轨迹；未证明立方体六面或内部、角点、连杆和线缆可达/无碰撞。"
+}

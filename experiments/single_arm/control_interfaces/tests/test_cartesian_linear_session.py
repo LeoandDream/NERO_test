@@ -48,6 +48,20 @@ class CartesianLinearSessionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "1～5 mm"):
             preview_point(self.kinematics, self.start, self.pose, target, self.config)
 
+    def test_flange_return_run_is_rejected_before_connection(self):
+        for mode, destination in (("p", "--to-s1"), ("l", "--to-s1"),
+                                  ("l", "--to-anchor")):
+            argv = ["cartesian_session", destination, "--run"]
+            if destination == "--to-anchor":
+                argv += ["--anchor-recording", "unused.csv"]
+            with self.subTest(mode=mode, destination=destination):
+                with (patch("sys.argv", argv),
+                      patch("experiments.single_arm.control_interfaces.cartesian_linear_session.AgxArmFactory.create_arm") as factory,
+                      self.assertRaises(SystemExit) as caught):
+                    main(motion_mode=mode)
+                self.assertEqual(caught.exception.code, 2)
+                factory.assert_not_called()
+
     def test_stable_csv_can_be_temporary_anchor(self):
         path = Path("experiments/single_arm/pose_recording/data/recordings/nero_poses_20260924T140821Z.csv")
         anchor, pose = read_anchor_recording(path, self.kinematics, self.config)

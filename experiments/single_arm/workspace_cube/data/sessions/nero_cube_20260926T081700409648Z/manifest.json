@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "calibration_version": "cube_faces_v1",
+  "created_at_utc": "2026-09-26T08:17:00.409810+00:00",
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "config_path": "experiments/single_arm/config/nero_teach.json",
+  "mount": "left",
+  "zero_reference": "2026-09-23 现场确认安全，CAN 关节反馈 20260923T145941Z",
+  "robot_model": "NERO",
+  "firmware_driver": "V121",
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center",
+  "tool_offset_m": [
+    0,
+    0,
+    0
+  ],
+  "note": "六面为立方体局部 ±X/±Y/±Z；每面至少三个不共线的法兰点。"
+}

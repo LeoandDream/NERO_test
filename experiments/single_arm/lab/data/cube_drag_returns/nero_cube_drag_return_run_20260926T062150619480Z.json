@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "one_time_cube_drag_return_to_s1",
+  "started_at_utc": "2026-09-26T06:21:50.619455+00:00",
+  "plan": "experiments/single_arm/lab/data/cube_drag_returns/nero_cube_drag_return_plan_20260926T062054686595Z.json",
+  "completed": false,
+  "last_published_index": 1,
+  "feedback_sample_count": 0,
+  "last_published_joint_rad": [
+    0.0805818515645782,
+    -0.5336751431464795,
+    -0.32313025771423015,
+    -0.40379937574140806,
+    1.5293447570600314,
+    -0.6631553025877654,
+    0.015341444125030157
+  ],
+  "error": "name 'stage_ends' is not defined",
+  "error_type": "NameError",
+  "finished_at_utc": "2026-09-26T06:21:56.165643+00:00"
+}

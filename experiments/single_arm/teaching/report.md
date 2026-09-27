@@ -40,16 +40,16 @@ python -m experiments.single_arm.teaching.teach_session
 python -m experiments.single_arm.teaching.teach_session --run --max-seconds 5
 ```
 
-默认最长示教时间为 120 秒，命令行允许 1–300 秒。启动前脚本检查七个驱动、故障状态、关节限位、当前位置是否接近 S1（每关节最多偏差 0.05 rad），并排除全零位附近。到时或示教期间按一次 `Ctrl+C` 后，脚本退出拖动、记录停稳过程、检查轨迹连续性，等待 5 秒，再尝试沿本次轨迹倒序返回**本次示教前的实际位置**。倒计时期间按 `Ctrl+C` 可取消回位；已发送回位运动指令后，若未达到小步目标或状态异常，脚本停止并发送电子急停。
+默认最长示教时间为 120 秒，命令行允许 1–300 秒。启动前脚本检查七个驱动、故障状态、关节限位、当前位置是否接近 S1（每关节最多偏差 0.05 rad），并排除全零位附近。到时或示教期间按一次 `Ctrl+C` 后，脚本退出拖动、记录停稳过程，再从实时七轴反馈独立规划少量 `move_j` 目标回 S1；不会倒放本次记录。倒计时期间按 `Ctrl+C` 可取消回位。运动状态异常可能触发电子急停。
 
-若未来某次示教记录完整，但回位未完成且机械臂仍位于该记录末端，可先只读检查，再在现场确认整条返回路径后显式运行恢复命令。用那次示教的 CSV 和起点配置替换示例路径：
+若未来某次示教结束但未回 S1，先从**当前位置**重新做只读规划，再在现场确认整条新路线后执行：
 
 ```bash
-python -m experiments.single_arm.teaching.return_session experiments/single_arm/teaching/data/recordings/nero_session_YYYYMMDDTHHMMSSZ.csv --config experiments/single_arm/config/nero_teach.json
-python -m experiments.single_arm.teaching.return_session experiments/single_arm/teaching/data/recordings/nero_session_YYYYMMDDTHHMMSSZ.csv --config experiments/single_arm/config/nero_teach.json --run
+python -m experiments.single_arm.lab.cli return plan
+python -m experiments.single_arm.lab.cli return run --plan 上一步输出的计划.json
 ```
 
-恢复工具会拒绝已标记为回位完成的记录。此次 [第二次 5 秒记录](data/recordings/nero_session_20260923T145952Z.csv)已经完成回位，不能再次用该工具执行。在 2026-09-23 这一步验证的是**拖动示教、记录和倒序回位**；后续正向回放结果见[回放报告](../replay/report.md)。即使记录轨迹有效，工作范围中后来出现的障碍物仍需现场检查。
+`teaching.return_session --run` 已停用；它仅能只读检查历史记录。此次 [第二次 5 秒记录](data/recordings/nero_session_20260923T145952Z.csv)的倒序回位是当时的历史操作，不代表当前回位方法。后续正向回放结果见[回放报告](../replay/report.md)。工作范围中后来出现的障碍物仍需现场检查。
 
 ## 后续 20 秒试验
 

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "kind": "home_demo_offline_reassessment",
+  "assessed_at_utc": "2026-09-26T09:35:18.148257+00:00",
+  "source_report": "experiments/single_arm/lab/data/home_demos/nero_home_demo_20260926T093257864574Z.json",
+  "source_report_sha256": "eae870aec10d70c44cd3603a56d98eb6ac345929dca12ed5d7873aa8653dd7ba",
+  "recording_path": "experiments/single_arm/lab/data/home_demos/recordings/nero_poses_lab_20260926T093258489363Z.csv",
+  "recording_sha256": "2d633392ea49f64f9ccdd4b69b7155363de718eefeb3401deb5a80e0cf61cc82",
+  "recording_accepted": true,
+  "reasons": [],
+  "trajectory_summary": {
+    "samples": 599,
+    "elapsed_s": 29.95,
+    "start_joint_rad": [
+      0.017348572764823635,
+      -0.5787511799613198,
+      0.028029987787028934,
+      -0.2996206726898666,
+      0.01117010721276371,
+      0.20552997271485224,
+      -0.47343801289598186
+    ],
+    "end_joint_rad": [
+      0.20153316872778523,
+      0.3095515961337143,
+      -0.028082347664588763,
+      -0.11482521148870693,
+      1.6764411064181133,
+      0.131737451940532,
+      0.5925218277595549
+    ],
+    "start_flange_xyz_m": [
+      0.382056,
+      -0.014084999999999999,
+      0.572409
+    ],
+    "end_flange_xyz_m": [
+      -0.12217199999999999,
+      -0.024010999999999998,
+      0.705687
+    ],
+    "max_joint_excursion_rad": 1.682095973194575,
+    "max_flange_excursion_m": 0.5977210674353047,
+    "final_joint_variation_last_1s_rad": 3.490658503987887e-05,
+    "final_flange_variation_last_1s_m": 1.0000000000287557e-06,
+    "demonstrated_motion": true,
+    "endpoint_stable": true,
+    "endpoint_shift_after_stop_rad": 0.000959931088596877
+  },
+  "post_stop_control_mode": 2,
+  "requires_can_mode_before_motion": true,
+  "physical_support_confirmed": false,
+  "route_approved_for_motion": false
+}

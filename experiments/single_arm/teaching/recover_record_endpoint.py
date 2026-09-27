@@ -11,10 +11,11 @@ import can
 from pyAgxArm import AgxArmFactory, ArmModel, NeroFW, create_agx_arm_config
 
 from experiments.single_arm.can_setup.can_drag_teach import MOUNT_CODES, fresh, send_frame, wait_status
+from experiments.single_arm.can_setup.drag_start_guard import require_drag_start_safe
 from experiments.single_arm.teaching.return_session import load_recording
 from experiments.single_arm.teaching.teach_session import (
     DEFAULT_CONFIG, check_drivers, healthy_preteach_status, joint_point,
-    load_config, plan_reverse_return, stop_drag, validate_joints,
+    load_config, stop_drag, validate_joints,
 )
 
 
@@ -30,8 +31,10 @@ def main():
         parser.error("--max-seconds 必须在 1 到 180 秒之间")
 
     try:
+        if args.run:
+            require_drag_start_safe()
         config = load_config(args.config)
-        _, _, original, recorded = load_recording(args.recording, config)
+        _, _, _, recorded = load_recording(args.recording, config)
         target = recorded[-1]
         robot = AgxArmFactory.create_arm(create_agx_arm_config(
             robot=ArmModel.NERO, firmeware_version=NeroFW.V121, channel=config["channel"], local_loopback=True
@@ -135,11 +138,10 @@ def main():
 
             time.sleep(0.5)
             current = validate_joints(joint_point(robot), config["zero_exclusion_radius_rad"])
-            route = plan_reverse_return(recorded, current, original, config)
             if not reached:
                 raise RuntimeError("未在时限内稳定接近记录末端；已退出拖动，未回位")
-            print(f"停稳后仍与记录末端吻合；倒序路线可规划为 {len(route)-1} 小步。", flush=True)
-            print("本脚本没有发送回位运动指令。", flush=True)
+            print("停稳后仍与记录末端吻合；本脚本未发送回位运动指令。", flush=True)
+            print("回 S1 请从实时姿态运行 lab.cli return plan/run。", flush=True)
         finally:
             robot.disconnect()
     except (OSError, ValueError, RuntimeError, TimeoutError, can.CanError) as exc:

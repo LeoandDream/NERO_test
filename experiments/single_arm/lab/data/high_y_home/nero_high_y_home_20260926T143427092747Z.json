@@ -1,0 +1,156 @@
+{
+  "kind": "high_y_s1_h0_move_j_trial",
+  "stage": "outer-to-h0",
+  "started_at_utc": "2026-09-26T14:34:27.092723+00:00",
+  "completed": false,
+  "automatic_disable": false,
+  "completed_targets": [],
+  "emergency_stop_requested": false,
+  "start_state": {
+    "captured_at_utc": "2026-09-26T14:34:27.397761+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.44809583215702414,
+      0.3381924491589412,
+      -0.20179496811558437,
+      -0.02326523892908441,
+      1.6129460282305597,
+      -0.38784706637817995,
+      0.03399901382884954
+    ],
+    "flange_pose_m_rad": [
+      -0.14526999999999998,
+      -0.075019,
+      0.685314,
+      -2.2904130306846784,
+      -1.4541908794691554,
+      -0.5527457741066042
+    ],
+    "joint_variation_0_25s_rad": 0.0,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.8
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "preflight_passed": true,
+  "execution_requested": false,
+  "route_joint_rad": [
+    [
+      0.44809583215702414,
+      0.3381924491589412,
+      -0.20179496811558437,
+      -0.02326523892908441,
+      1.6129460282305597,
+      -0.38784706637817995,
+      0.03399901382884954
+    ],
+    [
+      0.22769565421518026,
+      0.31152381818846786,
+      -0.02818706741970842,
+      -0.0002617993877991494,
+      1.6435416500180204,
+      0.13133602621257331,
+      0.5926789073922344
+    ],
+    [
+      0.20149826214274535,
+      0.31012755478687243,
+      -0.028082347664588763,
+      -0.11386528040011006,
+      1.6763189333704738,
+      0.13177235852557187,
+      0.5924345612969553
+    ]
+  ],
+  "joint_box_flange_ranges_m": [
+    {
+      "x": [
+        -0.16724163512513276,
+        -0.1320611100544115
+      ],
+      "y": [
+        -0.07773628473069377,
+        -0.03272523611664991
+      ],
+      "z": [
+        0.6839145242628663,
+        0.7015211129145111
+      ]
+    },
+    {
+      "x": [
+        -0.15373958887353256,
+        -0.12185461531288845
+      ],
+      "y": [
+        -0.034318781071490896,
+        -0.02411889163903726
+      ],
+      "z": [
+        0.700157795252108,
+        0.7056050618596118
+      ]
+    }
+  ],
+  "speed_percent_by_target": [
+    2,
+    2
+  ],
+  "home_config_sha256": "d3a3790f03c1e5e9858786fa56821196fee3f1bd90782b4d2b7e7818ea1ba48e",
+  "source_sha256": "2d633392ea49f64f9ccdd4b69b7155363de718eefeb3401deb5a80e0cf61cc82",
+  "finished_at_utc": "2026-09-26T14:34:27.448561+00:00"
+}

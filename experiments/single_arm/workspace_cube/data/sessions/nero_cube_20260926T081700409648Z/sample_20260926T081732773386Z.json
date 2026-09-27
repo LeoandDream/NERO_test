@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-09-26T08:17:22.049144+00:00",
+  "face": "+X",
+  "joint_rad": [
+    0.017366026057343577,
+    -0.5787511799613198,
+    0.028047441079548877,
+    -0.2995159529347469,
+    0.011222467090323538,
+    0.20558233259241207,
+    -0.4738743452089804
+  ],
+  "flange_pose_m_rad": [
+    0.38203899999999996,
+    -0.014076,
+    0.572433,
+    1.4612769162322525,
+    -0.21109757302871418,
+    0.22972023614749368
+  ],
+  "joint_feedback_unix_s": 1790410642.043802,
+  "pose_feedback_unix_s": 1790410642.046369,
+  "source_recording": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081720444755Z.csv",
+  "source_sha256": "ae32a93d814abfab0a2e1e2eefd8317a5650686857d105626634a701f7e09453",
+  "source_start_index": 0,
+  "source_end_index": 63,
+  "source_sample_index": 31,
+  "dwell_s": 3.149,
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "mount": "left",
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center"
+}

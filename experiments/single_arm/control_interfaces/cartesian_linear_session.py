@@ -274,6 +274,8 @@ def main(motion_mode="l"):
         parser.error("--to-anchor 必须指定 --anchor-recording")
     if args.to_s1 and args.anchor_recording is not None:
         parser.error("--to-s1 不与 --anchor-recording 同时使用")
+    if args.run and (args.to_s1 or args.to_anchor):
+        parser.error("法兰目标回位执行已停用；请从实时七轴姿态使用 lab.cli return plan/run 规划 move_j")
     robot = None
     try:
         config = load_config(args.config)

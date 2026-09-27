@@ -1,0 +1,34 @@
+{
+  "kind": "optimized_sparse_s1_h0_trial",
+  "direction": "home",
+  "strategy": "reduced-j3",
+  "started_at_utc": "2026-09-26T18:05:51.744931+00:00",
+  "execution_requested": false,
+  "completed": false,
+  "completed_targets": [],
+  "emergency_stop_requested": false,
+  "precommand_feedback_retries": [],
+  "stationary_retries": [],
+  "resume_source_report": "experiments/single_arm/lab/data/optimized_home/nero_optimized_home_20260926T175610058238Z.json",
+  "automatic_disable": false,
+  "preflight_state_attempts": [
+    {
+      "label": "initial",
+      "attempt": 1,
+      "joint_rad": [
+        0.017366026057343577,
+        -0.5787511799613198,
+        0.028029987787028934,
+        -0.29949849964222697,
+        0.011239920382843483,
+        0.20565214576249183,
+        -0.47343801289598186
+      ],
+      "variation_rad": 0.0,
+      "reasons": []
+    }
+  ],
+  "error_type": "ValueError",
+  "error": "实时姿态不在原报告最后到位目标，不能续行",
+  "finished_at_utc": "2026-09-26T18:05:53.081676+00:00"
+}

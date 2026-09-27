@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "status": "EXTREMA_CANDIDATE_ONLY",
+  "geometry_valid": false,
+  "motion_region_verified": false,
+  "six_faces_sampled": false,
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center",
+  "source_map_csv": "experiments/single_arm/workspace_cube/data/candidates/nero_drag_map_20260926T063042397610Z.csv",
+  "source_map_sha256": "dfbb10649f579a483c28fe9a203189d9d3b194a73167569a425e1a87d9c385a3",
+  "evidence_level": "new_hand_guided_sweep",
+  "sample_count": 599,
+  "axis_ranges_m": {
+    "x": [
+      -0.15461,
+      0.512052
+    ],
+    "y": [
+      -0.219569,
+      0.23838399999999998
+    ],
+    "z": [
+      0.409249,
+      0.7015739999999999
+    ]
+  },
+  "axis_spans_m": {
+    "x": 0.666662,
+    "y": 0.45795299999999994,
+    "z": 0.29232499999999995
+  },
+  "axis_extrema": {
+    "x": {
+      "min": {
+        "flange_xyz_base_m": [
+          -0.15461,
+          -0.10346599999999999,
+          0.659355
+        ],
+        "joint_rad": [
+          0.2568950126010454,
+          0.6193475383627078,
+          -0.2430370983402104,
+          -0.6265208415884045,
+          0.4625820649485771,
+          0.2049365607691742,
+          -0.8288394084795873
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "508",
+        "time_utc": "2026-09-26T06:30:17.228+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.512052,
+          0.005516,
+          0.409249
+        ],
+        "joint_rad": [
+          0.09381144729469522,
+          -0.9875421973634315,
+          -0.5038416484657231,
+          -0.23736477827122882,
+          0.38629372334390494,
+          0.2049540140616941,
+          -0.4337492257056308
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "341",
+        "time_utc": "2026-09-26T06:30:08.878+00:00"
+      }
+    },
+    "y": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.313318,
+          -0.219569,
+          0.565654
+        ],
+        "joint_rad": [
+          -0.602382938033323,
+          -0.5222374187817433,
+          0.09466665862817245,
+          -0.36100390248250713,
+          0.8575500746748939,
+          0.2049540140616941,
+          -0.473088947045583
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "187",
+        "time_utc": "2026-09-26T06:30:01.178+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.36067899999999997,
+          0.23838399999999998,
+          0.500293
+        ],
+        "joint_rad": [
+          0.8781100532633871,
+          -0.7286575094151126,
+          -0.9164723902222224,
+          -0.515570261039125,
+          0.38500217969742917,
+          0.20484929430657445,
+          -0.5902005398544026
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "331",
+        "time_utc": "2026-09-26T06:30:08.378+00:00"
+      }
+    },
+    "z": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.512052,
+          0.005516,
+          0.409249
+        ],
+        "joint_rad": [
+          0.09381144729469522,
+          -0.9875421973634315,
+          -0.5038416484657231,
+          -0.23736477827122882,
+          0.38629372334390494,
+          0.2049540140616941,
+          -0.4337492257056308
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "341",
+        "time_utc": "2026-09-26T06:30:08.878+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.104944,
+          -0.11514999999999999,
+          0.7015739999999999
+        ],
+        "joint_rad": [
+          -0.7084465966770184,
+          -0.22310543828243515,
+          0.0330565360327726,
+          -0.05632177496185701,
+          0.43917719967933316,
+          0.20497146735421407,
+          -0.5925916409296348
+        ],
+        "source": "experiments/single_arm/pose_recording/data/recordings/nero_poses_20260926T062951Z.csv",
+        "source_index": "277",
+        "time_utc": "2026-09-26T06:30:05.678+00:00"
+      }
+    }
+  },
+  "candidate_center_base_m": [
+    0.17872099999999996,
+    0.0094075,
+    0.5554115
+  ],
+  "candidate_side_length_m": 0.27232499999999993,
+  "inset_from_narrowest_extrema_m": 0.01,
+  "candidate_face_centers": {
+    "+X": {
+      "candidate_center_xyz_base_m": [
+        0.3148834999999999,
+        0.0094075,
+        0.5554115
+      ],
+      "nearest_recorded_distance_m": 0.04421470457607971,
+      "plane_in_base": "Y-Z"
+    },
+    "-X": {
+      "candidate_center_xyz_base_m": [
+        0.0425585,
+        0.0094075,
+        0.5554115
+      ],
+      "nearest_recorded_distance_m": 0.11983389826234485,
+      "plane_in_base": "Y-Z"
+    },
+    "+Y": {
+      "candidate_center_xyz_base_m": [
+        0.17872099999999996,
+        0.14556999999999998,
+        0.5554115
+      ],
+      "nearest_recorded_distance_m": 0.0865114205076417,
+      "plane_in_base": "X-Z"
+    },
+    "-Y": {
+      "candidate_center_xyz_base_m": [
+        0.17872099999999996,
+        -0.12675499999999995,
+        0.5554115
+      ],
+      "nearest_recorded_distance_m": 0.03972732441594834,
+      "plane_in_base": "X-Z"
+    },
+    "+Z": {
+      "candidate_center_xyz_base_m": [
+        0.17872099999999996,
+        0.0094075,
+        0.6915739999999999
+      ],
+      "nearest_recorded_distance_m": 0.02248320011141652,
+      "plane_in_base": "X-Y"
+    },
+    "-Z": {
+      "candidate_center_xyz_base_m": [
+        0.17872099999999996,
+        0.0094075,
+        0.419249
+      ],
+      "nearest_recorded_distance_m": 0.21567800093252434,
+      "plane_in_base": "X-Y"
+    }
+  },
+  "interpretation": "六个单轴极值来自已记录轨迹；未证明立方体六面或内部、角点、连杆和线缆可达/无碰撞。"
+}

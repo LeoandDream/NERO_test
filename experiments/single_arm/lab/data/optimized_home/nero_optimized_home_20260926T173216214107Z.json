@@ -1,0 +1,14 @@
+{
+  "kind": "optimized_sparse_s1_h0_trial",
+  "direction": "start",
+  "started_at_utc": "2026-09-26T17:32:16.214017+00:00",
+  "execution_requested": true,
+  "completed": false,
+  "completed_targets": [],
+  "emergency_stop_requested": false,
+  "precommand_feedback_retries": [],
+  "automatic_disable": false,
+  "error_type": "RuntimeError",
+  "error": "实时预检未通过：七轴反馈尚未停稳",
+  "finished_at_utc": "2026-09-26T17:32:16.571182+00:00"
+}

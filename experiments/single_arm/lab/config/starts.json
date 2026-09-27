@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "default_start": "S1",
+  "robot_model": "NERO",
+  "firmware_driver": "V121",
+  "mount": "left",
+  "tool_offset_m": [0, 0, 0],
+  "configuration_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "starts": {
+    "S1": {
+      "joint_rad": [0.017383479349863524, -0.5787511799613198, 0.028047441079548877, -0.2995159529347469, 0.011239920382843483, 0.2056695990550118, -0.47343801289598186],
+      "source": "experiments/single_arm/config/nero_teach.json",
+      "current_site_arrival_hold_verified": true,
+      "aesthetic_review": "historically_accepted",
+      "route_from": ["C2"]
+    },
+    "C2": {
+      "joint_rad": [0.2687981580996467, -0.6333974388412622, -0.8668526795880237, -0.518310427964756, -0.19228292369221528, 0.2056695990550118, -0.4694935687864747],
+      "source": "experiments/single_arm/reachability/data/visits/nero_candidate_C2_20260925T170852026380Z.json",
+      "current_site_arrival_hold_verified": true,
+      "aesthetic_review": "AWAITING_USER",
+      "route_from": ["S1"]
+    }
+  },
+  "route_source_plan": "experiments/single_arm/continuous_replay/data/plans/nero_continuous_20260925T165935418493Z.json",
+  "route_evidence": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T170640155991Z_analysis.json",
+  "site_conditions": "Left mounted Nero, bare flange, fixed base, unchanged table/support/cable layout from 2026-09-25; physical clearance requires current-site observation."
+}

@@ -85,17 +85,23 @@ def _controlled_stop(robot, report):
             report["stop_error"] = str(stop_exc)
 
 
-def run(plan, plan_path, config):
-    robot = robot_instance(config["channel"])
+def run(plan, plan_path, config, robot_factory=None, *, source_reader=read_source,
+        run_dir=RUN_DIR):
+    """执行已复核的定时关节流；source_reader 仅决定源记录的校验格式。
+
+    默认仍读取原来固定的 20 秒示教源。新封存记录可提供严格的读取器，
+    两者共用相同的实时反馈、发布节拍和异常停止逻辑。
+    """
+    robot = (robot_factory or robot_instance)(config["channel"])
     signal_previous = None
     trace = None
     report_created = False
     motion_sent = False
     aborted = False
     stem = "nero_continuous_" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    report_path = RUN_DIR / f"{stem}.json"
-    samples_path = RUN_DIR / f"{stem}.csv"
-    can_path = RUN_DIR / f"{stem}.can.csv"
+    report_path = Path(run_dir) / f"{stem}.json"
+    samples_path = Path(run_dir) / f"{stem}.csv"
+    can_path = Path(run_dir) / f"{stem}.can.csv"
     report = {
         "schema_version": 1,
         "started_at_utc": utc_now(),
@@ -109,6 +115,7 @@ def run(plan, plan_path, config):
         "frequency_hz": plan["frequency_hz"],
         "turnaround_hold_s": plan.get("turnaround_hold_s", 0.0),
         "recovery_mode": bool(plan.get("recovery_mode", False)),
+        "one_way_mode": bool(plan.get("one_way_mode", False)),
         "recovery_parent_report": plan.get("recovery_parent_report"),
         "samples_csv": str(samples_path),
         "can_trace_csv": str(can_path),
@@ -133,7 +140,9 @@ def run(plan, plan_path, config):
         nominal_start = plan["waypoints"][0]["joint_rad"]
         offset = [a-b for a,b in zip(actual_start, nominal_start)]
         report["joint_plan_offset_rad"] = offset
-        source = read_source(Path(plan["recording"]), config)
+        source = source_reader(Path(plan["recording"]), config)
+        if source["sha256"] != plan["source_sha256"]:
+            raise ValueError("连续源记录在执行前发生变化")
         envelope = source_envelope(source)
         # 依据本轮实际起点把整条计划等量平移，回程精确返回本轮起点。
         targets = []
@@ -291,7 +300,7 @@ def run(plan, plan_path, config):
             while time.monotonic() < deadline:
                 trace.check()
                 status, current, _ = read_realtime(robot)
-                final_target = targets[-1] if plan.get("recovery_mode") else actual_start
+                final_target = targets[-1] if (plan.get("recovery_mode") or plan.get("one_way_mode")) else actual_start
                 if max(abs(a-b) for a,b in zip(current, final_target)) <= FINAL_TOLERANCE_RAD:
                     break
                 time.sleep(0.05)
@@ -305,7 +314,8 @@ def run(plan, plan_path, config):
             report["period_p99_s"] = sorted_periods[math.ceil(0.99*len(sorted_periods))-1]
             report["period_max_s"] = max(periods)
             report["actual_motion_duration_s"] = time.monotonic()-started
-            report["return_actual_duration_s"] = time.monotonic()-forward_sent_at
+            if forward_sent_at is not None:
+                report["return_actual_duration_s"] = time.monotonic()-forward_sent_at
             report["driver_snapshots"].append(driver_snapshot(robot))
             # SocketCAN 旁路监听在另一线程读取；最后一批帧可能晚于 SDK
             # move_j 返回。等待监听追平后再关闭，否则会丢失最后一组证据。
@@ -323,7 +333,8 @@ def run(plan, plan_path, config):
             )
             report["acceptance_period_pass"] = report["period_p99_s"] <= 0.08
             report["completed"] = True
-            label = "连续原路回位" if plan.get("recovery_mode") else "连续往返"
+            label = ("单向命名起点转移" if plan.get("one_way_mode") else
+                     "连续原路回位" if plan.get("recovery_mode") else "连续往返")
             print(f"{label}完成；最终最大关节误差 {report['max_return_joint_error_rad']:.6f} rad。", flush=True)
     except Exception as exc:
         report["error"] = str(exc)

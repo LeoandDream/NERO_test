@@ -1,0 +1,13 @@
+{
+  "kind": "optimized_sparse_s1_h0_trial",
+  "direction": "start",
+  "started_at_utc": "2026-09-26T15:13:25.022184+00:00",
+  "execution_requested": false,
+  "completed": false,
+  "completed_targets": [],
+  "emergency_stop_requested": false,
+  "automatic_disable": false,
+  "error_type": "ValueError",
+  "error": "起步未先以单 J1 沿 Y 负向离桌",
+  "finished_at_utc": "2026-09-26T15:13:27.889196+00:00"
+}

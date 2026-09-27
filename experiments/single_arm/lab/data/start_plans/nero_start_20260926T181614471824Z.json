@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "named_joint_target_hold",
+  "target_name": "H0",
+  "already_at_target": true,
+  "controller_targets": 0,
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "start_joint_rad": [
+    0.22999948882781276,
+    0.31079077990263027,
+    -0.02806489437206882,
+    -0.05707226654021458,
+    1.6599128384017272,
+    0.13147565255273286,
+    0.5925218277595549
+  ]
+}

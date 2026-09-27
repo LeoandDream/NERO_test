@@ -1,5 +1,7 @@
 # 回放 2026-09-23 的 S1 示教
 
+**新示教快速回放**从[统一接口](../lab/README.md)进入：`python -m experiments.single_arm.lab.cli replay plan --recording latest --mode point` 只读计划，核对后 `python -m experiments.single_arm.lab.cli replay run --plan <plan_path>` 执行。只收录新版本封存、配置一致且已回位的记录，逐点 `move_j` 一轮往返；旧记录继续用下文脚本。定时连续回放是独立模式，不会从逐点模式静默切换。实机验收状态见[统一接口报告](../lab/report.md)。
+
 [回放脚本](replay_session.py)默认读取[已完成回位的五秒示教记录](../teaching/data/recordings/nero_session_20260923T145952Z.csv)。该记录有 280 条关节反馈，其中 35 条是退出拖动后的停稳补录。脚本沿关节记录正向回放，再沿同一条小步路线反向返回**本轮开始时的实际关节位置**；不做末端逆运动学求解。
 
 先在 `nero-py310` 环境运行只读规划：

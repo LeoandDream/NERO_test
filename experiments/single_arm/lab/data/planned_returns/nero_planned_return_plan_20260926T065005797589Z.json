@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "kind": "live_planned_return_to_s1",
+  "created_at_utc": "2026-09-26T06:50:05.797468+00:00",
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "start_state": {
+    "captured_at_utc": "2026-09-26T06:50:05.736571+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.017366026057343577,
+      -0.5787337266687997,
+      0.028012534494508988,
+      -0.2995159529347469,
+      0.011239920382843483,
+      0.2056695990550118,
+      -0.47343801289598186
+    ],
+    "flange_pose_m_rad": [
+      0.382038,
+      -0.014077999999999999,
+      0.572436,
+      1.4611896497696526,
+      -0.21153390534171276,
+      0.22982495590261334
+    ],
+    "joint_variation_0_25s_rad": 6.981317007977508e-05,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.700000000000003
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "target_name": "S1",
+  "speed_percent": 5,
+  "source_recording": null,
+  "reversed_recording": false,
+  "environment_checked": false,
+  "controller_actual_path_known": false,
+  "strategy": "direct",
+  "start_joint_rad": [
+    0.017366026057343577,
+    -0.5787337266687997,
+    0.028012534494508988,
+    -0.2995159529347469,
+    0.011239920382843483,
+    0.2056695990550118,
+    -0.47343801289598186
+  ],
+  "target_joint_rad": [
+    0.017383479349863524,
+    -0.5787511799613198,
+    0.028047441079548877,
+    -0.2995159529347469,
+    0.011239920382843483,
+    0.2056695990550118,
+    -0.47343801289598186
+  ],
+  "route_joint_rad": [
+    [
+      0.017366026057343577,
+      -0.5787337266687997,
+      0.028012534494508988,
+      -0.2995159529347469,
+      0.011239920382843483,
+      0.2056695990550118,
+      -0.47343801289598186
+    ],
+    [
+      0.017383479349863524,
+      -0.5787511799613198,
+      0.028047441079548877,
+      -0.2995159529347469,
+      0.011239920382843483,
+      0.2056695990550118,
+      -0.47343801289598186
+    ]
+  ],
+  "joint_box_flange_ranges_m": [
+    {
+      "x": [
+        0.38203823697901995,
+        0.38204661962732317
+      ],
+      "y": [
+        -0.014084210394848093,
+        -0.014074540274628126
+      ],
+      "z": [
+        0.572442804950921,
+        0.5724498630794429
+      ]
+    }
+  ],
+  "min_flange_x_m": 0.15,
+  "controller_targets": 1
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source_recording_csv": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T072611012480Z.csv",
+  "source_recording_sha256": "def8192e161af9a1a51b9554775a3c0f9c6d57588c340870521b287380865f95",
+  "levels": {
+    "new_hand_guided_sweep": {
+      "samples": 599
+    }
+  },
+  "interpretation": "仅是拖动时经过的法兰位置，不证明包围盒或立方体内部安全。"
+}

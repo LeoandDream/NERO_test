@@ -5,10 +5,10 @@
 | 接口 | 输入 | SDK 下发 | 当前用途 |
 | --- | --- | --- | --- |
 | `JointTargetPublisher` | 7 个关节角，rad | `move_j` | 示教回放、分段回 S1、已验证的笛卡尔 X 本机逆解 |
-| `CartesianPointPublisher` | 法兰 `[x,y,z,roll,pitch,yaw]`，m/rad | `move_p` | 控制器 IK 与点位运动；2 mm 去程和回 S1 已实机到位 |
+| `CartesianPointPublisher` | 法兰 `[x,y,z,roll,pitch,yaw]`，m/rad | `move_p` | VLA 运行时点位目标；2 mm 往返为历史接口试验 |
 | `CartesianLinearPublisher` | 法兰 `[x,y,z,roll,pitch,yaw]`，m/rad | `move_l` | 控制器 IK 与直线运动；临时锚点 2 mm 往返已实机到位 |
 
-`move_p` 只指定法兰**终点**，SDK 不承诺中间法兰位置走直线；`move_l` 明确请求法兰直线。两者都由控制器选择逆解，因此同一法兰终点可能对应不同七轴姿态；回原关节姿态时还须核对关节反馈。`move_j` 输入的是已知七轴目标，不调用法兰 IK。官方[Nero 驱动源码](https://github.com/agilexrobotics/pyAgxArm/blob/master/pyAgxArm/protocols/can_protocol/drivers/nero/default/driver.py)分别实现三种运动模式。
+`move_p` 只指定法兰**终点**，SDK 不承诺中间法兰位置走直线；`move_l` 明确请求法兰直线。两者都由控制器选择逆解，因此同一法兰终点可能对应不同七轴姿态。**普通回位、位置复位、示教后回 S1 均从实时关节状态规划 `move_j` 并验收七轴；`move_p` 留给 VLA 的法兰点位运行。**控制器电子 `reset` 仅解除急停故障，不会把机械臂送到 S1。官方[Nero 驱动源码](https://github.com/agilexrobotics/pyAgxArm/blob/master/pyAgxArm/protocols/can_protocol/drivers/nero/default/driver.py)分别实现三种运动模式。
 
 2026-09-24 成功的分段回 S1 **没有调用 SDK 的 IK**：脚本直接规划七个关节角，SDK `fk()` 只用于计算沿途法兰中心。现有[法兰 X 实验](../cartesian_x/README.md)则用本机数值逆解计算位置目标，最后仍通过 `move_j` 发布。SDK 的 `get_ik_joint_angles()` 只能读取 `move_p`、`move_l`、`move_c` 后控制器给出的逆解反馈，不能在运动前请求它生成一条可验证的关节路径。
 
@@ -26,7 +26,7 @@ PYTHONPATH=/home/leo/.cache/nero_collision_audit/python:/home/leo/nero_dh116_ws 
 
 离线网格没有检查控制器实际 IK 路线、现场支撑、线缆和台面，因此这份结果只供现场核对，不是自动执行许可。
 
-[`cartesian_point_session.py`](cartesian_point_session.py)使用同一套状态、锚点和目标检查，改为**只发送一次 `move_p`**。首次试验仅允许法兰平移 1～5 mm；离线采样只是终点可达性的筛查，不是 P 模式真实路径。运动中记录法兰和关节反馈，只允许法兰相对起点不超过 30 mm、关节相对起点不超过 0.25 rad，并检查故障与到位状态。这些数值不能证明连杆和现场环境安全。2026-09-25 在 S1 附近完成了 X 负向 2 mm 的[去程](data/runs/nero_move_p_20260925T080436Z.json)与[回程](data/runs/nero_move_p_20260925T080758Z.json)，各发送一次 `move_p` 并到位；现场报告均平稳无异常，回程后独立只读检查为 `NORMAL`、七轴使能，且接近 S1。只读命令：
+[`cartesian_point_session.py`](cartesian_point_session.py)使用同一套状态、锚点和目标检查，改为**只发送一次 `move_p`**。首次试验仅允许法兰平移 1～5 mm；离线采样只是终点可达性的筛查，不是 P 模式真实路径。运动中记录法兰和关节反馈，只允许法兰相对起点不超过 30 mm、关节相对起点不超过 0.25 rad，并检查故障与到位状态。这些数值不能证明连杆和现场环境安全。2026-09-25 在 S1 附近完成了 X 负向 2 mm 的[去程](data/runs/nero_move_p_20260925T080436Z.json)与[回程](data/runs/nero_move_p_20260925T080758Z.json)，各发送一次 `move_p` 并到位；这是历史接口试验。现在 `--to-s1/--to-anchor --run` 会在连接 CAN 前拒绝，位置回位改走 `lab.cli return plan/run`。
 
 用户随后自行完成 X 负向 4 mm 的[去程和回程](report.md)，每程一条 `move_p`，法兰及七轴反馈到位。去程法兰相对起点最大平移约 7.7 mm，回程约 8.4 mm；两程采样均明显偏离连接起终点的直线。现场核对必须覆盖整个可能活动范围，不能只按 4 mm 终点位移留间隙。输入 `-0.04` 代表 40 mm，会在预检阶段被 5 mm 上限拒绝；距离单位为米。
 
@@ -64,7 +64,7 @@ python -m experiments.single_arm.control_interfaces.point_workspace_demo --build
 python -m experiments.single_arm.control_interfaces.cartesian_point_session --dx-m -0.002
 ```
 
-现场核对后才在同一命令末尾加 `--run`；成功后先只读运行 `python -m experiments.single_arm.control_interfaces.cartesian_point_session --to-s1`，核对目标和关节分支后才考虑回程 `--run`。每次命令仅发送一个点位目标；每次新实验仍须从实时姿态重新预检。
+上面的点位命令仅保留作为 VLA 目标发布接口的历史试验说明。法兰点位到位后若需回 S1，使用实时关节反馈生成 `move_j` 回位计划；不能再加 `--to-s1 --run`。
 
 在工作区根目录运行，第一次只做 S1 附近 X 负向 2 mm 预检：
 
@@ -80,12 +80,7 @@ python -m experiments.single_arm.control_interfaces.cartesian_linear_session --d
 python -m experiments.single_arm.control_interfaces.cartesian_linear_session --dx-m -0.002 --run
 ```
 
-若成功停在新姿态，需要回 S1 时，先只读预检 `--to-s1`，核对后另行加 `--run`。回位仍然**只发送一个法兰目标**；脚本不会把它拆成多段 `move_j`。两条命令各自单独生成记录，保存在 `data/runs/`，包含执行期间的关节、法兰、控制器 IK 和运动状态采样，可用于检查实际连续性。临时锚点 2 mm 往返已在实机到位，详见[实验记录](report.md)；现场确认回程平稳，无异常。
-
-```bash
-python -m experiments.single_arm.control_interfaces.cartesian_linear_session --to-s1
-python -m experiments.single_arm.control_interfaces.cartesian_linear_session --to-s1 --run
-```
+若成功停在新姿态，需要回 S1 时，改用 `python -m experiments.single_arm.lab.cli return plan` 只读规划，再用 `return run --plan` 显式执行 `move_j`。历史 `move_l` 临时锚点 2 mm 往返已在实机到位，详见[实验记录](report.md)；现在法兰 `--to-s1/--to-anchor --run` 均已停用。
 
 从急停后的大幅下垂姿态直接到 S1 的六维直线，离线预检未收敛；本脚本会在超过 30 mm 或不能求得连续近邻解时拒绝命令。用户要求的“不拆分回位”在**符合范围的起点**由单次 `move_l` 实现；任意姿态一键恢复仍需控制器轨迹能力和实机验证，不能绕过预检强行下发。旧[五段关节恢复记录](../start_transfer/report.md)保留为历史实测。
 
@@ -95,7 +90,7 @@ python -m experiments.single_arm.control_interfaces.cartesian_linear_session --t
 python -m experiments.single_arm.control_interfaces.cartesian_linear_session --anchor-recording experiments/single_arm/pose_recording/data/recordings/nero_poses_20260924T140821Z.csv --dx-m -0.002
 ```
 
-只读预检通过、现场范围清空后，同一条命令末尾加 `--run` 才执行。成功后，用**同一份 CSV** 先执行 `--to-anchor --anchor-recording ...` 只读预检，再加 `--run` 回到记录的法兰位姿。去程和回程各只发布一个 `move_l` 目标。回程还会核对七关节是否接近原姿态；法兰到位但控制器选了另一组关节解，会报告未完成。临时锚点要用实时关节反馈核对；若当前位置偏离记录，外行程会拒绝。机器人突然停机的原因尚未查明，因此实验时仍需现场支撑和监护。
+只读预检通过、现场范围清空后，同一条命令末尾加 `--run` 才执行去程。历史试验曾用同一份 CSV 通过 `move_l` 返回锚点；这个回位执行入口现已停用。临时锚点要用实时关节反馈核对；若当前位置偏离记录，外行程会拒绝。机器人突然停机的原因尚未查明，因此实验时仍需现场支撑和监护。
 
 三种接口共用的现场要求是：从实时反馈确认起点、安装方向和零点；检查全部连杆、工具、线缆和支撑；执行时检查反馈新鲜度、运动状态、目标误差和故障码；只允许一个进程向 CAN 发布运动目标。当前 `JointTargetPublisher` 已接入[共享关节执行器](../start_transfer/go_to_start.py)。
 

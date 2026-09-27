@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "kind": "live_planned_return_to_s1",
+  "plan": "experiments/single_arm/lab/data/planned_returns/nero_planned_return_plan_20260926T072812088999Z.json",
+  "started_at_utc": "2026-09-26T07:28:47.168296+00:00",
+  "completed": true,
+  "controller_targets": 5,
+  "motion_attempted": true,
+  "final_state": {
+    "captured_at_utc": "2026-09-26T07:29:11.682949+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.017383479349863524,
+      -0.5787686332538396,
+      0.02806489437206882,
+      -0.299481046349707,
+      0.011152653920243767,
+      0.2056695990550118,
+      -0.47354273265110153
+    ],
+    "flange_pose_m_rad": [
+      0.38204299999999997,
+      -0.014072,
+      0.572434,
+      1.4611547431846128,
+      -0.2115513586342327,
+      0.22982495590261334
+    ],
+    "joint_variation_0_25s_rad": 0.00013962634015951547,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.700000000000003
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "final_max_joint_error_rad": 0.00010471975511966436,
+  "finished_at_utc": "2026-09-26T07:29:11.684871+00:00"
+}

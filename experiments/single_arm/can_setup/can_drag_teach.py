@@ -7,6 +7,8 @@ import time
 import can
 from pyAgxArm import AgxArmFactory, ArmModel, NeroFW, create_agx_arm_config
 
+from experiments.single_arm.can_setup.drag_start_guard import require_drag_start_safe
+
 
 # 安装码参与重力补偿；必须与物理安装方向一致。
 MOUNT_CODES = {"horizontal": 0x01, "left": 0x02, "right": 0x03}
@@ -28,8 +30,13 @@ def fresh(message, max_age=1.0):
     return message is not None and 0 <= time.time() - float(message.timestamp) <= max_age
 
 
-def send_frame(bus, can_id, data):
+def send_frame(bus, can_id, data, *, drag_authorization=None):
     """构造并发送一个标准 8 字节 Nero CAN 控制帧。"""
+    if can_id == 0x150 and len(data) >= 3 and data[2] == 1:
+        require_drag_start_safe(drag_authorization)
+    if (can_id == 0x151 and len(data) >= 6 and data[0] == 1
+            and data[1] == 0xFF and data[5] in MOUNT_CODES.values()):
+        require_drag_start_safe(drag_authorization)
     bus.send(can.Message(arbitration_id=can_id, data=data, is_extended_id=False), timeout=0.5)
 
 
@@ -46,6 +53,12 @@ def main():
         parser.error("--start 必须同时指定 --mount")
     if args.mount and not args.start:
         parser.error("--mount 仅与 --start 一起使用")
+    if args.start:
+        try:
+            require_drag_start_safe()
+        except RuntimeError as exc:
+            print(exc)
+            return 2
 
     config = create_agx_arm_config(
         robot=ArmModel.NERO, firmeware_version=NeroFW.V121, channel=args.channel, local_loopback=True
@@ -76,13 +89,16 @@ def main():
                 send_frame(bus, 0x150, [0, 0, 2, 0, 0, 0, 0, 0])
                 stopped = wait_status(
                     robot,
-                    lambda item: fresh(item) and int(item.msg.teach_status) in (0, 2),
+                    lambda item: fresh(item) and int(item.msg.teach_status) in (0, 2, 6),
                 )
                 print("结束指令已发送；示教状态：", stopped.msg.teach_status if stopped else "未确认")
                 return 0 if stopped else 2
 
+            idle_teach = (int(status.msg.teach_status) in (0, 2)
+                          or (int(status.msg.ctrl_mode) == 1
+                              and int(status.msg.teach_status) == 6))
             if (int(status.msg.ctrl_mode) not in (1, 2) or int(status.msg.arm_status) != 0
-                    or int(status.msg.teach_status) != 0 or status.msg.err_code):
+                    or not idle_teach or status.msg.err_code):
                 print("机械臂未处于无故障的 CAN/空闲示教状态；未进入拖动示教。")
                 return 2
             drivers = [robot.get_driver_states(index) for index in range(1, 8)]

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "name": "H0",
+  "description": "法兰接触桌面朝人一侧边缘的停机支撑位",
+  "robot_model": "NERO",
+  "mount": "left",
+  "tool_offset_m": [0, 0, 0],
+  "joint_rad": [
+    0.20149826214274535,
+    0.31012755478687243,
+    -0.028082347664588763,
+    -0.11386528040011006,
+    1.6763189333704738,
+    0.13177235852557187,
+    0.5924345612969553
+  ],
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "source_report": "experiments/single_arm/lab/data/home_demos/nero_home_demo_20260926T093257864574Z.json",
+  "source_assessment": "experiments/single_arm/lab/data/home_demos/nero_home_demo_assessment_20260926T093518148277Z.json",
+  "site_observation": "2026-09-26: 拖动终点曾由桌面朝人一侧边缘支撑；首次 S1→H0 自动回位时用户报告发生碰撞，终点未按预期承托，需要重新标定。",
+  "route_blocked": true,
+  "route_block_reason": "首次 S1→H0 自动回位发生碰撞；禁止继续使用此 H0 目标及对应往返路线",
+  "edge_release_blocked": true,
+  "edge_release_block_reason": "单次 X 负向外移到位，但现场观察可能朝支架移动；坐标方向待重新示教确认",
+  "disable_verified": false,
+  "controller_route_verified": false
+}

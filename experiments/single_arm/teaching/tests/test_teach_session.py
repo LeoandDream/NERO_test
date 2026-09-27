@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT))
 
 from experiments.single_arm.teaching import teach_session  # noqa: E402
+from experiments.single_arm.teaching import return_session  # noqa: E402
 from experiments.single_arm.teaching.return_session import load_recording  # noqa: E402
 from experiments.single_arm.teaching.teach_session import (  # noqa: E402
     JOINT_LIMITS, load_config, plan_reverse_return, validate_flange_workspace,
@@ -29,6 +30,28 @@ class ReturnPlanningTests(unittest.TestCase):
         cls.config = load_config(ROOT / "experiments/single_arm/config/nero_teach.json")
         cls.home = cls.config["safe_start_joint_rad"]
 
+    def test_return_preflight_retries_only_transient_settling_and_records_states(self):
+        base = {"control_mode": 2, "arm_status": 0, "teach_status": 0,
+                "error_code": 0, "joint_rad": list(self.home),
+                "joint_variation_0_25s_rad": 0.0,
+                "drivers": [{"enabled": True, "undervoltage": False,
+                             "driver_error": False} for _ in range(7)]}
+        moving = dict(base, joint_variation_0_25s_rad=0.003)
+        metadata = {}
+        with patch("experiments.single_arm.lab.device.read_state",
+                   side_effect=[moving, base]) as observed:
+            self.assertIs(teach_session.return_preflight_snapshot(object(), metadata), base)
+        self.assertEqual(observed.call_count, 2)
+        self.assertEqual(metadata["return_preflight_states"], [moving, base])
+
+        bad_driver = dict(base, drivers=[dict(driver) for driver in base["drivers"]])
+        bad_driver["drivers"][3]["enabled"] = False
+        with patch("experiments.single_arm.lab.device.read_state",
+                   return_value=bad_driver) as observed:
+            with self.assertRaisesRegex(RuntimeError, "关节 4 失能"):
+                teach_session.return_preflight_snapshot(object(), {})
+        observed.assert_called_once()
+
     def test_default_start_is_measured_nonzero_pose_and_p4_is_archived(self):
         self.assertEqual(len(self.home), 7)
         self.assertGreater(math.dist(self.home, [0.0] * 7), 0.25)
@@ -40,6 +63,34 @@ class ReturnPlanningTests(unittest.TestCase):
         self.assertEqual(p4_config["safe_start_joint_rad"], measured)
         with self.assertRaises(ValueError):
             validate_joints([0.0] * 7, self.config["zero_exclusion_radius_rad"])
+
+    def test_drag_entry_rejects_first_feedback_jump(self):
+        class JumpedRobot:
+            def get_arm_status(self):
+                return SimpleNamespace(timestamp=time.time(), msg=SimpleNamespace(
+                    teach_status=1, arm_status=0, err_code=0))
+
+            def get_joint_angles(self):
+                jumped = list(self_home)
+                jumped[1] += 0.2
+                return SimpleNamespace(timestamp=time.time(), msg=jumped)
+
+        self_home = self.home
+        with self.assertRaisesRegex(RuntimeError, "首 0.5 秒关节位移异常"):
+            teach_session.wait_drag_entry_guarded(JumpedRobot(), self.home)
+
+    def test_zero_target_return_still_switches_controller_mode(self):
+        from experiments.single_arm.start_transfer import go_to_start
+
+        planned = {"controller_targets": 0, "route_joint_rad": [self.home]}
+        metadata = {}
+        robot = object()
+        with patch.object(go_to_start, "execute_route") as publish:
+            teach_session.execute_planned_return(
+                robot, self.config, planned, lambda: False, metadata)
+        publish.assert_called_once()
+        self.assertIs(publish.call_args.args[0], robot)
+        self.assertEqual(publish.call_args.args[2], [self.home])
 
     def test_reverse_route_preserves_excursion_and_step_limit(self):
         start = self.home
@@ -91,6 +142,13 @@ class ReturnPlanningTests(unittest.TestCase):
         path = ROOT / "experiments/single_arm/teaching/data/recordings/nero_session_20260923T151241Z.csv"
         with self.assertRaisesRegex(ValueError, "缺少退出拖动后的停稳轨迹"):
             load_recording(path, self.config)
+
+    def test_legacy_reverse_run_is_disabled_before_connect(self):
+        with patch.object(sys, "argv", ["return_session", "old.csv", "--run"]), patch.object(
+            return_session.AgxArmFactory, "create_arm"
+        ) as factory:
+            self.assertEqual(return_session.main(), 1)
+        factory.assert_not_called()
 
     def test_fk_workspace_checks_path_between_waypoints(self):
         config = dict(self.config)
@@ -214,7 +272,7 @@ class ReturnPlanningTests(unittest.TestCase):
 
         robot = JumpingRobot(self.home)
 
-        def apply_frame(_bus, can_id, data):
+        def apply_frame(_bus, can_id, data, **_kwargs):
             frames.append((can_id, data[2] if can_id == 0x150 else None))
             if can_id == 0x151:
                 robot.mode = 1
@@ -229,6 +287,8 @@ class ReturnPlanningTests(unittest.TestCase):
             args = SimpleNamespace(max_seconds=1.0, output=output)
             with patch.object(teach_session.can, "Bus", return_value=FakeBus()), patch.object(
                 teach_session, "send_frame", side_effect=apply_frame
+            ), patch.object(teach_session, "authorize_s1_drag_start", return_value=object()), patch.object(
+                teach_session, "wait_drag_entry_guarded", return_value=robot.get_arm_status()
             ):
                 with self.assertRaisesRegex(ValueError, "相邻关节反馈跳变过大"):
                     teach_session.run_session(robot, config, args)
@@ -274,7 +334,10 @@ class ReturnPlanningTests(unittest.TestCase):
                 foc = SimpleNamespace(
                     driver_enable_status=True, voltage_too_low=False, driver_error_status=False,
                 )
-                return SimpleNamespace(msg=SimpleNamespace(foc_status=foc), timestamp=time.time())
+                return SimpleNamespace(msg=SimpleNamespace(foc_status=foc, vol=23.8), timestamp=time.time())
+
+            def fk(self, _joints):
+                return [0.3, 0.0, 0.6, 0.0, 0.0, 0.0]
 
             def set_speed_percent(self, _percent):
                 pass
@@ -295,7 +358,7 @@ class ReturnPlanningTests(unittest.TestCase):
 
         robot = FakeRobot(self.home)
 
-        def apply_frame(_bus, can_id, data):
+        def apply_frame(_bus, can_id, data, **_kwargs):
             frames.append((can_id, data[2] if can_id == 0x150 else None))
             if can_id == 0x151:
                 robot.mode = 1
@@ -313,6 +376,11 @@ class ReturnPlanningTests(unittest.TestCase):
             args = SimpleNamespace(max_seconds=0.2, output=output)
             with patch.object(teach_session.can, "Bus", return_value=FakeBus()), patch.object(
                 teach_session, "send_frame", side_effect=apply_frame
+            ), patch.object(teach_session, "authorize_s1_drag_start", return_value=object()), patch.object(
+                teach_session, "wait_drag_entry_guarded", return_value=robot.get_arm_status()
+            ), patch(
+                "experiments.single_arm.start_transfer.go_to_start.send_frame",
+                side_effect=apply_frame,
             ):
                 teach_session.run_session(robot, config, args)
             with output.open(newline="") as stream:

@@ -1,0 +1,1 @@
+sample_index,captured_at_utc,elapsed_s,joint_feedback_unix_s,pose_feedback_unix_s,status_feedback_unix_s,control_mode,arm_status,teach_status,motion_status,joint_1_rad,joint_2_rad,joint_3_rad,joint_4_rad,joint_5_rad,joint_6_rad,joint_7_rad,x_m,y_m,z_m,roll_rad,pitch_rad,yaw_rad

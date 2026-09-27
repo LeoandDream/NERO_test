@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""限时 CAN 拖动示教，并沿已记录轨迹返回示教前的非零位置。"""
+"""限时 CAN 拖动示教；结束后从实时姿态重新规划到命名起点 S1。"""
 
 import argparse
 import csv
 from datetime import datetime, timezone
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -16,6 +17,7 @@ from pyAgxArm import AgxArmFactory, ArmModel, NeroFW, create_agx_arm_config
 from pyAgxArm.api.constants import ROBOT_JOINT_LIMIT_PRESET_RAD
 
 from experiments.single_arm.can_setup.can_drag_teach import MOUNT_CODES, fresh, send_frame, wait_status
+from experiments.single_arm.can_setup.drag_start_guard import authorize_s1_drag_start
 from experiments.single_arm.pose_recording.record_poses import FIELDNAMES, JOINT_COLUMNS, POSE_COLUMNS, STATUS_COLUMNS
 
 
@@ -176,9 +178,58 @@ def check_start(robot, config):
         raise RuntimeError(
             f"当前姿态偏离安全起点 {config['safe_start_name']}：最大关节偏差 "
             f"{max(errors):.3f} rad，阈值 {config['start_max_joint_error_rad']:.3f} rad。"
-            "不会自动从当前位置移动到起点。"
+            "不会自动从当前位置移动到起点。若当前是已标定、七轴使能的"
+            "桌边 H0，请先运行 python -m experiments.single_arm.lab.optimized_home "
+            "--direction start 做只读预检；确认路线后才加 --run。"
+            "其他姿态请按根 README 的状态分支选择入口。"
         )
     return current
+
+
+def wait_drag_entry_guarded(robot, start_joints, timeout=3.0, on_sample=None):
+    """Watch the mode switch before the operator starts guiding the arm."""
+    deadline = time.monotonic() + timeout
+    guard_until = time.monotonic() + 0.5
+    entered = False
+    while time.monotonic() < deadline:
+        status = robot.get_arm_status()
+        joints = robot.get_joint_angles()
+        if not fresh(status) or not fresh(joints):
+            raise RuntimeError("切入拖动时反馈中断；已请求退出拖动")
+        values = [float(value) for value in joints.msg]
+        if on_sample is not None:
+            on_sample({"at_unix_s": time.time(), "joint_rad": values,
+                       "control_mode": int(status.msg.ctrl_mode),
+                       "arm_status": int(status.msg.arm_status),
+                       "teach_status": int(status.msg.teach_status)})
+        if (len(values) != 7 or max(abs(a-b) for a, b in zip(values, start_joints)) > 0.08):
+            raise RuntimeError("切入拖动首 0.5 秒关节位移异常；已请求退出拖动")
+        if status.msg.err_code or int(status.msg.arm_status) not in (0, 11):
+            raise RuntimeError("切入拖动时设备状态异常；已请求退出拖动")
+        entered = entered or int(status.msg.teach_status) == 1
+        if entered and time.monotonic() >= guard_until:
+            return status
+        time.sleep(0.02)
+    raise RuntimeError("未确认进入拖动示教；已请求退出拖动")
+
+
+def execute_planned_return(robot, config, planned, abort_requested, metadata):
+    """Switch to CAN joint mode even when the S1 plan has no move_j targets."""
+    from experiments.single_arm.start_transfer.go_to_start import execute_route
+
+    execute_route(
+        robot, config, planned["route_joint_rad"],
+        abort_requested,
+        speed_percent=config["return_speed_percent"],
+        target_tolerance_rad=0.005,
+        waypoint_timeout_s=20, waypoint_max_timeout_s=120,
+        pause_on_stationary_timeout=True,
+        path_mode="joint_box", joint_box_margin_rad=0.03,
+        on_emergency_stop=lambda reason: metadata.update(
+            emergency_stop_requested=True,
+            emergency_stop_reason=reason,
+        ),
+    )
 
 
 def point_segment_distance(point, start, end):
@@ -282,7 +333,7 @@ def capture_settling(robot, output, recorded, start_mono, config, metadata, last
     stable_since = None
     stable_anchor = None
     count = 0
-    # 退出拖动并非瞬时停止。把这段真实位移继续加入原轨迹，倒放时才有连续起点。
+    # 退出拖动并非瞬时停止。保存完整反馈供分析；回位使用停稳后的实时姿态另行规划。
     with output.open("a", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=FIELDNAMES)
         while time.monotonic() < deadline:
@@ -315,6 +366,32 @@ def capture_settling(robot, output, recorded, start_mono, config, metadata, last
                 raise RuntimeError("退出示教后关节反馈中断，拒绝自动回位")
             time.sleep(1.0 / config["record_rate_hz"])
     raise TimeoutError("退出示教后 3 秒内未确认停稳，拒绝自动回位")
+
+
+def return_preflight_snapshot(robot, metadata):
+    """保存回位前的实时状态；仅对短暂未停稳做有限次只读复测。"""
+    from experiments.single_arm.lab.device import read_state
+    from experiments.single_arm.lab.planned_return import require_return_state
+
+    anchor = None
+    metadata["return_preflight_states"] = []
+    for _ in range(3):
+        state = read_state(robot)
+        metadata["return_preflight_states"].append(state)
+        if anchor is None:
+            anchor = state["joint_rad"]
+        elif max(abs(a-b) for a, b in zip(anchor, state["joint_rad"])) > 0.01:
+            raise RuntimeError("回位预检期间姿态变化超过 0.01 rad；未发送运动指令")
+        try:
+            require_return_state(state)
+        except RuntimeError:
+            # 只允许重试关节尚未停稳这一项；状态、驱动或模式异常立即退出。
+            if state["joint_variation_0_25s_rad"] <= 0.002:
+                raise
+            require_return_state(dict(state, joint_variation_0_25s_rad=0.0))
+            continue
+        return state
+    raise RuntimeError("退出拖动后 3 次只读复测仍未停稳；未发送运动指令")
 
 
 def stop_drag(bus, robot):
@@ -441,8 +518,9 @@ def return_to_start(robot, bus, recorded, original, config, abort_return,
 
 
 def run_session(robot, config, args):
-    """统筹限时拖动、记录、停稳、轨迹校验与可中止的原路回位。"""
+    """统筹限时拖动、记录、停稳与从实时状态规划的回位。"""
     original = check_start(robot, config)
+    authorization = authorize_s1_drag_start(robot, mount=config["mount"])
     print(f"起点 {config['safe_start_name']} 已核对；本次原位关节角：{original}", flush=True)
 
     output = args.output or Path("experiments/single_arm/teaching/data/recordings") / (
@@ -455,7 +533,12 @@ def run_session(robot, config, args):
     if metadata_path.exists():
         raise ValueError(f"元数据文件已存在：{metadata_path}")
     metadata = {
+        "schema_version": 2,
         "recording": str(output),
+        "recording_id": output.stem,
+        "config_sha256": hashlib.sha256(Path(getattr(args, "config", DEFAULT_CONFIG)).read_bytes()).hexdigest(),
+        "robot_model": "NERO",
+        "firmware_driver": "V121",
         "safe_start_name": config["safe_start_name"],
         "safe_start_source": config["safe_start_source"],
         "original_joint_rad": original,
@@ -466,7 +549,10 @@ def run_session(robot, config, args):
         "post_stop_samples": 0,
         "stop_reason": None,
         "return_completed": False,
+        "return_mode": "live_planned_move_j",
         "emergency_stop_requested": False,
+        "drag_transition": {"before_mount_joint_rad": original,
+                            "first_half_second_samples": []},
     }
     # 先写失败默认值；即使进程随后异常退出，也不会把不完整记录误判为成功。
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -489,7 +575,9 @@ def run_session(robot, config, args):
             mount_code = MOUNT_CODES[config["mount"]]
             baseline_status = healthy_preteach_status(robot)
             baseline_timestamp = float(baseline_status.timestamp)
-            send_frame(bus, 0x151, [1, 0xFF, 50, 0, 0, mount_code, 0, 0])
+            metadata["drag_transition"]["mount_frame_at_unix_s"] = time.time()
+            send_frame(bus, 0x151, [1, 0xFF, 50, 0, 0, mount_code, 0, 0],
+                       drag_authorization=authorization)
             ready = wait_status(
                 robot,
                 lambda item: fresh(item) and float(item.timestamp) > baseline_timestamp
@@ -499,6 +587,10 @@ def run_session(robot, config, args):
             )
             if ready is None:
                 raise RuntimeError("未确认正常 CAN 控制模式")
+            metadata["drag_transition"]["after_mount_joint_rad"] = joint_point(robot)
+            authorization = authorize_s1_drag_start(
+                robot, mount=config["mount"], require_can_mode=True)
+            print("安装方向帧后姿态保持 S1；切入拖动后请先扶稳并保持静止 0.5 秒。", flush=True)
 
             started = False
             stopped = False
@@ -508,14 +600,12 @@ def run_session(robot, config, args):
             start_mono = time.monotonic()
             try:
                 started = True
-                send_frame(bus, 0x150, [0, 0, 1, 0, 0, 0, 0, 0])
-                entered = wait_status(
-                    robot,
-                    lambda item: fresh(item) and int(item.msg.teach_status) == 1,
-                    timeout=3.0,
-                )
-                if entered is None:
-                    raise RuntimeError("未确认进入拖动示教")
+                metadata["drag_transition"]["drag_frame_at_unix_s"] = time.time()
+                send_frame(bus, 0x150, [0, 0, 1, 0, 0, 0, 0, 0],
+                           drag_authorization=authorization)
+                wait_drag_entry_guarded(
+                    robot, original,
+                    on_sample=metadata["drag_transition"]["first_half_second_samples"].append)
                 with output.open("x", newline="", encoding="utf-8") as stream:
                     writer = csv.DictWriter(stream, fieldnames=FIELDNAMES)
                     writer.writeheader()
@@ -583,29 +673,36 @@ def run_session(robot, config, args):
                 robot, output, recorded, start_mono, config, metadata, last_joint_ts
             )
 
-            preview_current = validate_joints(
-                joint_point(robot), config["zero_exclusion_radius_rad"]
+            # 录制文件只作为示教数据。以拖动退出并停稳后的实测状态重新生成
+            # 最多几个控制器关节目标，不使用记录点的反向序列。
+            from experiments.single_arm.lab.device import read_state
+            from experiments.single_arm.lab.planned_return import plan_from_snapshot
+
+            snapshot = return_preflight_snapshot(robot, metadata)
+            planned = plan_from_snapshot(
+                robot, snapshot, config,
+                float(config.get("planned_return_min_flange_x_m", 0.15)),
             )
-            preview_route = plan_reverse_return(recorded, preview_current, original, config)
-            validate_route_workspace(robot, preview_route, config)
-            print(f"已检查倒序路径：{len(preview_route) - 1} 个小步。", flush=True)
+            metadata["return_plan"] = planned
+            print(f"已从实时姿态规划 {planned['controller_targets']} 个回 S1 目标；"
+                  "示教轨迹只用于保存。", flush=True)
 
             phase = "return"
             for remaining in range(config["return_countdown_seconds"], 0, -1):
                 if abort_requested:
                     raise InterruptedError("已取消自动返回")
-                print(f"{remaining} 秒后沿原轨迹返回；按 Ctrl+C 取消。", flush=True)
+                print(f"{remaining} 秒后沿新规划回 S1；按 Ctrl+C 取消。", flush=True)
                 time.sleep(1)
             if abort_requested:
                 raise InterruptedError("已取消自动返回")
 
-            return_to_start(
-                robot, bus, recorded, original, config, lambda: abort_requested,
-                on_emergency_stop=lambda reason: metadata.update(
-                    emergency_stop_requested=True,
-                    emergency_stop_reason=reason,
-                ),
-            )
+            execute_planned_return(robot, config, planned, lambda: abort_requested, metadata)
+            final_state = read_state(robot)
+            final_error = max(abs(a-b) for a, b in zip(
+                final_state["joint_rad"], config["safe_start_joint_rad"]))
+            metadata["return_final_max_joint_error_rad"] = final_error
+            if not final_state["ready_for_motion"] or final_error > 0.005:
+                raise RuntimeError("新规划回位后 S1 关节角或控制器状态未验收")
             metadata["return_completed"] = True
             print(f"会话完成；原始示教文件：{output}", flush=True)
     except Exception as exc:
@@ -615,7 +712,12 @@ def run_session(robot, config, args):
         raise
     finally:
         metadata["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
+        if output.exists():
+            metadata["recording_sha256"] = hashlib.sha256(output.read_bytes()).hexdigest()
         metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if metadata["return_completed"] and metadata["stop_reason"] == "time_limit":
+            print(f"可回放记录 ID：{output.stem}", flush=True)
+            print(f"回放这份记录：python -m experiments.single_arm.lab.cli quick replay --recording {output}", flush=True)
         signal.signal(signal.SIGINT, prior_int)
         signal.signal(signal.SIGTERM, prior_term)
 
@@ -624,7 +726,7 @@ def main():
     """默认只读预检；只有显式 --run 才启动有限时长的拖动会话。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("--run", action="store_true", help="启动限时示教及自动原路返回；默认只读检查")
+    parser.add_argument("--run", action="store_true", help="启动限时示教及实时规划回位；默认只读检查")
     parser.add_argument("--max-seconds", type=float, help="覆盖配置的最长示教秒数")
     parser.add_argument("--output", type=Path, help="本次示教 CSV 路径")
     args = parser.parse_args()
@@ -646,7 +748,7 @@ def main():
                 print(f"只读检查通过：当前位置接近 {config['safe_start_name']}。")
                 print(f"最长示教时间：{args.max_seconds:g} 秒；返回速度：{config['return_speed_percent']}%。")
                 print("当前关节角：", current)
-                print("运行时加 --run；示教结束将沿本次记录的轨迹返回当前起点。")
+                print("运行时加 --run；示教结束将从实时姿态重新规划回 S1。")
         finally:
             robot.disconnect()
     except (OSError, ValueError, RuntimeError, TimeoutError, InterruptedError, can.CanError) as exc:

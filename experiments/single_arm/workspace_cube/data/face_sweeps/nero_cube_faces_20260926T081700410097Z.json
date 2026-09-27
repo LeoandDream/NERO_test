@@ -1,0 +1,237 @@
+{
+  "schema_version": 2,
+  "kind": "six_face_guided_drag_sweep",
+  "started_at_utc": "2026-09-26T08:17:00.410124+00:00",
+  "completed": false,
+  "session_path": "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z",
+  "config_path": "experiments/single_arm/config/nero_teach.json",
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "mount": "left",
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center",
+  "tool_offset_m": [
+    0,
+    0,
+    0
+  ],
+  "seconds_per_face": 12,
+  "rate_hz": 20,
+  "drag_start_check": "can_drag_teach --start 内部核对实时状态和七轴驱动",
+  "faces": {
+    "+X": {
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081720444755Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "ae32a93d814abfab0a2e1e2eefd8317a5650686857d105626634a701f7e09453"
+      },
+      "selected_dwell_count": 3,
+      "source_rows": 239,
+      "sample_paths": [
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081732773386Z.json",
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081732773513Z.json",
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081732773578Z.json"
+      ]
+    },
+    "-X": {
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081745051108Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "c2a6aa443785797dcddc5c164538dffd5932398d858ea2e5570a4f34f1285839"
+      },
+      "selected_dwell_count": 3,
+      "source_rows": 239,
+      "sample_paths": [
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081757372352Z.json",
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081757372480Z.json",
+        "experiments/single_arm/workspace_cube/data/sessions/nero_cube_20260926T081700409648Z/sample_20260926T081757372548Z.json"
+      ]
+    },
+    "+Y": {
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081806472041Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "21e0f4acbc2d042879610ab77b9f8b270fbc8c57c018205a7dacf6819ddb1d27"
+      },
+      "selected_dwell_count": 0,
+      "source_rows": 239,
+      "sample_paths": []
+    }
+  },
+  "face_attempts": [
+    {
+      "face": "+X",
+      "started_at_utc": "2026-09-26T08:17:00.410320+00:00",
+      "start": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--start",
+          "--mount",
+          "left",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： CAN_CTRL(0x1)\n机械臂状态： NORMAL(0x0)\n示教状态： DISABLED(0x0)\n关节错误码：0x0000\n安装方向已按 left (0x02) 下发；发送拖动示教开始指令。\n已进入拖动示教，关节角和法兰位姿反馈正常。\n结束时执行：python -m experiments.single_arm.can_setup.can_drag_teach --stop\n此单次命令不自动结束或回位；限时会话使用 python -m experiments.single_arm.teaching.teach_session --run。\n",
+        "stderr": ""
+      },
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081720444755Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "ae32a93d814abfab0a2e1e2eefd8317a5650686857d105626634a701f7e09453"
+      },
+      "stop": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--stop",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： START_RECORDING(0x1)\n关节错误码：0x0000\n结束指令已发送；示教状态： DISABLED(0x0)\n",
+        "stderr": ""
+      },
+      "finished_at_utc": "2026-09-26T08:17:32.771695+00:00"
+    },
+    {
+      "face": "-X",
+      "started_at_utc": "2026-09-26T08:17:32.775606+00:00",
+      "start": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--start",
+          "--mount",
+          "left",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： DISABLED(0x0)\n关节错误码：0x0000\n安装方向已按 left (0x02) 下发；发送拖动示教开始指令。\n已进入拖动示教，关节角和法兰位姿反馈正常。\n结束时执行：python -m experiments.single_arm.can_setup.can_drag_teach --stop\n此单次命令不自动结束或回位；限时会话使用 python -m experiments.single_arm.teaching.teach_session --run。\n",
+        "stderr": ""
+      },
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081745051108Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "c2a6aa443785797dcddc5c164538dffd5932398d858ea2e5570a4f34f1285839"
+      },
+      "stop": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--stop",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： START_RECORDING(0x1)\n关节错误码：0x0000\n结束指令已发送；示教状态： DISABLED(0x0)\n",
+        "stderr": ""
+      },
+      "finished_at_utc": "2026-09-26T08:17:57.370440+00:00"
+    },
+    {
+      "face": "+Y",
+      "started_at_utc": "2026-09-26T08:17:57.374215+00:00",
+      "start": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--start",
+          "--mount",
+          "left",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： DISABLED(0x0)\n关节错误码：0x0000\n安装方向已按 left (0x02) 下发；发送拖动示教开始指令。\n已进入拖动示教，关节角和法兰位姿反馈正常。\n结束时执行：python -m experiments.single_arm.can_setup.can_drag_teach --stop\n此单次命令不自动结束或回位；限时会话使用 python -m experiments.single_arm.teaching.teach_session --run。\n",
+        "stderr": ""
+      },
+      "recording": {
+        "recording_path": "experiments/single_arm/pose_recording/data/recordings/nero_poses_lab_20260926T081806472041Z.csv",
+        "samples": 239,
+        "duration_s": 12,
+        "rate_hz": 20,
+        "sha256": "21e0f4acbc2d042879610ab77b9f8b270fbc8c57c018205a7dacf6819ddb1d27"
+      },
+      "stop": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--stop",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： START_RECORDING(0x1)\n关节错误码：0x0000\n结束指令已发送；示教状态： DISABLED(0x0)\n",
+        "stderr": ""
+      },
+      "finished_at_utc": "2026-09-26T08:18:18.792486+00:00"
+    },
+    {
+      "face": "-Y",
+      "started_at_utc": "2026-09-26T08:18:18.796324+00:00",
+      "start": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--start",
+          "--mount",
+          "left",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 2,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： DISABLED(0x0)\n关节错误码：0x0000\n关节驱动反馈不完整；未进入拖动示教。\n",
+        "stderr": ""
+      },
+      "stop": {
+        "command": [
+          "/home/leo/miniconda3/envs/nero-py310/bin/python",
+          "-m",
+          "experiments.single_arm.can_setup.can_drag_teach",
+          "--stop",
+          "--channel",
+          "can0"
+        ],
+        "returncode": 0,
+        "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： DISABLED(0x0)\n关节错误码：0x0000\n结束指令已发送；示教状态： DISABLED(0x0)\n",
+        "stderr": ""
+      },
+      "finished_at_utc": "2026-09-26T08:18:23.249743+00:00"
+    }
+  ],
+  "continued_session": false,
+  "existing_sample_counts": {
+    "+X": 0,
+    "-X": 0,
+    "+Y": 0,
+    "-Y": 0,
+    "+Z": 0,
+    "-Z": 0
+  },
+  "reused_faces": [],
+  "automatic_return": false,
+  "geometry_valid": false,
+  "motion_region_verified": false,
+  "error_type": "RuntimeError",
+  "error": "-Y 面 CAN 拖动开始命令未确认",
+  "finished_at_utc": "2026-09-26T08:18:23.250047+00:00"
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "status": "EXTREMA_CANDIDATE_ONLY",
+  "geometry_valid": false,
+  "motion_region_verified": false,
+  "six_faces_sampled": false,
+  "coordinate_frame": "robot_base",
+  "reference_point": "flange_center",
+  "source_map_csv": "experiments/single_arm/reachability/data/maps/nero_workspace_20260925T164948469376Z.csv",
+  "source_map_sha256": "0c61522fd30e72fa30f5e593ee8937938da73776ec0d678ea16add6fce8f3f44",
+  "evidence_level": "new_full_continuous_path_sample",
+  "sample_count": 9445,
+  "axis_ranges_m": {
+    "x": [
+      0.243192,
+      0.44048099999999996
+    ],
+    "y": [
+      -0.13394799999999998,
+      0.006213
+    ],
+    "z": [
+      0.43459,
+      0.6105229999999999
+    ]
+  },
+  "axis_spans_m": {
+    "x": 0.19728899999999996,
+    "y": 0.14016099999999998,
+    "z": 0.17593299999999995
+  },
+  "axis_extrema": {
+    "x": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.243192,
+          -0.111664,
+          0.5904389999999999
+        ],
+        "joint_rad": [
+          0.4860741966804208,
+          -0.23684117949563052,
+          -1.2248197091720607,
+          -0.9175544943584589,
+          -0.05513495107050088,
+          0.20554742600737222,
+          -0.4680100389222795
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "2308",
+        "time_utc": "2026-09-25T16:34:06.134488+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.44048099999999996,
+          -0.064402,
+          0.466524
+        ],
+        "joint_rad": [
+          0.24064599726497815,
+          -0.8298691527382639,
+          -1.224767349294501,
+          -0.6688625292417869,
+          -0.05396558047166467,
+          0.20561723917745198,
+          -0.46787041258212
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "6837",
+        "time_utc": "2026-09-25T16:37:52.505430+00:00"
+      }
+    },
+    "y": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.28076599999999996,
+          -0.13394799999999998,
+          0.5734469999999999
+        ],
+        "joint_rad": [
+          0.24399702942880727,
+          -0.3950203696038766,
+          -1.19113485460857,
+          -0.8400444222773907,
+          -0.054925511560261556,
+          0.20554742600737222,
+          -0.46811475867739916
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "1895",
+        "time_utc": "2026-09-25T16:33:45.484533+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.358431,
+          0.006213,
+          0.548303
+        ],
+        "joint_rad": [
+          0.5142089042225694,
+          -0.49996701752629563,
+          -1.0134428834630274,
+          -0.7646287452987158,
+          -0.1844638486432807,
+          0.20565214576249183,
+          -0.4691968628136356
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "8491",
+        "time_utc": "2026-09-25T16:39:15.205844+00:00"
+      }
+    },
+    "z": {
+      "min": {
+        "flange_xyz_base_m": [
+          0.43232099999999996,
+          -0.09242099999999999,
+          0.43459
+        ],
+        "joint_rad": [
+          0.26804766652128914,
+          -0.8238826734039232,
+          -1.2249069756346604,
+          -0.863676180349394,
+          -0.05398303376418461,
+          0.20561723917745198,
+          -0.4676958796569205
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "2669",
+        "time_utc": "2026-09-25T16:34:24.184412+00:00"
+      },
+      "max": {
+        "flange_xyz_base_m": [
+          0.266947,
+          -0.03496,
+          0.6105229999999999
+        ],
+        "joint_rad": [
+          0.6147398691374428,
+          -0.2899690019263379,
+          -1.161342084277027,
+          -0.7740535232594852,
+          -0.1802401518534544,
+          0.2056346924699719,
+          -0.4689350634258365
+        ],
+        "source": "experiments/single_arm/continuous_replay/data/runs/nero_continuous_20260925T163204971088Z.json",
+        "source_index": "1176",
+        "time_utc": "2026-09-25T16:33:09.536069+00:00"
+      }
+    }
+  },
+  "candidate_center_base_m": [
+    0.3418365,
+    -0.0638675,
+    0.5225565
+  ],
+  "candidate_side_length_m": 0.12016099999999998,
+  "inset_from_narrowest_extrema_m": 0.01,
+  "candidate_face_centers": {
+    "+X": {
+      "candidate_center_xyz_base_m": [
+        0.40191699999999997,
+        -0.0638675,
+        0.5225565
+      ],
+      "nearest_recorded_distance_m": 0.004040110332651788,
+      "plane_in_base": "Y-Z"
+    },
+    "-X": {
+      "candidate_center_xyz_base_m": [
+        0.281756,
+        -0.0638675,
+        0.5225565
+      ],
+      "nearest_recorded_distance_m": 0.040067296982701464,
+      "plane_in_base": "Y-Z"
+    },
+    "+Y": {
+      "candidate_center_xyz_base_m": [
+        0.3418365,
+        -0.0037870000000000056,
+        0.5225565
+      ],
+      "nearest_recorded_distance_m": 0.027939195129781363,
+      "plane_in_base": "X-Z"
+    },
+    "-Y": {
+      "candidate_center_xyz_base_m": [
+        0.3418365,
+        -0.12394799999999997,
+        0.5225565
+      ],
+      "nearest_recorded_distance_m": 0.024711791041929713,
+      "plane_in_base": "X-Z"
+    },
+    "+Z": {
+      "candidate_center_xyz_base_m": [
+        0.3418365,
+        -0.0638675,
+        0.582637
+      ],
+      "nearest_recorded_distance_m": 0.00781271646100125,
+      "plane_in_base": "X-Y"
+    },
+    "-Z": {
+      "candidate_center_xyz_base_m": [
+        0.3418365,
+        -0.0638675,
+        0.462476
+      ],
+      "nearest_recorded_distance_m": 0.04666187296390919,
+      "plane_in_base": "X-Y"
+    }
+  },
+  "interpretation": "六个单轴极值来自已记录轨迹；未证明立方体六面或内部、角点、连杆和线缆可达/无碰撞。"
+}

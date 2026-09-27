@@ -1,12 +1,16 @@
 # 单臂实验
 
+第一次操作请按[根 README 的完整命令行流程](../../README.md)依次进行。下面是实验目录索引，旧报告中的日期计划、被锁定的拖动入口及过时的 H0 路线都不作为当前操作步骤。
+
 当前设备为 Nero，左侧安装，CAN 通道 `can0`，固件 1.21。所有命令均从工作区根目录执行，并先激活 `nero-py310`。共同配置在 [config/nero_teach.json](config/nero_teach.json)；S1 是现场确认并经回位验证的非零起点。`flange_workspace_m` 目前为 `null`，历史采样范围不能当成自动碰撞保护。
+
+从[统一实验接口](lab/README.md)进入新实验：同一 `LabAPI` 与 `lab.cli` 提供只读状态、命名起点、限时示教、完整记录发现、显式快速回放、六面几何标定、探测和地图读取。各旧实验入口仍保留；历史记录与停用计划的使用限制见各目录报告。
 
 | 顺序 | 实验 | 用途 | 报告 |
 | --- | --- | --- | --- |
 | 1 | [CAN 连通与状态](can_setup/README.md) | 查询固件、检查驱动、按需使能 | [报告](can_setup/report.md) |
 | 2 | [位姿采集](pose_recording/README.md) | 连续记录关节与法兰、提取停留点 | [报告](pose_recording/report.md) |
-| 3 | [拖动示教](teaching/README.md) | 限时记录、停稳补录与原路回位 | [报告](teaching/report.md) |
+| 3 | [拖动示教](teaching/README.md) | 限时记录、停稳补录与实时规划回 S1 | [报告](teaching/report.md) |
 | 4 | [移动到 S1](start_transfer/README.md) | 从实时姿态规划小步关节路线 | [报告](start_transfer/report.md) |
 | 5 | [轨迹回放](replay/README.md) | 回放完整示教记录并返回 | [报告](replay/report.md) |
 | 6 | [法兰 X 方向运动](cartesian_x/README.md) | 用数值逆解自主计算轨迹 | [报告](cartesian_x/report.md) |

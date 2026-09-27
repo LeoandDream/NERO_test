@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-"""从一次未完成回位的示教记录末端，受控返回该次示教前的关节位置。"""
+"""历史示教记录的只读倒序路线检查；新的位置回位用 lab.cli return。"""
 
 import argparse
 import csv
-from datetime import datetime, timezone
 import json
 from pathlib import Path
-import signal
 import sys
-import time
 
 import can
 from pyAgxArm import AgxArmFactory, ArmModel, NeroFW, create_agx_arm_config
@@ -17,7 +14,7 @@ from experiments.single_arm.can_setup.can_drag_teach import fresh, wait_status
 from experiments.single_arm.pose_recording.record_poses import JOINT_COLUMNS
 from experiments.single_arm.teaching.teach_session import (
     CAN_IDLE_TEACH_STATUSES, DEFAULT_CONFIG, check_drivers, healthy_status,
-    joint_point, load_config, plan_reverse_return, return_to_start, validate_joints,
+    joint_point, load_config, plan_reverse_return, validate_joints,
     validate_route_workspace,
 )
 
@@ -70,12 +67,17 @@ def load_recording(path, config, allow_completed=False):
 
 
 def main():
-    """默认只读验证中断记录；显式 --run 才从记录末端执行倒序回位。"""
+    """仅检查历史记录与当前端点；不再提供倒序运动入口。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recording", type=Path, help="本次未完成回位的示教 CSV")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("--run", action="store_true", help="实际发送回位指令；默认仅检查")
+    parser.add_argument("--run", action="store_true", help="已停用；会拒绝并提示新入口")
     args = parser.parse_args()
+
+    if args.run:
+        print("倒序运动入口已停用。请从实时姿态运行 lab.cli return plan/run。",
+              file=sys.stderr, flush=True)
+        return 1
 
     try:
         config = load_config(args.config)
@@ -93,51 +95,8 @@ def main():
             route = plan_reverse_return(recorded, current, original, config)
             validate_route_workspace(robot, route, config)
             print(f"起点 {config['safe_start_name']}；当前与记录末端吻合；倒序路径 {len(route)-1} 个小步。")
-            if not args.run:
-                print("只读检查完成。加 --run 后会等待 5 秒，再沿轨迹返回示教前位置。")
-                return 0
-
-            aborted = False
-
-            def on_signal(_signum, _frame):
-                nonlocal aborted
-                aborted = True
-
-            previous_int = signal.signal(signal.SIGINT, on_signal)
-            previous_term = signal.signal(signal.SIGTERM, on_signal)
-            attempt = {
-                "started_at_utc": datetime.now(timezone.utc).isoformat(),
-                "start_joint_rad": current,
-                "planned_waypoints": len(route) - 1,
-                "completed": False,
-            }
-            try:
-                for remaining in range(config["return_countdown_seconds"], 0, -1):
-                    if aborted:
-                        raise InterruptedError("已取消回位")
-                    print(f"{remaining} 秒后回位；按 Ctrl+C 取消。", flush=True)
-                    time.sleep(1)
-                if aborted:
-                    raise InterruptedError("已取消回位")
-                with can.Bus(channel=config["channel"], interface="socketcan", local_loopback=True) as bus:
-                    return_to_start(robot, bus, recorded, original, config, lambda: aborted)
-                attempt["completed"] = True
-                metadata["return_completed"] = True
-                if "error" in metadata:
-                    metadata["initial_return_error"] = metadata.pop("error")
-                metadata["resumed_return_at_utc"] = datetime.now(timezone.utc).isoformat()
-                print("已回到本次示教前位置。", flush=True)
-            except Exception as exc:
-                attempt["error"] = str(exc)
-                raise
-            finally:
-                attempt["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
-                metadata.setdefault("resume_attempts", []).append(attempt)
-                metadata_path.write_text(
-                    json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-                )
-                signal.signal(signal.SIGINT, previous_int)
-                signal.signal(signal.SIGTERM, previous_term)
+            print("只读检查完成。倒序运动入口已停用；回位请从实时姿态重新规划。")
+            return 0
         finally:
             robot.disconnect()
     except (OSError, ValueError, RuntimeError, TimeoutError, InterruptedError, can.CanError) as exc:

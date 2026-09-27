@@ -1,0 +1,167 @@
+{
+  "kind": "finish_idle_teaching_mode_at_s1",
+  "started_at_utc": "2026-09-26T14:13:44.860654+00:00",
+  "completed": true,
+  "move_j_targets_published": 0,
+  "start_state": {
+    "captured_at_utc": "2026-09-26T14:13:45.165467+00:00",
+    "control_mode": 2,
+    "arm_status": 0,
+    "teach_status": 0,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.017383479349863524,
+      -0.5787511799613198,
+      0.02796017461694916,
+      -0.29955085951978677,
+      0.011239920382843483,
+      0.20539034637469272,
+      -0.47343801289598186
+    ],
+    "flange_pose_m_rad": [
+      0.382044,
+      -0.014079,
+      0.5724199999999999,
+      1.4613641826948522,
+      -0.21149899875667286,
+      0.22954570322229423
+    ],
+    "joint_variation_0_25s_rad": 0.0,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.700000000000003
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": false,
+    "reasons": [
+      "控制器未处于 CAN 控制模式"
+    ]
+  },
+  "final_state": {
+    "captured_at_utc": "2026-09-26T14:13:45.467640+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.017383479349863524,
+      -0.5787511799613198,
+      0.02796017461694916,
+      -0.29955085951978677,
+      0.011239920382843483,
+      0.20539034637469272,
+      -0.47343801289598186
+    ],
+    "flange_pose_m_rad": [
+      0.382044,
+      -0.014079,
+      0.5724199999999999,
+      1.4613641826948522,
+      -0.21149899875667286,
+      0.22954570322229423
+    ],
+    "joint_variation_0_25s_rad": 0.0,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.700000000000003
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "finished_at_utc": "2026-09-26T14:13:45.518704+00:00"
+}

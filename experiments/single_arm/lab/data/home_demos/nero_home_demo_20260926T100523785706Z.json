@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "kind": "hand_guided_supported_home_demo",
+  "started_at_utc": "2026-09-26T10:05:23.785763+00:00",
+  "completed": false,
+  "config_path": "experiments/single_arm/config/nero_teach.json",
+  "config_sha256": "1881e2000ba3df60df1d11ad509408038310e652591aaaeac59d7f34efb773d3",
+  "mount": "left",
+  "channel": "can0",
+  "initial_state": {
+    "captured_at_utc": "2026-09-26T10:05:23.784044+00:00",
+    "control_mode": 1,
+    "arm_status": 0,
+    "teach_status": 6,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.22867303859629706,
+      0.3310889591033243,
+      -0.02816961412718848,
+      0.005480333851262195,
+      1.643384570385341,
+      0.13142329267517303,
+      0.5926614540997145
+    ],
+    "flange_pose_m_rad": [
+      -0.164842,
+      -0.037261999999999997,
+      0.6966049999999999,
+      -0.8232194482881654,
+      -0.8458912752715718,
+      -1.899406918360389
+    ],
+    "joint_variation_0_25s_rad": 0.0,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.8
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.5
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": true,
+    "reasons": []
+  },
+  "duration_s": 10.0,
+  "rate_hz": 20.0,
+  "physical_support_confirmed": false,
+  "automatic_return": false,
+  "automatic_disable": false,
+  "route_approved_for_motion": false,
+  "start": {
+    "command": [
+      "/home/leo/miniconda3/envs/nero-py310/bin/python",
+      "-m",
+      "experiments.single_arm.can_setup.can_drag_teach",
+      "--start",
+      "--mount",
+      "left",
+      "--channel",
+      "can0"
+    ],
+    "returncode": 0,
+    "stdout": "控制模式： CAN_CTRL(0x1)\n机械臂状态： NORMAL(0x0)\n示教状态： TERMINATE_EXECUTION(0x6)\n关节错误码：0x0000\n安装方向已按 left (0x02) 下发；发送拖动示教开始指令。\n已进入拖动示教，关节角和法兰位姿反馈正常。\n结束时执行：python -m experiments.single_arm.can_setup.can_drag_teach --stop\n此单次命令不自动结束或回位；限时会话使用 python -m experiments.single_arm.teaching.teach_session --run。\n",
+    "stderr": ""
+  },
+  "recording": {
+    "recording_path": "experiments/single_arm/lab/data/home_demos/recordings/nero_poses_lab_20260926T100524394207Z.csv",
+    "samples": 199,
+    "duration_s": 10.0,
+    "rate_hz": 20.0,
+    "sha256": "ec9c49293097321da9c192a44b83ca67520244da2d79f6bc35a97210cc2538a3"
+  },
+  "stop": {
+    "command": [
+      "/home/leo/miniconda3/envs/nero-py310/bin/python",
+      "-m",
+      "experiments.single_arm.can_setup.can_drag_teach",
+      "--stop",
+      "--channel",
+      "can0"
+    ],
+    "returncode": 0,
+    "stdout": "控制模式： TEACHING_MODE(0x2)\n机械臂状态： NORMAL(0x0)\n示教状态： START_RECORDING(0x1)\n关节错误码：0x0000\n结束指令已发送；示教状态： STOP_RECORDING(0x2)\n",
+    "stderr": ""
+  },
+  "raw_recording_path": "experiments/single_arm/lab/data/home_demos/recordings/nero_poses_lab_20260926T100524394207Z.csv",
+  "trajectory_summary": {
+    "samples": 199,
+    "elapsed_s": 9.95,
+    "start_joint_rad": [
+      0.037803831598197175,
+      -0.9242740119786371,
+      -0.028082347664588763,
+      -0.4686383574529974,
+      1.6437336362357398,
+      0.13138838609013315,
+      0.5907415919225207
+    ],
+    "end_joint_rad": [
+      0.4295255289158045,
+      0.18811158677994885,
+      8.726646259971648e-05,
+      0.11383037381507018,
+      1.5598705656774121,
+      0.13185962498817158,
+      1.370624514883667
+    ],
+    "start_flange_xyz_m": [
+      0.503,
+      0.029148,
+      0.389762
+    ],
+    "end_flange_xyz_m": [
+      -0.10621499999999999,
+      -0.048934,
+      0.7101919999999999
+    ],
+    "max_joint_excursion_rad": 1.2316090399623185,
+    "max_flange_excursion_m": 0.7405518931486165,
+    "final_joint_variation_last_1s_rad": 0.2888694444975815,
+    "final_flange_variation_last_1s_m": 0.04278406816795241,
+    "demonstrated_motion": true,
+    "endpoint_stable": false,
+    "endpoint_shift_after_stop_rad": 0.000872664625997166
+  },
+  "post_stop_state": {
+    "captured_at_utc": "2026-09-26T10:05:35.004684+00:00",
+    "control_mode": 2,
+    "arm_status": 0,
+    "teach_status": 0,
+    "motion_status": 0,
+    "error_code": 0,
+    "joint_rad": [
+      0.42938590257564496,
+      0.18872245201814686,
+      0.0,
+      0.11470303844106734,
+      1.559573859704573,
+      0.13185962498817158,
+      1.3705023418360274
+    ],
+    "flange_pose_m_rad": [
+      -0.10683799999999999,
+      -0.049206,
+      0.7100489999999999,
+      -1.1278143093462158,
+      -0.17802358370342164,
+      -1.2374733462490195
+    ],
+    "joint_variation_0_25s_rad": 0.0011344640137962991,
+    "drivers": [
+      {
+        "joint": 1,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 2,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.8
+      },
+      {
+        "joint": 3,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 4,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      },
+      {
+        "joint": 5,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.400000000000002
+      },
+      {
+        "joint": 6,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.6
+      },
+      {
+        "joint": 7,
+        "enabled": true,
+        "undervoltage": false,
+        "driver_error": false,
+        "voltage_v": 23.900000000000002
+      }
+    ],
+    "ready_for_motion": false,
+    "reasons": [
+      "控制器未处于 CAN 控制模式"
+    ]
+  },
+  "error_type": "RuntimeError",
+  "error": "录制结束复核未通过：录制终点仍在移动；须在回零位停稳至少 2 秒",
+  "finished_at_utc": "2026-09-26T10:05:35.005385+00:00"
+}
