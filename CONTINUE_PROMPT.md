@@ -1,3 +1,5 @@
+> **历史续接材料（2026-09-26）**：以下正文按当时会话保留，含已过期的“最新状态”和设备姿态，不能当作当前许可。当前项目入口为 [CURRENT_STATE.md](CURRENT_STATE.md)；正式契约、实验记录和测试等级分别见 [PROJECT_DESIGN.md](PROJECT_DESIGN.md)、[实验规范](docs/experiment_run_standard.md)、[测试审计](docs/test_tiers_audit.md)。后续不再向本文件追加检查点。
+
 # 当前检查点：统一接口、示教立方体与初始化（2026-09-26）
 
 ## 08:21Z 最新选择与检查点（以本节为准）

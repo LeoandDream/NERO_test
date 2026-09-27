@@ -14,17 +14,9 @@
 
 详细依据和预设验收门槛见 [plan.md](plan.md)。这套检查无法证明连杆、线缆和桌面之间没有碰撞；实机运行前须现场核对整片活动范围。
 
-## 离线步骤
+## 历史离线规划入口
 
-在仓库根目录、`nero-py310` 环境中：
-
-```bash
-python -m unittest discover -s experiments/single_arm/continuous_replay/tests -v
-python -m experiments.single_arm.continuous_replay.continuous_session --source-until-s 1.8
-python -m experiments.single_arm.continuous_replay.continuous_session
-```
-
-以上步骤不连接 CAN，分别生成 1.8 秒源前缀和完整记录的 JSON 计划。文件名自动带 UTC 时间戳。`--plan <计划路径>` 会重新计算全部目标并复核校验和，也不会运动。
+此前使用 `continuous_replay/tests` 的 `unittest discover` 和 `continuous_session` 的 1.8 秒前缀/完整源规划生成计划。它们会导入项目与 SDK 代码；本轮尚未核定整个导入、构造和异常链的零设备副作用，**不能仅凭本节当作已审定的离线命令运行**。先按[测试分级与静态候选清单](../../../docs/test_tiers_audit.md)审定选中入口，再在相应授权范围内运行并记录解释器、依赖与结果。历史计划文件名带 UTC 时间戳；`--plan <计划路径>` 的历史说明也不替代执行前的调用链审核。
 
 ## 分级实机步骤
 

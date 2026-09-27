@@ -104,10 +104,6 @@ planned = lab.plan_return(min_flange_x_m=0.15)
 
 当前这次从非命名低位回 S1 的现场辅助位于 `lab.site_recovery`，与通用 `starts` API **分开**。它依据当前实时姿态、左侧装与“基座 X 正向离桌”的现场条件，先只读生成四段单目标计划；每段需再次复核实际起点、桌面/线缆范围，并单独显式运行。计划只适用于生成时的姿态；任何接触、反馈偏离或停机后都停止，不跨段，不自动继续。当前[计划和验收状态](report.md)不能当作未来位置的模板。
 
-离线验证：
-
-```bash
-python -m unittest discover -s experiments/single_arm -p 'test_*.py' -q
-```
+整套 `unittest discover` 的设备副作用仍待核，不应作为无条件离线验证入口。选定测试前看[逐文件静态审计](../../../docs/test_tiers_audit.md)，实际运行结果须另行记录。
 
 本接口新增功能的实机状态和待办见[报告](report.md)。

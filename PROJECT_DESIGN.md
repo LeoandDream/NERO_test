@@ -1,0 +1,99 @@
+# NERO 项目顶层设计
+
+状态：Step 1B 已批准的设计契约。本文是后续正式 Runtime 的设计依据，**不是已实现能力清单或现场运行许可**。当前代码事实以 `main@060d3491fd195542f8be0f20d6304f66ba66e7ed` 的静态阅读和 [PROJECT_MAP.md](PROJECT_MAP.md) 为基线；环境、设备与路线仍须逐次核验。操作取舍 D1～D8 已由本轮任务批准。
+
+## 使命与阶段
+
+本项目在官方 NERO SDK 与真实科研实验之间建立安全、清晰、易用、可扩展的 Runtime，复用官方驱动与已验证的项目能力，不重新实现官方 Driver。长期应用方向是单臂 NERO → 双臂 NERO → DH116 → 数据采集 → VLA；v1 只聚焦**单臂安全运行基础设施**。历史需求中的初始化、示教、复位、遥操作及 VLA 说明长期动机，不表示这些能力现在都已实现。
+
+目前仓库首先是实验探索与实机验证仓库。`experiments/single_arm/` 已有状态、S1 示教、封存回放、专用 H0 路线等有价值的实现和失败证据；这些入口尚不是新的正式 Runtime。改造遵循“验证 → 提取 → 晋升 → 再迁移”，保留原始数据与失败报告。当前代码能运行，只说明当前行为；不能自动证明其职责边界或安全策略适合作为正式架构。
+
+`TASK_PROMPT.md`、`CONTINUE_PROMPT.md`、旧 README、历史报告与实验数据解释当时的工作和限制，不能覆盖本文及已批准的 D1～D8。历史事故、锁定状态和原始证据仍有效，不能因文档优先级变化而删除或解锁。当前源码与本文不同之处是**待实施的差距**，不得仅凭本文声称已上线。
+
+Step 2B 的项目状态入口为 [CURRENT_STATE.md](CURRENT_STATE.md)；新 Experiment/Run、证据和原件规则见 [实验规范](docs/experiment_run_standard.md)，验证副作用分级与当前候选清单见 [测试审计](docs/test_tiers_audit.md)。这些规则细化记录与交付，不改变本文件的操作契约、环境许可或能力晋升门槛；旧 `CONTINUE_PROMPT.md` 只保留历史检查点。
+
+## 使用者与核心概念
+
+| 使用者 | 目标与边界 |
+| --- | --- |
+| Experiment Developer | 研究、诊断和验证新能力；实验成功须经过晋升，不自动成为普通入口。 |
+| Public Python API Consumer | 从研究代码调用稳定操作与结构化结果；不直接拼底层控制帧或重写许可。 |
+| Quick Experiment User | 用少量命令完成已晋升的现场操作，看到具体风险、确认、实时结果与报告。 |
+| Environment / Calibration Developer | 维护安装、工具、点位、路线、空间候选及证据；不能用几何候选直接授予运动许可。 |
+| Future Integration Consumer | 后续双臂、DH116、LeRobot、VLA 等显式指定设备与环境，复用已晋升的能力；本轮不冻结这些系统的接口。 |
+
+| 概念 | 含义 |
+| --- | --- |
+| Capability | 在限定状态和环境下可执行的基础能力，如拖动模式、运动执行、软件失能。设计存在不等于已上线。 |
+| Workflow | 组合能力完成用户目标，拥有阶段、提交点、完成、取消与故障语义，如 start、teach、park。 |
+| Interface | Python API 或 CLI 等触发形式；它们共用操作契约和许可。 |
+| Environment | 某版本安装、机器人、工具、桌面、支撑、点位与路线的事实和验证范围。 |
+| Experiment | 一次任务或运行的参数、意图和产物；不能覆盖环境事实。 |
+| Evidence | 证明某能力在**指定环境和条件**下成立的源码、离线结果、实机反馈、现场观察与失败记录。 |
+
+## 状态、许可和通用执行规则
+
+运行时分别表达：① **Hardware / Robot Snapshot**：连接、模式、驱动、错误、七轴/法兰、反馈新鲜度；② **Operation Phase**：idle、starting、dragging、recording、returning、replaying、parking 等；③ **Operation Permission**：按 `can_start`、`can_drag`、`can_teach`、`can_replay`、`can_park`、`can_disable` 分别给出允许/拒绝及依据。单个 `ready_for_motion` 仅能描述设备侧条件，不能决定现场与路线许可。失联或反馈失效为 UNKNOWN，不推定 READY/PARK/安全。
+
+所有会使能、运动、切换拖动模式、回放、PARK 或失能的普通操作，都设计与其风险对应的 Human Flow：说明意图、起点与风险 → 人工确认 → 必要准备时间 → 临提交前重读状态并重新核准 → 执行 → 反馈验收 → 明确结果。具体倒计时秒数须在实现时按动作验证；不能对所有操作只套一个无信息的确认框。紧急停止不等待确认或倒计时。CLI 负责交互，工作流负责提交点和动作语义；非交互调用仍需显式动作授权并经过相同检查。
+
+**Cancel** 表示取消当前 workflow：停止推进新阶段，尽力退出当前控制模式，读取可信实况，不隐式启动新运动、不自动回 READY、不自动失能，并报告实际停点或 UNKNOWN。`Ctrl+C` 在未来正式接口中就是 Cancel；当前示教脚本在录制阶段收到信号后仍可能自动回 S1，这是已知实施差距，不能当作未来契约。**正常完成**、明确的“正常提前结束录制”、Cancel、**Fault** 分开记录；提前正常结束如将来需要，须另设用户动作并验证记录完整性，不能借用 `Ctrl+C`。发布指令后取消或故障时，停止后续目标，按可信反馈和已验证停止路径处理，不能承诺立刻静止、自动回位或电子急停后不下垂。故障不能伪装成取消或成功；异常报告须保存最后命令尝试和反馈。
+
+## 正式 v1 操作契约
+
+以下为**未来正式 Runtime** 的契约；当前可用性另见表中最后一列。`READY` 是经环境验证的带电实验起点，当前单臂实验的 S1 只对应当前站点；`PARK` 是经验证的停放点，当前新 H0 仅有特定安装、裸法兰、有人监护的候选/实验凭据。名称、角度及路线不能跨环境默认复用。除 `start` 的严格特例外，操作不得隐式 enable。
+
+| 操作 / 用户意图 | 前置与拒绝 | 人工确认 / 准备 | 物理效果、隐式 enable、正常后置 | Cancel / Fault | 普通用户可见性与当前验证范围 |
+| --- | --- | --- | --- | --- | --- |
+| `status`：了解真实状态及限制 | 可连接时读取新鲜快照；失联、缺帧标 UNKNOWN，不伪造可运动许可。 | 无动作确认、无倒计时。 | 只读；不使能、不运动；返回带时间、来源与未知项的状态。 | 取消只结束查询；读失败明确标未知。 | 未来 Quick/Python 可见；当前 `lab` 有状态读取代码，非正式 Runtime。 |
+| `start()`：进入 READY | 环境整体与目标/路线经验证；从已验证 READY、允许的已使能姿态/已验证 PARK，或 D5 所限失能 PARK 出发。拒绝急停、失联、未知低位、环境/工具错配及无适用路线。 | 告知路线、使能及扫过范围；现场确认、准备倒计时、执行前重读。 | 单一运动发布 owner 从实时姿态执行并验收 READY/停稳；仅 D5 特例单次隐式 enable，随后重读实况，姿态异常变化即停止，不进入运动。 | 提交前零控制动作；提交后停止后续目标并报告实测点；异常不得假定已到 READY。 | 未来 Quick/Python 可见；当前 S1/H0/C2 路线只在实验代码和指定现场有记录，不能外推。 |
+| `drag`：独立进入、保持、退出拖动 | 仅经验证的环境、起点、模式及现场范围；锁定入口、未知低位、故障、失能拒绝。**现阶段不得因本文解锁。** | 人确认扶稳、夹点、线缆与活动范围；模式切换前准备时间，切换后监测异常位移。 | 切拖动模式，无轨迹目标、无隐式 enable；正常结束确认退出/停稳，留在真实终点，不录制、不回位、不失能。 | Cancel 尽力退出模式并保留实际终点；故障/退出未确认标 UNKNOWN、交现场处理。 | 未来独立能力可供 Quick/Python，**当前独立 Drag locked / not yet promoted**；S1 Teach 内部拖动不等于独立入口获准。 |
+| `teach`：取得合格示教记录 | **v1 只允许 READY → READY**；需当前环境、READY、该 Teach 的拖动模式许可与录制条件有效。拒绝其它起点、故障、锁定/未知范围；独立 Drag 的入口锁定不等于现有 S1 Teach 内部授权失效。 | 开始前说明拖动范围、时限、录制/自动返回 READY；人工确认和模式准备时间；返回前另核实时姿态/路线。 | Drag + Recording + Normal Finish + 从实时结束姿态新规划回 READY；无隐式 enable。正常结束需停稳、回 READY 验收与记录封存。v1 **不提供 `return_policy` 或 stay/session_start 选项**。 | Ctrl+C 取消 workflow：退出拖动、保留原始数据与实况、**不自动回 READY**；故障同样不隐式回位，记录不可冒充合格。返回运动中取消按实测状态处理。 | 未来 Quick/Python 可见；当前实验 S1 限时示教可用但 Ctrl+C 语义不同，尚非正式 v1。 |
+| `replay`：重放合格记录 | 源记录/哈希/配置/环境、当前起点及完整路线适用，执行前再次校验；拒绝损坏、未完成、失败的 latest、未知旧格式及错配。 | 展示来源、模式、时长与范围；人确认、准备时间、执行前重读。 | 单一发布 owner 执行往返；无隐式 enable；逐点验收与最终到位分开；源合格与本轮成功分开。 | 提交前零运动；中途停止后续目标并报告实测点，**不自动返程**；故障保留源与失败报告。 | 未来 Quick/Python 可见；当前 point/continuous 在单臂实验存在，证据仅限历史样本/现场。 |
+| `park()`：到经验证 PARK | 从有适用 PARK 路线的已知使能状态；拒绝未知姿态、站点变化、失能、急停、旧锁路线。 | 告知完整扫过区、桌面/线缆/承托条件；确认、准备时间、前置重检。 | 单一发布 owner 运动至 PARK 并验收到位/停稳，**保持使能**；角度到位与实体承托分开记录。 | 中途取消/故障不宣称 PARK，不自动失能。 | 未来 Quick/Python 可见；当前新 H0 仅当前安装受监护候选，旧 `supported_home` 路线 locked。 |
+| `disable()`：软件解除驱动 | **仅已到 validated PARK**，现场人工确认可靠实体承托、姿态/工具/支撑未变；否则拒绝。 | 明示可能下沉和夹点；单独确认、准备倒计时、发送前重读。 | 一次 `disable()`，不运动、不隐式 enable、不自动重试；验收七轴失能及实际位移。**不等于物理断电。** | 发送前取消零失能；发送后反馈不明不得当成功或盲重发；故障须现场支撑。 | 未来 Quick/Python 可见但为独立动作；当前仅 H0 候选受监护实验入口，不构成普适可用。 |
+| `emergency_stop`：请求软件电子急停 | 危险动作时可尝试，不受普通运动许可限制；通信失效不得声称已执行，转现场物理措施。 | **无普通确认和倒计时。** | 发送软件电子急停，不使能、不自动 reset；区分“已请求/已发送/反馈确认”，姿态可能因阻尼下垂。 | 无正常 Cancel；发送/反馈异常需报告 UNKNOWN 并现场处置。 | 普通用户可看说明和状态；显式软件急停入口需在实现阶段审核。**软件急停不等于实体急停。** |
+
+`recover/reset` 是**受监护高级恢复 workflow**，不在普通 Quick API。先只读观察并确认急停类型、停稳和可靠承托，显式批准与准备后重新检查，只发送一次 reset；不使能、不回位、不自动失能。发送后单独验收真实状态；后续 start 必须是新请求、新实时规划。reset 可能使机械臂失电下落，不能作为正常停机或返回。
+
+## 安全不变量
+
+1. 状态未知不得推断安全；任何运动前重新读取实时状态，历史计划不得默认适用于新姿态。
+2. 环境、底座、工具、TCP、桌面、线缆或支撑变化可能使验证失效；锁定路线不因迁移或文档更新解锁。
+3. 几何可达不等于可安全运动；PARK 关节到位不等于实体承托或允许 disable。
+4. `disable()` 不等于物理断电；SDK `reset()` 不等于回位；软件电子急停不等于实体急停或姿态保持。
+5. Ctrl+C 不等于“正常完成并继续下一物理动作”；Fault 不得伪装成 Cancel/Success；catch/finally 不得自动执行危险清理动作。
+6. 一次运动只能有一个明确目标发布 owner；运动结果依反馈验收，目标已发送不等于到位。
+7. 正式 Runtime 不得依赖 `experiments` 或 CLI；实验代码可以依赖正式 Runtime。
+8. 原始记录、配置哈希、失败报告和来源引用不可静默改写；一次 replay 的成功不能反写源资格。
+
+## 环境、证据与晋升
+
+**Code describes capability. Environment describes installation and validated geometry. Experiment describes a task/run.** Environment Profile v1 由标定开发者维护、人工批准，至少能表达 identity/version、机器人身份、安装方向、固件档位、工具/TCP、READY/PARK、安全路点、恢复路线、几何工作空间候选、经验证可运动区域、禁入/未验证区域、适用桌面/线缆/实体支撑条件、证据引用与锁定状态。格式暂不决定，不能把当前散落在代码和 JSON 的值直接当作跨站点 Profile。
+
+Profile 整体至少分 `draft` / `validated`；点位、路线等资产至少分 `candidate` / `validated` / `locked` / `retired`。普通 Runtime **仅能自动使用整体 validated 且相关资产 validated、适用条件匹配的组合**。locked 优先拒绝；retired 不运行。底座、桌面、工具、TCP、线缆、双臂相对位置或支撑发生材料性变化时，建立新版本并重新验证，不覆盖旧 validated 记录。几何拟合只产候选，不能提升路线或空间许可。谁批准版本和资产及所依据现场证据必须留下可追溯记录。
+
+能力状态按 `Experimental → Verified → Promoted Runtime Capability` 逐项、逐环境推进。晋升至少需要清楚的需求语义、System Flow、Human Flow、离线验证、对应安装/工具/路线的实机反馈和现场观察、故障路径验证、可读数据/报告以及明确限制。报告记载的历史实机事件只证明对应范围，不自动给新现场、双臂或新工具授许可；测试文件存在不等于已运行或通过。本轮设计固化不晋升任何能力。
+
+## 职责与依赖
+
+最小职责是：CLI → Robot API / Workflows → Device、Motion、Environment + Safety、Teaching / Recording。Evidence 随工作流与记录产出；这些是**责任，不要求对应类、包或目录**。每个正式实现文件只有一个主要 owner，文件到责任的映射及新增文件前置记录规则见 [PROJECT_MAP.md](PROJECT_MAP.md)。
+
+| 责任 | 拥有 | 不拥有 |
+| --- | --- | --- |
+| Robot API / Workflows | 用户可理解的操作、阶段、提交点、完成/取消/故障、结构化结果 | CAN 帧、环境数值或 CLI 输入 |
+| Device | 固定版本官方 SDK/必要底层 I/O、模式切换、可信设备事实、命令尝试与确认区分 | 路线选择、示教或回放业务流程 |
+| Motion | 唯一运动目标发布、反馈、超时、中止、执行结果 | 用户意图或环境验证决策 |
+| Environment + Safety | 版本化环境事实、点位/路线与逐操作许可、锁定与证据适用性 | CAN 指令或实验自动晋升 |
+| Teaching / Recording | 采样、原件/哈希、完整性、回放资格及报告证据 | 运动许可或隐式回位 |
+| CLI | 展示、输入、确认、倒计时及结果说明 | 安全逻辑、路线选择或运动执行 |
+
+允许 `CLI → Runtime`、`Experiments → Runtime`、`Future Integrations → Runtime`。**Runtime must not depend on experiments. Experiment code may depend on Runtime.** 同时禁止 `Runtime → CLI`；Device 不依赖 Teaching、Replay、Experiments；Motion 不决定用户意图或 Environment validation。现有 `lab/device.py` 借用 `continuous_replay` 工厂等反向依赖是待迁移的代码事实，不是获准的目标依赖。迁移前须保持现有安全门禁。
+
+## 历史入口与变更治理
+
+旧入口逐项标为 `active experiment`（仍用于研究）、`deprecated`（有期限的旧调用）、`locked`（明确拒绝执行）、`historical`（保存证据/只读复盘）或 `retired`（经批准后才移除）。当前**不建立泛化 compatibility layer、LegacyManager 或默认 wrapper**。当正式能力验证并上线后再逐入口评估；仅确认有仓库外调用者且兼容有实际价值时，才考虑共享同一许可与执行路径的必要 wrapper。locked 入口绝不为兼容开放，historical 原件不重写。
+
+Agent 可在既有批准职责、操作契约和安全边界内实现明确授权的任务。若需求改变 Public API、操作契约、安全标准、环境治理、核心抽象、顶层模块或依赖方向，先写 Design Change Proposal：冲突事实、原因、影响、最简单替代与验证条件；**请求用户批准 → 更新本文件与 PROJECT_MAP → 再改代码**。新需求放不进当前结构时先判断旧边界是否错置，不能默认加 manager、helper、adapter、v2 目录或 wrapper。当前代码存在不代表设计合理，工作代码也不证明架构合理。任务范围或硬件授权不明时不得自行继续相应动作；具体 Agent 工作规则见 [AGENTS.md](AGENTS.md)。
+
+v1 暂不设计完整双臂协调、DH116 正式 Runtime、VLA action schema、ROS2 架构、完整碰撞规划器、通用 workflow engine、plugin system、compatibility framework、dependency injection framework、Event Bus 或 Manager hierarchy。未来出现真实需求时再提交设计变更。

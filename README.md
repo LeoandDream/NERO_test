@@ -24,10 +24,10 @@
 
 ## 1. 准备电脑和 CAN
 
-在终端输入：
+在终端输入（将示例路径换成实际项目根目录）：
 
 ```bash
-cd /home/leo/nero_dh116_ws
+cd /path/to/nero_dh116_ws
 conda activate nero-py310
 python --version
 ip -details link show can0
@@ -249,10 +249,6 @@ python -m experiments.single_arm.can_setup.nero_can_activate
 
 `reset` 后通常是 `JOINT_BRAKE_NOT_RELEASED`、七轴失能；确认姿态稳定后再按第 1 节单次使能，**重新读取实时姿态并生成新路线**。详细见[电子急停恢复](docs/emergency_stop_recovery.md)。
 
-终端输出的 CSV、JSON、计划和报告路径都相对于工作区根目录。新示教文件在 `experiments/single_arm/teaching/data/recordings/`；实验报告分别在各目录的 `data/` 中。运行后找不到文件，先按终端打印的**完整路径**打开，不要猜文件名。开发者可运行离线测试，不连接实机：
-
-```bash
-python -m unittest discover -s experiments/single_arm -p 'test_*.py' -q
-```
+终端输出的 CSV、JSON、计划和报告路径都相对于工作区根目录。新示教文件在 `experiments/single_arm/teaching/data/recordings/`；实验报告分别在各目录的 `data/` 中。运行后找不到文件，先按终端打印的**完整路径**打开，不要猜文件名。历史整套 `unittest discover` 命令尚未被证实为零设备副作用的离线入口；执行测试前按[测试分级与逐文件审计](docs/test_tiers_audit.md)选择已核实的子集和解释器，记录实际运行结果。当前项目续接见[CURRENT_STATE.md](CURRENT_STATE.md)。
 
 各实验的实现、证据和历史限制见[单臂实验总览](experiments/single_arm/README.md)、[统一 API/CLI](experiments/single_arm/lab/README.md)与[厂家用户指南](docs/user_guide.md)。

@@ -19,10 +19,6 @@
 | 9 | [连续示教回放](continuous_replay/README.md) | 完整 20 秒源轨迹往返、20 Hz 目标与 CAN/反馈独立验收通过 | [报告](continuous_replay/report.md) |
 | 10 | [可达空间与初始化候选](reachability/README.md) | 16 段新探测及历史边缘接近已验收；候选姿态尚待精确到位和外观判断 | [报告](reachability/report.md) |
 
-离线测试命令：
-
-```bash
-python -m unittest discover -s experiments/single_arm -p 'test_*.py' -q
-```
+整套 `unittest discover` 尚未获零设备副作用证明，不作为无条件离线测试命令。按[测试分级与逐文件审计](../../docs/test_tiers_audit.md)核定选定子集，再在相应授权范围内运行并记录版本与结果。
 
 实机动作需重新检查底座固定、安装方向、关节零点、整条连杆活动范围，并有人现场监护。已执行的规划文件不能复用。
