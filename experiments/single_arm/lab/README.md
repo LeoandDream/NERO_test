@@ -2,7 +2,9 @@
 
 **当前操作从[根 README](../../../README.md)开始。**本页保留 API 和历史实验细节；其中 `quick home-demo/cube-sweep/cube-faces` 和无时限手动拖动仍不可作为当前实机入口。旧 `supported_home` 桌边路线仍锁定；`quick park` 现为统一 H0 命名目标入口的别名。
 
-**S1 限时示教有条件解锁：**2026-09-26 从桌边低位进入拖动时机械臂突然大幅移动。`teach --run` 和 `quick teach/demo` 现在要求实时反馈为正常、七轴使能、停稳且位于已验证 S1；两次模式帧之间重新核对姿态，并监测启动后前 0.5 秒。S1 的基本静止 5 秒会话已实机平稳，零目标收尾已验证；真正拖动后的自动回位仍需按现场试验核对。`quick home-demo/cube-sweep/cube-faces` 和无时限手动拖动仍锁定。软件监测不能保证防止瞬时异动。详见[CAN 拖动事故说明](../can_setup/README.md#四通过-can-拖动示教)。
+**Step 3C 当前边界：**旧通用法兰 X 数值不再默认作为规划/执行条件。`plan_return()`、`return plan` 和非 H0 的 S1 命名入口可产生 `candidate_only` 计划，`run_return()`/`return run` 及对应 `quick init/starts run` 不执行该候选；旧 schema 1 计划不自动升级。示教依赖自动回 S1，当前在拖动前拒绝。精确 H0 专用分流保持原有代码与条件；下文涉及通用回位执行和示教动作的旧操作说明以本段当前状态为准。
+
+**历史 S1 示教条件：**2026-09-26 从桌边低位进入拖动时机械臂突然大幅移动。旧 `teach --run` 和 `quick teach/demo` 要求正常、七轴使能、停稳且位于已验证 S1，两次模式帧之间重核姿态；基本静止 5 秒会话曾获实机反馈。Step 3C 起缺少自动回位的路线依据，Teach 当前在拖动前拒绝，旧条件不能单独解锁。`quick home-demo/cube-sweep/cube-faces` 和无时限手动拖动仍锁定。详见[CAN 拖动事故说明](../can_setup/README.md#四通过-can-拖动示教)。
 
 本目录提供 Python 入口 `LabAPI` 和相同规则的命令行入口 `python -m experiments.single_arm.lab.cli`。导入模块不会连接 CAN。人用 `quick` 命令在**同次调用**显示预检、键盘确认并执行；开发者仍可分别调用 plan/run，或用 `quick_replay()` / `quick_start()` 一次完成。命令不自动复位、使能或把未知姿态送到全零位。所有关节角为 **rad**，法兰位置为 **m**，时长为 **s**；只有 `pose-candidate` 特意以整数 **度**显示候选角。路径在工作区根目录下使用。完整入门流程见[根 README](../../../README.md)。
 
@@ -14,12 +16,12 @@
 | 位姿记录 | `record_poses()` | `poses` | `pose_recording.record_poses` 保持可用；仅采样 |
 | 停机回零姿态演示 | `home_demo()` | `quick home-demo` | **当前锁定**；历史实现曾进入拖动并记录路线，不自动回位或失能 |
 | 桌边支撑位 H0 往返 | `plan_start("H0"/"S1")` / `run_start()` | `quick init --target H0/S1`、`quick park`；高级 `starts plan/run` | 精确匹配已标定两端点时生成经双向验收的 `move_j` 路线；到 H0 后仍保持使能 |
-| 限时示教 | `teach_preflight()` / `teach_run()` | `teach` / `teach --run` | 退出拖动后从实时姿态新规划回 S1；原始轨迹只保存 |
+| 限时示教 | `teach_preflight()` / `teach_run()` | `teach` / `teach --run` | 当前缺返回路线依据，拖动前拒绝；历史完成记录保持原状 |
 | 新示教发现与校验 | `recordings()` / `validate_recording()` | `records` | 只收录新版本封存且完成回位的记录，旧记录不被改写 |
 | 新示教关节回放 | `quick_replay()` 或 `plan_replay()` / `run_replay()` | `quick replay` / `quick demo`；高级 `replay plan/run` | `point_move_j` 逐点或 `timed_move_j` 定时连续；一份新 5 秒记录已完成实机往返 |
 | 旧固定 20 秒连续回放 | `plan_continuous_archive()` / `run_continuous_archive()` | `continuous-archive plan/run` | 定时关节流；**不能**把任意新记录静默当连续源 |
-| 命名目标 | `quick_start()` 或 `starts()` / `plan_start()` / `run_start()` | `quick init`；高级 `starts list/plan/run` | S1、C2、H0 使用同一规划入口；已标定 H0↔S1 选专用路线。2026-09-27 非 H0 低位有窄范围受监护候选，每次只执行一个低位目标并暂停；其它正常姿态→S1 用通用规划。S1→C2 保留已验证去程 |
-| 实时重规划回 S1 | `plan_return()` / `run_return()` | `return plan/run` | 从当前七轴角生成少量 `move_j` 目标；不倒放示教记录；当前左侧装要求法兰 X 关节盒不低于 0.15 m |
+| 命名目标 | `quick_start()` 或 `starts()` / `plan_start()` / `run_start()` | `quick init`；高级 `starts list/plan/run` | 精确 H0↔S1 仍选专用路线；非 H0→S1 只产候选，不能直接运行。S1→C2 旧独立路径未改 |
+| 实时重规划回 S1 | `plan_return()` / `run_return()` | `return plan/run` | 从当前七轴角生成少量候选目标；无默认 X 门槛。缺环境与路线依据时不执行 |
 | 整数度外观候选 | `plan_pose_candidate()` / `run_pose_candidate()` | `pose-candidate plan/run` | 仅 S1 邻域；[0,−33,0,−17,0,12,−27]° 已到位，公共默认尚未更改 |
 | 法兰小段直线探测 | `plan_probe()` / `run_probe()` | `probe plan/run` | 每段 2～10 mm、单次 `move_l`；复用 `reachability.controlled_probe` |
 | 局部关节探测 | `plan_joint_probe()` / `run_joint_probe()` | `joint-probe plan/run` | 仅已满足 J4>+0.02 rad 的姿态，J4 +0.05 rad 往返 |
@@ -57,9 +59,9 @@ print(result["plan_path"], result["plan"]["flange_xyz_envelope_m"])
 # lab.quick_start("S1")  # 已标定 H0→S1；失能 H0 会先单次使能
 # lab.quick_start("H0")  # S1→轻触桌边 H0，到位后仍保持使能
 # 停在其他正常姿态时，按实时七轴角生成新的少目标回 S1 路线：
-planned = lab.plan_return(min_flange_x_m=0.15)
-# 现场核对 planned["plan"]["joint_box_flange_ranges_m"] 后显式执行：
-# lab.run_return(planned["plan_path"])
+planned = lab.plan_return()  # candidate_only；无 X 条件时该项未评估
+print(planned["plan"]["joint_box_flange_ranges_m"])
+# 不能将本计划交给 run_return() 执行；需先补经核定的路线/环境依据
 ```
 
 回放和命名起点执行会使用已保存的计划文件；`quick_replay()` / `quick_start()` 在本次调用内创建该文件并随后重新检查配置、源记录、实时姿态、状态与完整路线。接口返回报告路径或抛出明确异常。CLI 执行失败以非零退出码和“实验未完成”说明。报告包含时间、目标、反馈、最后到位小步与失败原因。连接及机器人对象可经 `robot_factory` 注入，用于离线替身测试。`status()` 的 `ready_for_motion` 是**设备状态检查**，仍须现场核对桌面、支撑、工具、安装方向、线缆和整条连杆活动空间。
@@ -90,10 +92,10 @@ planned = lab.plan_return(min_flange_x_m=0.15)
 
 2026-09-26 减小 J3 偏转的路线完成 S1→H0→S1 双向试验，分别 7/7 目标到位；现场确认回家终点轻触承托可靠、回程顺利离桌，全程无异常。旧 `supported_home` 过压路线仍锁定；`quick park` 已改由统一命名目标入口调用本路线。详见[实验报告](report.md)。
 
-- 新示教 CSV 与同名 JSON 共存。JSON `schema_version=2`，含 `recording_id`、`recording_sha256`、`config_sha256`、型号/固件、起点、示教结束/回位状态。`records` 列出经全部校验的完整记录；`latest` 检查最近一次示教尝试，失败时直接说明原因并拒绝回放，不会退选旧记录。仅在完整限时采样和停稳样本已保存、自动回位预检失败且未急停时，可独立用 `return plan/run` 回 S1，再运行 `python -m experiments.single_arm.lab.complete_recording --recording <CSV> --return-report <成功报告>` 生成哈希绑定的只读完成凭证；原始失败记录不改写。更改任一原始字节或回位报告均会使凭证失效。
+- 新示教 CSV 与同名 JSON 共存。`records` 仍只收录经校验的完整记录；旧失败原件不改写。历史曾允许用 `return plan/run` 补做自动回位并生成哈希绑定凭证；**当前通用 `return run` 未接执行许可**，这条补做路径暂停，不能用新候选伪造成功报告。
 - `replay plan` 明确选择逐点或定时连续模式，保存源/配置哈希、起点和完整目标。连续模式还保存采样频率、时间伸缩、总时长和法兰包络审计；执行前重算所有目标，拒绝篡改。`replay run --plan` 每次只执行一轮正向加原路返回，新计划不自动执行。连续流的实时跟踪、CAN 帧、时钟误差和异常停止使用旧执行器；一份新封存源已完成实机验收。
-- S1/C2 基础目录在 [config/starts.json](config/starts.json)，H0 是另行标定的桌边支撑目标；公共默认仍是 S1。`quick init`、`quick park`、Python `quick_start()` 与高级 `starts plan/run` 统一按命名目标分流：已使能 H0→S1 调用 `optimized_home`，已失能 H0→S1 调用 `start_from_h0_candidate`，S1→H0 调用 `optimized_home`；其他正常姿态→S1 调用法兰 X≥0.15 m 的通用实时 `move_j` 规划器。保存的命名计划在运行前重算并核对实时姿态；交互 `quick` 还要求键入“开始”。急停、未停稳、未知低位或范围不符时拒绝运动。S1→C2 保留已验收的关节去程；历史路线不证明当前现场清空。
-- `return plan/run` 从当前姿态独立规划 S1，不要求起点在 S1/C2 附近；它只接受正常、七轴使能、停稳的左侧安装裸法兰场景，逐段抽查关节限位及关节盒 FK。默认法兰 X≥0.15 m，**不能从桌边 H0 的负 X 姿态直接规划**。已使能 H0 使用 `optimized_home --direction start`；失能 H0 使用 `start_from_h0_candidate`。2026-09-27 非 H0 低位候选只通过交互 `quick init --target S1` 分流，默认 `return` 和高级 `starts run` 不自动获得该现场许可。默认每次只发一个 2% 目标并暂停；首目标已现场平稳验收后，用户明确选择完整扫过范围受监护时，可用 `quick init --target S1 --complete-low-route` 一次命令逐目标执行到 S1。该选项不接受 `--yes`，完整路线尚未实机验收。S1 回轻触候选位使用 `optimized_home --direction home`，现场确认承托后可另用 `disable_at_h0_candidate` 单次失能；这两步不构成无人值守自动停机。
+- S1/C2 基础目录在 [config/starts.json](config/starts.json)；精确匹配 H0↔S1 的专用分流未改。其它正常姿态→S1 使用旧通用规划器的**候选计算**，无默认 `0.15 m` 和非负 X 约束；计划不代表可执行。S1→C2 旧去程与事故路线锁定均未改。
+- `return plan` 检查实时状态、关节与 FK 后生成 schema 2 候选。只有明确给出坐标系、法兰中心、米、回 S1 候选范围及来源时，才可额外筛选法兰 X；条件通过也不证明整臂或整条路线无碰撞。`return run` 拒绝旧 schema 1 计划与新 `candidate_only` 计划，且在设备连接前结束。2026-09-27 低位前缀仍只计算特定试验候选，不自动发送任何目标；`--complete-low-route` 不能绕过该执行门禁。已使能/失能 H0 仍用各自专用入口，现场适用性须每次另核。
 - 立方体会话有 manifest、每点单独 JSON 和每次拟合 JSON。六面各至少 3 个不共线法兰点，三边偏差≤5%、面偏差≤5 mm、法向误差≤8°才标 `geometry_valid=true`。`motion_region_verified` 永远为 `false`；必须另有实体环境及路径证据才能设运动区域。
 - `cube extrema --recording` 把正常拖动原始 CSV 转为带来源索引的地图，然后提取 XYZ 极值；`--map` 则从已有地图的一种证据级别提取。两者按内缩余量提出轴对齐候选，并给出六个确实出现在原始轨迹中的内缩极值姿态、来源行及关节角。左侧安装现场确认基座 X 正向离桌；`--bottom-margin-m 0.03` 可让桌面侧 `−X` 比普通 `--margin-m 0.01` 多留余量。候选面中心到实测轨迹的距离另行报告。产物标 `EXTREMA_CANDIDATE_ONLY`；轨迹极值不能证明六面、内部或角点可达，也不允许直接发布候选面中心运动。
 - 候选还提供基座轴对齐立方体的中心、等长边、实际候选边界和八个角点。边长取内缩后最窄轴跨度，其余两轴居中；角点为几何构造值，非实测点。2026-09-26 用户选择以一条完整边界轨迹直接构建此候选，暂停六面分段采样；[本次产物](../workspace_cube/data/candidates/nero_cube_extrema_20260926T082126485145Z.json)保留原始 CSV 哈希与六个极值来源行。

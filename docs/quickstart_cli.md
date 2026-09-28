@@ -2,7 +2,9 @@
 
 > **历史步骤，勿按本页顺序操作。** 当前完整命令行流程已集中到[根 README](../README.md)。本页保留旧实验过程供追溯；`quick cube-sweep`、`quick cube-faces`、`quick home-demo` 和手动 `can_drag_teach --start` 仍锁定。旧 `supported_home` H0 路线仍锁定，`quick park` 现已改用新的统一命名目标规划。新手请从根 README 第 1 节开始。
 
-**S1 限时示教有条件解锁：**2026-09-26 从桌边低位切入拖动后机械臂突然大幅移动。`quick teach/demo` 与 `teach --run` 现在只允许从实测 S1、正常状态及七轴使能进入；安装方向帧后再核对姿态，启动后先保持静止 0.5 秒。S1 的基本静止 5 秒会话已完成，零目标收尾得到验证；真正拖动后的自动回位仍须单独验收。桌边低位、`quick home-demo/cube-sweep/cube-faces`、`can_drag_teach --start` 仍锁定。软件监测不能防止瞬时异动，运行时需现场扶稳。Web 示教不受此代码锁保护。详见[事故说明](../experiments/single_arm/can_setup/README.md#四通过-can-拖动示教)。
+**Step 3C 现行边界：**通用回 S1 规划不再默认采用法兰基座 X≥0.15 m 或 X 非负。它只生成候选；缺少有来源、适用于本次整条路线的环境与执行依据时，`return run`、通用 `quick init --target S1`、`starts run` 对该候选和 Teach 启动会在控制动作前拒绝。下文旧执行命令与历史成功描述只供追溯。已标定 H0↔S1 专用路径单独适用，事故锁定入口未解锁。
+
+**历史示教门槛：**2026-09-26 从桌边低位切入拖动后机械臂突然大幅移动。旧 `quick teach/demo` 与 `teach --run` 曾要求实测 S1、正常状态及七轴使能，并核对模式帧后的姿态。Step 3C 起自动回位缺路线依据，Teach 在拖动前拒绝；这些旧条件仍不能单独授权示教。`quick home-demo/cube-sweep/cube-faces`、`can_drag_teach --start` 继续锁定。详见[事故说明](../experiments/single_arm/can_setup/README.md#四通过-can-拖动示教)。
 
 所有命令由现场人员在终端执行。先读每一步的输出，再决定是否进入下一步；旧运动入口须显式加 `--run`，统一 `quick` 入口则要求在终端键入 `开始` 或用完整参数加 `--yes`；使能命令须显式加 `--enable`。当前设备为 Nero 固件 1.21、左侧装、CAN `can0`，安全起点 S1 已记录在[配置](../experiments/single_arm/config/nero_teach.json)。更换安装方向、机械臂或零点后，不能直接复用 S1。
 
@@ -64,11 +66,11 @@ python -m experiments.single_arm.lab.cli starts run --plan <上一步的plan_pat
 python -m experiments.single_arm.lab.cli status
 ```
 
-执行会重验实时起点，保存动作报告与最终关节误差。C2 外观仍待用户决定；公共默认起点保持 S1。`quick init`、`quick park`、`starts plan/run` 共用命名目标规划入口；H0↔S1 使用已标定路线，其他正常姿态→S1 仍须通过通用规划的法兰 X≥0.15 m 门槛。其它姿态不凭此命令推定安全。
+历史执行会重验实时起点，保存动作报告与最终关节误差。C2 外观仍待用户决定；公共默认起点保持 S1。H0↔S1 使用独立的已标定路线；其他正常姿态→S1 的通用规划现只产生候选。候选的法兰 X 检查若未显式给出有来源的条件，会标记为未评估；即使给出条件，也不能代替连杆、工具、线缆和整条路线的环境依据。
 
 ### B. 新示教与快速回放
 
-从 S1 开始，只读预检 `teach`；现场扶稳、底座固定、拖动与自动回位全范围清空后才加 `--run`：
+以下是历史示教命令示例。当前 Teach 在缺少可适用的整条回位路线依据时，会在进入拖动/录制前拒绝；不能把这些命令作为当前现场操作步骤：
 
 ```bash
 python -m experiments.single_arm.lab.cli teach --max-seconds 5
@@ -81,7 +83,7 @@ python -m experiments.single_arm.lab.cli records latest
 
 2026-09-26 的一次 20 秒示教在 J4 接近 SDK 下限时中断，退出拖动后控制器留在模式 2、机械臂未回 S1；随后 `quick replay --recording latest` 曾只提示“控制器未处于 CAN 控制模式”。这个中断文件没有退出后的停稳样本，也没有完成回位，**不能回放**。现已改为先报告最近示教本身的 J4 限位错误。发生同类中断时，先查看 `python -m experiments.single_arm.lab.cli status`，从实时姿态恢复到 S1，再重新录制；不要修改失败 CSV、跳过限位或直接发送回放。此次限位边缘姿态使用的一次性恢复命令是 `python -m experiments.single_arm.lab.recover_teach_limit --run`，只识别绑定的那份记录和姿态，不是通用恢复入口。
 
-若完整限时示教已经保存原始 CSV 和退出拖动后的停稳样本，却仅在**自动回 S1 的预检**失败，`records latest` 会显示原始原因，不会直接放行回放。先查看 `status`，确认现场范围后从实时姿态运行 `return plan/run` 回 S1。成功报告生成后，可用下面的只读命令把该报告与原始 CSV/JSON 的哈希绑定；它不发送运动指令，也不改写原始失败记录：
+历史上，完整限时示教若仅在**自动回 S1 的预检**失败，可另行完成回位并用下面的只读命令绑定成功报告。当前通用 `return run` 尚缺执行依据，这条补做路径暂停；旧原始 CSV/JSON 和报告不改写：
 
 ```bash
 python -m experiments.single_arm.lab.complete_recording --recording <失败示教的CSV路径> --return-report <成功的回S1报告路径>
@@ -92,7 +94,7 @@ python -m experiments.single_arm.lab.cli records latest
 
 示教结束时，控制器可能在退出拖动后的首条样本短暂报告 `STOP_RECORDING`，随后才报告 `DISABLED`。记录校验接受停稳段开头最多 5 条这种过渡状态，但仍要求至少 2 条后续 `DISABLED`，并拒绝状态倒退。2026-09-27 的 20 秒记录 `nero_session_20260927T052141097432Z` 即有 1 条过渡状态；原 CSV/JSON 未改动，修复校验后 `records latest` 与连续回放只读规划均通过。规划本身不会发送运动指令。
 
-若示教结束后未回位，或机械臂停在其他正常、已使能且稳定的姿态，使用上述 `quick init --target S1` 从**当前实时角度**重新规划并执行；此命令不读取录制 CSV，也不倒放。需要提前查看每段法兰范围时才分开运行：
+历史流程曾在示教结束后从实时角度重新规划回 S1。当前通用回位候选可用于分析，但缺少整条路线依据时不能执行；以下旧命令仅供追溯：
 
 ```bash
 python -m experiments.single_arm.lab.cli return plan
@@ -100,7 +102,7 @@ python -m experiments.single_arm.lab.cli return plan
 python -m experiments.single_arm.lab.cli return run --plan experiments/single_arm/lab/data/planned_returns/刚生成的计划.json
 ```
 
-当前左侧安装的通用 S1 自动回位使用基座 X≥0.15 m 的法兰关节盒门槛，只覆盖这类离桌姿态。统一 `quick init --target S1` 已支持精确匹配的已标定 H0，使能或失能状态分别选用对应路线；未知桌面低位、急停或该门槛不通过时会拒绝运动。S1 是带电实验起点，**不是断电支撑位**。
+旧通用 S1 自动回位使用过基座法兰 X≥0.15 m 的假设，但没有获批为项目工作空间。新候选规划不再隐式应用它，也不会因负 X 推断碰撞。统一 `quick init --target S1` 对精确匹配的已标定 H0 仍走独立路线；其他候选缺少执行依据时拒绝自动运动。S1 是带电实验起点，**不是断电支撑位**。
 
 这里的“回位/位置复位”使用 `move_j` 并核对七轴；`move_p` 用于 VLA 的法兰点位运动实验。控制器电子 `reset` 仅用于解除电子急停，执行后关节可能失能，它不是位置复位命令。
 
@@ -159,7 +161,7 @@ python -m experiments.single_arm.lab.cli quick cube-sweep
 python -m experiments.single_arm.lab.cli quick cube-sweep --duration-s 30 --rate-hz 20 --margin-m 0.01 --yes
 ```
 
-输出包含 `recording_path`、`map_path`、`candidate_path` 和 `report_path`。录制期间若拖动模式退出、故障或反馈中断，命令会尝试结束拖动，并在报告中记录失败；部分原始 CSV 保留，不会被当成有效标定。完成后机械臂停在实际记录末端；若需回 S1，应另从实时关节角规划 `move_j`，按 B 节 `return plan/run` 执行。若极值跨度太小，候选生成失败，原始记录仍保留。
+输出包含 `recording_path`、`map_path`、`candidate_path` 和 `report_path`。录制期间若拖动模式退出、故障或反馈中断，命令会尝试结束拖动，并在报告中记录失败；部分原始 CSV 保留，不会被当成有效标定。完成后机械臂停在实际记录末端；回 S1 须另核路线依据，当前通用 `return plan` 仅供候选分析，`return run` 不接通。若极值跨度太小，候选生成失败，原始记录仍保留。
 
 也可**先用已有轨迹自动提取极值**，无需再次拖动：
 
@@ -289,14 +291,14 @@ python -m experiments.single_arm.control_interfaces.cartesian_linear_session --d
 python -m experiments.single_arm.control_interfaces.cartesian_linear_session --dx-m -0.002 --run
 ```
 
-先确认完成信息和现场无异常。若需回 S1，从实时七轴角重新规划 `move_j`：
+历史示例曾从实时七轴角重新规划 `move_j` 回 S1；当前通用回位执行入口未接通，以下命令仅供追溯：
 
 ```bash
 python -m experiments.single_arm.lab.cli return plan
 python -m experiments.single_arm.lab.cli return run --plan 上一步输出的计划.json
 ```
 
-运行第二条命令前核对新规划目标和活动范围。法兰实验的执行记录写入 `experiments/single_arm/control_interfaces/data/runs/`；回位报告另写入 `experiments/single_arm/lab/data/planned_return_runs/`。若当前姿态无通过关节限位和桌面侧门槛的候选路线，回位脚本会拒绝；不能通过调大阈值强行回位。
+第二条命令现在会在缺少执行依据时拒绝，不能以候选计划代替路线和环境验证。法兰实验的历史执行记录写入 `experiments/single_arm/control_interfaces/data/runs/`；回位报告曾写入 `experiments/single_arm/lab/data/planned_return_runs/`。不得通过另换阈值强行回位。
 
 若不在 S1，可先用只读位置记录建立**临时锚点**，按[控制器 IK 的临时起点步骤](../experiments/single_arm/control_interfaces/README.md)测试小范围运动。临时锚点不覆盖 S1 历史配置；回位执行应使用关节目标。14:08 的记录曾用于 2 mm 历史往返试验：当时去程、回程各发送一条 `move_l`，控制器均报告到位；现场确认回程平稳，随后独立状态检查为 `NORMAL`、七轴使能。现在法兰回位执行入口已停用。
 
@@ -314,7 +316,7 @@ python -m experiments.single_arm.can_setup.monitor_state --duration 300 --rate 2
 
 ## 5. 控制器 IK 与 VLA 法兰点位 `move_p`
 
-普通回位、位置复位和示教结束返回 S1，统一使用 `lab.cli return plan/run` 从实时七轴角规划 `move_j`，并验收七轴目标。VLA 运行时若发布法兰六维**终点**，才使用 `move_p`；控制器会求终点 IK，但中间法兰路径未知，同一法兰位姿也可能对应另一组七轴角。控制器电子 `reset` 是急停故障处理，不是位置回位。
+旧普通回位、位置复位和示教结束返回 S1 曾使用 `lab.cli return plan/run`；当前通用入口只支持候选分析，自动执行尚缺整条路线的环境与适用依据。VLA 运行时若发布法兰六维**终点**，才使用 `move_p`；控制器会求终点 IK，但中间法兰路径未知，同一法兰位姿也可能对应另一组七轴角。控制器电子 `reset` 是急停故障处理，不是位置回位。
 
 2026-09-25 的 2 mm、4 mm `move_p` 去程和回程是接口验证的[历史实验](../experiments/single_arm/control_interfaces/report.md)，不是当前 S1 回位步骤；其中 4 mm 试验的法兰中途相对起点最大移动约 8.4 mm。VLA 接入前应按实时状态和现场范围重新审查其目标及停止条件，不能照搬历史点位计划。
 

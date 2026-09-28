@@ -7,6 +7,7 @@ import sys
 import time
 
 from experiments.single_arm.lab.api import LabAPI
+from experiments.single_arm.lab.planned_return import flange_x_constraint
 from experiments.single_arm.lab.cube import FACES
 from experiments.single_arm.can_setup.drag_start_guard import require_drag_start_safe
 from experiments.single_arm.teaching.teach_session import DEFAULT_CONFIG
@@ -48,7 +49,9 @@ def parser_create():
     live_return = groups.add_parser("return", help="从实时姿态新规划回 S1；不倒放示教记录")
     return_sub = live_return.add_subparsers(dest="action", required=True)
     return_plan = return_sub.add_parser("plan", help="只读生成关节目标与法兰范围")
-    return_plan.add_argument("--min-flange-x-m", type=float, default=0.15)
+    return_plan.add_argument("--min-flange-x-m", type=float,
+                             help="仅用于候选筛选；须同时提供 --flange-x-source")
+    return_plan.add_argument("--flange-x-source", help="候选条件来源；不是执行批准")
     return_run = return_sub.add_parser("run", help="显式执行并重新核对实时起点")
     return_run.add_argument("--plan", type=Path, required=True)
     cube = groups.add_parser("cube", help="六面立方体几何标定；不授予运动许可")
@@ -257,6 +260,8 @@ def quick_dispatch(args, api, *, is_tty=None, input_fn=input):
             raise ValueError("--complete-low-route 只适用于非 H0 低位候选；未发送运动指令")
         if planned["plan"]["already_at_target"]:
             return {"plan_path":planned["plan_path"],"already_at_target":True}
+        if planned["plan"].get("execution_status") == "candidate_only":
+            raise ValueError("回 S1 路线仅为未完成环境评估的候选；未进入动作确认或发送控制指令")
         if planned["plan"].get("site_low_pose_trial") and args.yes:
             raise ValueError("首次非 H0 低位试验须现场查看路线并键入确认；不接受 --yes")
         prompt = ("当前是非 H0 低位，本次仅有基于 12:09 UTC 姿态的站点候选路线。"
@@ -268,7 +273,7 @@ def quick_dispatch(args, api, *, is_tty=None, input_fn=input):
                   if full_low else
                   "当前是非 H0 低位，本次仅有基于 12:09 UTC 姿态的站点候选路线。"
                   "这次只以 2% 执行一个 move_j 目标，随后暂停；"
-                  "低位前三段逐次向 Y 负向退让并到通用回 S1 区域。"
+                  "低位前三段逐次向 Y 负向退让并到后段候选起点。"
                   "这条路线尚无实机验收。请确认法兰当前未接触桌边，"
                   "底座/工具/线缆布局一致，全部连杆、腕部、桌边和支撑"
                   "的实际扫过范围清空，并全程现场监护。"
@@ -410,8 +415,13 @@ def dispatch(args, api):
                 api.plan_start(args.target) if args.action == "plan" else
                 api.run_start(args.plan))
     if args.group == "return":
-        return (api.plan_return(min_flange_x_m=args.min_flange_x_m)
-                if args.action == "plan" else api.run_return(args.plan))
+        if args.action == "run":
+            return api.run_return(args.plan)
+        if (args.min_flange_x_m is None) != (args.flange_x_source is None):
+            raise ValueError("候选法兰 X 数值与来源须同时提供")
+        constraint = (None if args.min_flange_x_m is None else
+                      flange_x_constraint(args.min_flange_x_m, args.flange_x_source))
+        return api.plan_return(flange_x_constraint=constraint)
     if args.group == "cube":
         return (api.cube_new() if args.action == "new" else
                 api.cube_capture(args.session, args.face) if args.action == "capture" else

@@ -2,6 +2,8 @@
 
 本仓库使用 Python 3.10、SocketCAN 和 `pyAgxArm` 控制左侧安装的 Nero。下面的命令都在**工作区根目录**执行。第一次做实验，按“准备 → 看状态 → 到 S1 → 示教 → 回放 → 回家”的顺序；其他实验放在后面的命令索引。
 
+**Step 3C 当前入口变化：**旧通用回 S1 的 `X≥0.15 m` 默认已移除。`return plan` 和非 H0 姿态的 `starts plan/quick init --target S1` 现在只生成 `candidate_only` 候选；`return run`、这类候选的 `starts run/quick init` 会在控制指令前拒绝。依赖自动回 S1 的新 `teach --run/quick teach/demo` 也在拖动前拒绝，直到有经核定的环境与路线依据。下方原有实机示教/通用回位步骤记录历史流程，**当前不可照其动作命令执行**。精确匹配的 H0↔S1 专用分流未因本项修改解锁或重认证。
+
 > **先认清两个位置：**S1 是七轴使能时的实验起点，不是断电承托位；H0 候选位是法兰轻触朝人一侧桌边的支撑位。位置回位使用 `move_j`，电子 `reset` 只用于解除急停，不能让机械臂回到某个姿态。所有日期命名的旧计划和记录仅证明当时那次实验，不能从新的实时姿态直接重放。
 
 阅读本页不会连接或移动机械臂；执行带动作的命令时，程序会连接控制器。人要在现场查看底座、桌面、法兰、全部连杆、腕部、线缆和支撑的活动范围。若预检失败或运动中止，就停在当时状态，读失败报告，不把同一条 `--run` 命令再执行一遍。
@@ -10,10 +12,10 @@
 
 | 想做的事 | 起点 | 命令与行为 |
 | --- | --- | --- |
-| 启动到 S1 | 已标定的 H0，或通用规划允许的正常姿态 | `python -m experiments.single_arm.lab.cli quick init --target S1`；同一命令中自动选择路线、预检并要求键入“开始”。已标定且失能的 H0 会先使能；已使能的 H0 不重复使能 |
+| 启动到 S1 | 已标定的 H0；其它姿态目前仅生成候选 | `python -m experiments.single_arm.lab.cli quick init --target S1`；精确 H0 仍选专用路线。其它姿态只打印候选并在动作确认前拒绝 |
 | 回家并失能 | S1、七轴已使能、`NORMAL` | 先 `python -m experiments.single_arm.lab.cli quick init --target H0`；确认 H0 法兰轻触承托后，再 `python -m experiments.single_arm.lab.disable_at_h0_candidate --run` |
 
-`quick init`、`quick park` 和 `starts plan/run` 共用 S1、C2、H0 命名目标入口。已标定 H0→S1 走专用低速离桌路线，S1→H0 走经双向验收的桌边绕行路线；其他正常姿态→S1 默认要求法兰 X≥0.15 m。2026-09-27 的一组**非 H0、法兰 X≈0.038 m** 实测姿态新增了窄范围受监护候选，见下面第 2 节；其它未知低位仍拒绝。
+`quick init`、`quick park` 和 `starts plan/run` 共用 S1、C2、H0 命名目标入口。已标定 H0→S1 与 S1→H0 仍走各自专用路线；其它正常姿态→S1 不再隐式套用法兰 X 数值，数值候选不等于路线执行许可。2026-09-27 的非 H0 低位试验记录只对当时路线有效。
 
 ## 0. 命令怎么读
 
@@ -79,9 +81,9 @@ python -m experiments.single_arm.lab.cli quick init --target S1
 
 已标定 H0 无论当前七轴使能还是失能，都会自动选对应的 H0→S1 专用路线；失能状态只在该路线中单次使能。命令先做只读预检，打印目标和报告；现场确认桌边、连杆、腕部、线缆及支撑范围后，在终端键入“开始”才执行。若输出 `already_at_target: true`，无需运动。到达 S1 后再运行上面的 `teach_session` 只读检查。
 
-**非 H0 低位首次试验：**仅在七轴角接近 2026-09-27 12:09 UTC 的实测姿态、法兰未接触桌边、左侧裸法兰安装及线缆布局相同、整片活动范围清空时，`quick init --target S1` 才会列出 `site_low_pose_trial: true`。程序预选先 J3→−0.30 rad、再 J1→0、再 J2→−0.30 rad，随后从 X≥0.15 m 区域常规规划回 S1。**每次低位调用只以 2% 执行第一个目标并暂停，不声称已回 S1；现场核对后再次运行同一命令，最多三次低位目标。**首次试验不接受 `--yes`；独立 `starts run` 没有现场确认参数，不能执行这类计划。第三步到达通用区域后，再次运行 `quick init --target S1` 才执行后段。模型预测不等于桌边、连杆和线缆安全；起点姿态、环境或中途反馈变化时会拒绝，不要反复强跑。
+**非 H0 低位历史试验：**2026-09-27 的窄姿态候选曾按 J3、J1、J2 分段规划并报告目标到位。当前 `quick init --target S1` 对匹配起点仍可给出候选，但不会执行低位前缀或后段。该试验前缀的局部 X/Y 数值只标记当时的候选条件；后段不再凭 `0.15 m` 假设取得许可。完整连杆、桌边、支撑和线缆的适用证据仍需核定。
 
-首个 J3 目标于 2026-09-27 现场到位且平稳后，可在**完整路线的实体扫过范围已清空并有人全程监护**时，显式改用一次命令执行剩余多个目标：`python -m experiments.single_arm.lab.cli quick init --target S1 --complete-low-route`。这仍是多个 2% `move_j` 目标，程序逐目标核对反馈，并在最后独立验收到 S1；它不是一个 `move_j` 直达，也不自动失能。默认命令仍逐目标暂停。`--complete-low-route` 不接受 `--yes`，其它低位、H0 和普通起点均拒绝此选项。完整路线尚未实机验收，模型只读结果不能替代桌边、连杆及线缆间隙确认。
+历史首个 J3 目标与其后完整目标发布记录见实验报告。`--complete-low-route` 仍存在于旧 CLI，但本轮产生的 `candidate_only` 计划在其动作前被拒绝；旧计划也不能按新语义重放。这些历史结果不能替代当前环境与路线适用证据。
 
 H0 专用路线重新连接时，若**只有**一次七轴停稳采样不通过，会在同一入口内有限次只读复测；报告保存每次关节变化。复测期间姿态改变超过 0.002 rad、持续不稳或出现其他故障时仍会在发送运动前退出。失败后先看报告中的 `completed_targets` 和实时状态，不直接反复输入“开始”。
 
@@ -92,16 +94,15 @@ python -m experiments.single_arm.lab.cli starts plan --target S1
 python -m experiments.single_arm.lab.cli starts run --plan <上一步输出的plan_path>
 ```
 
-这里的计划文件只能配合刚才的实时起点使用。从 S1 回桌边也可将 `--target S1` 改为 `--target H0`；执行前仍需现场确认整片范围。上述非 H0 低位首次试验只使用交互式 `quick init --target S1`，不要照搬这组分离命令。其他桌面接触位、急停、未知安装条件下若被拒绝，保持现场姿态并根据实时情况处理。
+这里的计划文件只能配合刚才的实时起点使用。从 S1 回桌边也可将 `--target S1` 改为 `--target H0`；执行前仍需现场确认整片范围。非 H0 的通用回 S1 计划目前仅是候选，分离命令与交互命令都不能执行它。其他桌面接触位、急停、未知安装条件下若被拒绝，保持现场姿态并根据实时情况处理。
 
-示教结束后若停在已建模的离桌姿态，也可直接使用“从实时姿态回 S1”入口；它与 `starts` 一样发送新规划的 `move_j`，不读原轨迹做倒放：
+从实时姿态回 S1 的通用入口目前只可查看候选，不读原轨迹做倒放：
 
 ```bash
 python -m experiments.single_arm.lab.cli return plan
-python -m experiments.single_arm.lab.cli return run --plan <上一步输出的plan_path>
 ```
 
-两条命令之间要核对刚生成计划的目标和法兰范围；若当前位置或状态已改变，就重新规划，不执行旧 `plan_path`。
+输出的 `execution_status=candidate_only` 和 `environment_assessment=not_evaluated` 表示未授予执行许可。可另给有来源的 `--min-flange-x-m <米数> --flange-x-source <来源>` 做**候选**筛选，负数本身合法；该输入也不能解锁 `return run`。
 
 ## 3. 只读记录当前位置
 
@@ -119,7 +120,7 @@ python -m experiments.single_arm.lab.cli poses --duration 5 --rate 5
 python -m experiments.single_arm.lab.cli teach --max-seconds 5
 ```
 
-现场扶稳机械臂，确认拖动与自动回 S1 的整片范围清空，再运行交互入口：
+以下交互动作命令为历史步骤；当前会在进入拖动前因返回路线依据未核定而拒绝：
 
 ```bash
 python -m experiments.single_arm.lab.cli quick teach --max-seconds 5

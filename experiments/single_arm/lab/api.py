@@ -31,9 +31,7 @@ def h0_start_strategy(state):
             state.get("control_mode") != 1 or state.get("error_code") != 0 or
             any(d.get("undervoltage") or d.get("driver_error") for d in drivers)):
         return None
-    # Only choose the specialist here. Its preflight checks stability again and
-    # retries a transient sample; a single noisy sample must not route H0 to
-    # the generic S1 planner, whose flange-X floor intentionally rejects H0.
+    # 专用 H0 仍由专用路线复核；一次噪声采样不得隐式选用通用候选。
     if (state.get("arm_status") == 0 and
             all(d.get("enabled") for d in drivers) and
             max(abs(a-b) for a, b in zip(joints, HOME_Q)) <= 0.01):
@@ -153,6 +151,7 @@ class LabAPI:
         if not math.isfinite(max_seconds) or not 1 <= max_seconds <= 300:
             raise ValueError("示教最长时间须在 1～300 s")
         config = load_config(self.config_path)
+        planned_return.require_return_execution_basis(config)
         with connected(config, self.robot_factory) as robot:
             start = check_start(robot, config)
             state = require_ready(read_state(robot))
@@ -393,10 +392,10 @@ class LabAPI:
         return {"plan_path":planned["plan_path"], "result": result}
 
 
-    def plan_return(self, *, min_flange_x_m=0.15, allow_site_low_pose=False):
-        """从当前姿态独立规划回 S1；不读取示教记录或发送运动命令。"""
+    def plan_return(self, *, flange_x_constraint=None, allow_site_low_pose=False):
+        """从当前姿态计算回 S1 候选；不读取示教记录或授予执行许可。"""
         plan = planned_return.prepare(
-            self.config_path, min_flange_x_m, self.robot_factory,
+            self.config_path, flange_x_constraint, self.robot_factory,
             allow_site_low_pose=allow_site_low_pose)
         plan["already_at_target"] = plan["controller_targets"] == 0
         path = planned_return.save_plan(plan)
@@ -404,7 +403,7 @@ class LabAPI:
 
     def run_return(self, plan_path, *, site_clearance_confirmed=False,
                    complete_site_route=False):
-        """重新读取实时状态并复核计划，显式执行回 S1。"""
+        """旧/候选回位计划均须先通过独立路线许可；当前在连接前拒绝。"""
         return {"report_path": str(planned_return.run(
             plan_path, self.config_path, self.robot_factory,
             site_clearance_confirmed=site_clearance_confirmed,

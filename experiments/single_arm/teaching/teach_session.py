@@ -519,6 +519,8 @@ def return_to_start(robot, bus, recorded, original, config, abort_return,
 
 def run_session(robot, config, args):
     """统筹限时拖动、记录、停稳与从实时状态规划的回位。"""
+    from experiments.single_arm.lab.planned_return import require_return_execution_basis
+    require_return_execution_basis(config)
     original = check_start(robot, config)
     authorization = authorize_s1_drag_start(robot, mount=config["mount"])
     print(f"起点 {config['safe_start_name']} 已核对；本次原位关节角：{original}", flush=True)
@@ -676,13 +678,18 @@ def run_session(robot, config, args):
             # 录制文件只作为示教数据。以拖动退出并停稳后的实测状态重新生成
             # 最多几个控制器关节目标，不使用记录点的反向序列。
             from experiments.single_arm.lab.device import read_state
-            from experiments.single_arm.lab.planned_return import plan_from_snapshot
+            from experiments.single_arm.lab.planned_return import (
+                plan_from_snapshot, require_return_execution_basis,
+            )
 
+            require_return_execution_basis(config)
             snapshot = return_preflight_snapshot(robot, metadata)
             planned = plan_from_snapshot(
                 robot, snapshot, config,
-                float(config.get("planned_return_min_flange_x_m", 0.15)),
+                config.get("planned_return_flange_x_constraint"),
             )
+            if planned["execution_status"] != "executable":
+                raise RuntimeError("示教返回路线仅为候选，不能发送运动指令")
             metadata["return_plan"] = planned
             print(f"已从实时姿态规划 {planned['controller_targets']} 个回 S1 目标；"
                   "示教轨迹只用于保存。", flush=True)
@@ -732,6 +739,9 @@ def main():
     args = parser.parse_args()
     try:
         config = load_config(args.config)
+        if args.run:
+            from experiments.single_arm.lab.planned_return import require_return_execution_basis
+            require_return_execution_basis(config)
         if args.max_seconds is None:
             args.max_seconds = float(config["max_teach_seconds"])
         if not math.isfinite(args.max_seconds) or not 1 <= args.max_seconds <= 300:
