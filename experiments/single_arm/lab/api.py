@@ -281,17 +281,26 @@ class LabAPI:
                         "already_at_target": False}
                 return {"plan_path": str(starts.save_start_plan(plan)),
                         "plan": plan}
+            if planned_return.is_site_low_start(state):
+                return self.plan_return(allow_site_low_pose=True)
             return self.plan_return()
         plan = starts.prepare_start(target, self.config_path,
                                     robot_factory=self.robot_factory)
         return {"plan_path": str(starts.save_start_plan(plan)), "plan": plan}
 
-    def run_start(self, plan_path):
+    def run_start(self, plan_path, *, site_clearance_confirmed=False,
+                  complete_site_route=False):
         plan = json.loads(Path(plan_path).read_text(encoding="utf-8"))
         if plan.get("kind") in ("named_joint_target_plan",
                                 "named_joint_target_hold"):
             return self._run_named_joint_target(plan)
         if plan.get("kind") == "live_planned_return_to_s1":
+            if plan.get("site_low_pose_trial"):
+                return self.run_return(
+                    plan_path, site_clearance_confirmed=site_clearance_confirmed,
+                    complete_site_route=complete_site_route)
+            if complete_site_route:
+                raise ValueError("完整低位路线选项仅适用于非 H0 低位候选")
             return self.run_return(plan_path)
         return starts.execute_start(plan_path, self.config_path,
                                     robot_factory=self.robot_factory)
@@ -367,27 +376,39 @@ class LabAPI:
                        if kind == "optimized_home" else supported_run(**kwargs))
         return {"report_path": str(report_path), "target_name": target}
 
-    def quick_start(self, target="S1"):
+    def quick_start(self, target="S1", *, site_clearance_confirmed=False,
+                    complete_site_route=False):
         """Use the same saved named-target plan for S1, H0 and C2."""
         planned=self.plan_start(target)
+        if complete_site_route and not planned["plan"].get("site_low_pose_trial"):
+            raise ValueError("完整低位路线选项仅适用于非 H0 低位候选")
         if planned["plan"].get("already_at_target"):
             return {"plan_path": planned["plan_path"], "already_at_target": True}
-        return {"plan_path":planned["plan_path"],
-                "result":self.run_start(planned["plan_path"])}
+        result = (self.run_start(
+            planned["plan_path"],
+            site_clearance_confirmed=site_clearance_confirmed,
+            complete_site_route=complete_site_route)
+            if planned["plan"].get("site_low_pose_trial") else
+            self.run_start(planned["plan_path"]))
+        return {"plan_path":planned["plan_path"], "result": result}
 
 
-    def plan_return(self, *, min_flange_x_m=0.15):
+    def plan_return(self, *, min_flange_x_m=0.15, allow_site_low_pose=False):
         """从当前姿态独立规划回 S1；不读取示教记录或发送运动命令。"""
-        plan = planned_return.prepare(self.config_path, min_flange_x_m,
-                                      self.robot_factory)
+        plan = planned_return.prepare(
+            self.config_path, min_flange_x_m, self.robot_factory,
+            allow_site_low_pose=allow_site_low_pose)
         plan["already_at_target"] = plan["controller_targets"] == 0
         path = planned_return.save_plan(plan)
         return {"plan_path": str(path), "plan": plan}
 
-    def run_return(self, plan_path):
+    def run_return(self, plan_path, *, site_clearance_confirmed=False,
+                   complete_site_route=False):
         """重新读取实时状态并复核计划，显式执行回 S1。"""
         return {"report_path": str(planned_return.run(
-            plan_path, self.config_path, self.robot_factory))}
+            plan_path, self.config_path, self.robot_factory,
+            site_clearance_confirmed=site_clearance_confirmed,
+            complete_site_route=complete_site_route))}
 
     def plan_pose_candidate(self):
         plan=pose_candidate.prepare(self.config_path,robot_factory=self.robot_factory)

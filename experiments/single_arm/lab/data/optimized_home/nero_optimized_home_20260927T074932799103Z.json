@@ -1,0 +1,34 @@
+{
+  "kind": "optimized_sparse_s1_h0_trial",
+  "direction": "home",
+  "strategy": "reduced-j3",
+  "started_at_utc": "2026-09-27T07:49:32.799034+00:00",
+  "execution_requested": false,
+  "completed": false,
+  "completed_targets": [],
+  "emergency_stop_requested": false,
+  "precommand_feedback_retries": [],
+  "stationary_retries": [],
+  "resume_source_report": null,
+  "automatic_disable": false,
+  "preflight_state_attempts": [
+    {
+      "label": "initial",
+      "attempt": 1,
+      "joint_rad": [
+        0.2404540110472588,
+        0.3642676681837365,
+        0.07211700469240569,
+        -0.04960225734167885,
+        0.004031710572106902,
+        0.1319119848657314,
+        0.06091199089460211
+      ],
+      "variation_rad": 0.0002792526803190934,
+      "reasons": []
+    }
+  ],
+  "error_type": "ValueError",
+  "error": "当前姿态不在本次路线的命名起点",
+  "finished_at_utc": "2026-09-27T07:49:33.156362+00:00"
+}

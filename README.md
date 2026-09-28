@@ -13,7 +13,7 @@
 | 启动到 S1 | 已标定的 H0，或通用规划允许的正常姿态 | `python -m experiments.single_arm.lab.cli quick init --target S1`；同一命令中自动选择路线、预检并要求键入“开始”。已标定且失能的 H0 会先使能；已使能的 H0 不重复使能 |
 | 回家并失能 | S1、七轴已使能、`NORMAL` | 先 `python -m experiments.single_arm.lab.cli quick init --target H0`；确认 H0 法兰轻触承托后，再 `python -m experiments.single_arm.lab.disable_at_h0_candidate --run` |
 
-`quick init`、`quick park` 和 `starts plan/run` 现在共用 S1、C2、H0 命名目标规划入口。已标定 H0→S1 走专用低速离桌路线，S1→H0 走经双向验收的桌边绕行路线；其他正常姿态→S1 使用要求法兰 X≥0.15 m 的通用规划。未知低位仍会拒绝，不能为了“运行成功”放宽门槛。
+`quick init`、`quick park` 和 `starts plan/run` 共用 S1、C2、H0 命名目标入口。已标定 H0→S1 走专用低速离桌路线，S1→H0 走经双向验收的桌边绕行路线；其他正常姿态→S1 默认要求法兰 X≥0.15 m。2026-09-27 的一组**非 H0、法兰 X≈0.038 m** 实测姿态新增了窄范围受监护候选，见下面第 2 节；其它未知低位仍拒绝。
 
 ## 0. 命令怎么读
 
@@ -77,7 +77,11 @@ python -m experiments.single_arm.teaching.teach_session
 python -m experiments.single_arm.lab.cli quick init --target S1
 ```
 
-已标定 H0 无论当前七轴使能还是失能，都会自动选对应的 H0→S1 专用路线；失能状态只在该路线中单次使能。命令先做只读预检，打印目标和报告；现场确认桌边、连杆、腕部、线缆及支撑范围后，在终端键入“开始”才执行。若输出 `already_at_target: true`，无需运动。到达 S1 后再运行上面的 `teach_session` 只读检查。非 H0 姿态使用通用规划；未知桌边低位会拒绝，不会尝试自动使能或运动。
+已标定 H0 无论当前七轴使能还是失能，都会自动选对应的 H0→S1 专用路线；失能状态只在该路线中单次使能。命令先做只读预检，打印目标和报告；现场确认桌边、连杆、腕部、线缆及支撑范围后，在终端键入“开始”才执行。若输出 `already_at_target: true`，无需运动。到达 S1 后再运行上面的 `teach_session` 只读检查。
+
+**非 H0 低位首次试验：**仅在七轴角接近 2026-09-27 12:09 UTC 的实测姿态、法兰未接触桌边、左侧裸法兰安装及线缆布局相同、整片活动范围清空时，`quick init --target S1` 才会列出 `site_low_pose_trial: true`。程序预选先 J3→−0.30 rad、再 J1→0、再 J2→−0.30 rad，随后从 X≥0.15 m 区域常规规划回 S1。**每次低位调用只以 2% 执行第一个目标并暂停，不声称已回 S1；现场核对后再次运行同一命令，最多三次低位目标。**首次试验不接受 `--yes`；独立 `starts run` 没有现场确认参数，不能执行这类计划。第三步到达通用区域后，再次运行 `quick init --target S1` 才执行后段。模型预测不等于桌边、连杆和线缆安全；起点姿态、环境或中途反馈变化时会拒绝，不要反复强跑。
+
+首个 J3 目标于 2026-09-27 现场到位且平稳后，可在**完整路线的实体扫过范围已清空并有人全程监护**时，显式改用一次命令执行剩余多个目标：`python -m experiments.single_arm.lab.cli quick init --target S1 --complete-low-route`。这仍是多个 2% `move_j` 目标，程序逐目标核对反馈，并在最后独立验收到 S1；它不是一个 `move_j` 直达，也不自动失能。默认命令仍逐目标暂停。`--complete-low-route` 不接受 `--yes`，其它低位、H0 和普通起点均拒绝此选项。完整路线尚未实机验收，模型只读结果不能替代桌边、连杆及线缆间隙确认。
 
 H0 专用路线重新连接时，若**只有**一次七轴停稳采样不通过，会在同一入口内有限次只读复测；报告保存每次关节变化。复测期间姿态改变超过 0.002 rad、持续不稳或出现其他故障时仍会在发送运动前退出。失败后先看报告中的 `completed_targets` 和实时状态，不直接反复输入“开始”。
 
@@ -88,7 +92,7 @@ python -m experiments.single_arm.lab.cli starts plan --target S1
 python -m experiments.single_arm.lab.cli starts run --plan <上一步输出的plan_path>
 ```
 
-这里的计划文件只能配合刚才的实时起点使用。从 S1 回桌边也可将 `--target S1` 改为 `--target H0`；执行前仍需现场确认整片范围。其他桌面接触位、急停、未知安装条件下若被拒绝，保持现场姿态并根据实时情况处理，不降低门槛硬跑。
+这里的计划文件只能配合刚才的实时起点使用。从 S1 回桌边也可将 `--target S1` 改为 `--target H0`；执行前仍需现场确认整片范围。上述非 H0 低位首次试验只使用交互式 `quick init --target S1`，不要照搬这组分离命令。其他桌面接触位、急停、未知安装条件下若被拒绝，保持现场姿态并根据实时情况处理。
 
 示教结束后若停在已建模的离桌姿态，也可直接使用“从实时姿态回 S1”入口；它与 `starts` 一样发送新规划的 `move_j`，不读原轨迹做倒放：
 

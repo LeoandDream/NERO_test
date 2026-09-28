@@ -16,7 +16,7 @@ import sys
 import time
 
 from experiments.single_arm.lab.device import connected, read_state
-from experiments.single_arm.start_transfer.go_to_start import execute_route
+from experiments.single_arm.start_transfer.go_to_start import RoutePaused, execute_route
 from experiments.single_arm.teaching.teach_session import (
     DEFAULT_CONFIG, load_config, validate_joints, validate_route_workspace,
 )
@@ -27,6 +27,18 @@ RUN_DIR = Path("experiments/single_arm/lab/data/planned_return_runs")
 START_TOLERANCE_RAD = 0.003
 TARGET_TOLERANCE_RAD = 0.005
 MAX_CONTROLLER_TARGET_DISTANCE_RAD = 1.0
+# A single documented, non-H0 trial starting region. This is not a generic
+# relaxation of the table-side floor and must be selected explicitly.
+SITE_LOW_REFERENCE_Q = [
+    0.2577153173494827, 0.017558012275062956, 0.07127924665144843,
+    -0.15709708597200958, 0.003787364476827695,
+    0.13192943815825137, 0.060859631017042275,
+]
+SITE_LOW_START_TOLERANCE_RAD = 0.01
+SITE_LOW_FLOOR_X_M = 0.02
+SITE_LOW_EXIT_J3_RAD = -0.30
+SITE_LOW_EXIT_J1_RAD = 0.0
+SITE_LOW_EXIT_J2_RAD = -0.30
 
 
 def _write_new(directory, prefix, data):
@@ -110,7 +122,90 @@ def _assess(robot, route, config, min_flange_x_m):
     return ranges
 
 
-def plan_from_snapshot(robot, state, config, min_flange_x_m=0.15):
+def site_low_stage(state):
+    """Return the next supervised trial stage for one measured neighborhood."""
+    if (state.get("control_mode") != 1 or state.get("arm_status") != 0 or
+            state.get("teach_status") != 0 or
+            state.get("ready_for_motion") is not True):
+        return None
+    q = state.get("joint_rad", [])
+    pose = state.get("flange_pose_m_rad", [])
+    if len(q) != 7 or len(pose) < 3:
+        return None
+    references = [list(SITE_LOW_REFERENCE_Q)]
+    for axis, target in ((2, SITE_LOW_EXIT_J3_RAD),
+                         (0, SITE_LOW_EXIT_J1_RAD)):
+        next_q = list(references[-1])
+        next_q[axis] = target
+        references.append(next_q)
+    pose_boxes = (
+        ((0.025, 0.055), (-0.030, 0.005)),
+        ((0.020, 0.045), (-0.040, -0.015)),
+        ((0.015, 0.040), (-0.045, -0.025)),
+    )
+    for index, (reference, (x_box, y_box)) in enumerate(zip(
+            references, pose_boxes)):
+        if (max(abs(a-b) for a,b in zip(q, reference)) <=
+                SITE_LOW_START_TOLERANCE_RAD and
+                x_box[0] <= float(pose[0]) <= x_box[1] and
+                y_box[0] <= float(pose[1]) <= y_box[1] and
+                0.700 <= float(pose[2]) <= 0.735):
+            return index
+    return None
+
+
+def is_site_low_start(state):
+    return site_low_stage(state) is not None
+
+
+def _plan_site_low_exit(robot, state, config, min_flange_x_m):
+    """Candidate: retreat in Y before moving J2 to the generic X region."""
+    stage = site_low_stage(state)
+    if config["mount"] != "left" or stage is None:
+        raise ValueError("非 H0 低位姿态不在本次现场恢复起点范围")
+    start = list(state["joint_rad"])
+    prefix = [start]
+    for axis,target in ((2,SITE_LOW_EXIT_J3_RAD),
+                        (0,SITE_LOW_EXIT_J1_RAD),
+                        (1,SITE_LOW_EXIT_J2_RAD))[stage:]:
+        next_q = list(prefix[-1])
+        next_q[axis] = target
+        prefix.append(next_q)
+    ranges = _assess(robot, prefix, config, SITE_LOW_FLOOR_X_M)
+    # In the two low-X retreat stages, each single-axis command must move the
+    # predicted flange away from the human-side table edge in base -Y.
+    for first, second in zip(prefix[:max(0,3-stage)],
+                             prefix[1:max(0,3-stage)]):
+        previous_y = float(robot.fk(first)[1])
+        for index in range(1, 102):
+            fraction = index / 101
+            point = [a + fraction*(b-a) for a,b in zip(first, second)]
+            y = float(robot.fk(point)[1])
+            if y > previous_y + 0.0001:
+                raise ValueError("低位首段没有持续沿 Y 负向离桌")
+            previous_y = y
+    if (float(robot.fk(prefix[-2])[1]) > -0.034 or
+            float(robot.fk(prefix[-1])[0]) < min_flange_x_m + 0.02):
+        raise ValueError("低位退让未到达桌边绕行余量或通用 X 区域")
+    simulated = dict(state, joint_rad=prefix[-1],
+                     flange_pose_m_rad=list(robot.fk(prefix[-1])))
+    suffix = plan_from_snapshot(robot, simulated, config, min_flange_x_m)
+    return {"strategy": "site_low_exit+" + suffix["strategy"],
+            "start_joint_rad": start,
+            "target_joint_rad": suffix["target_joint_rad"],
+            "route_joint_rad": prefix + suffix["route_joint_rad"][1:],
+            "joint_box_flange_ranges_m": ranges + suffix["joint_box_flange_ranges_m"],
+            "min_flange_x_m": min_flange_x_m,
+            "site_low_pose_trial": True,
+            "site_low_stage": stage,
+            "site_trial_first_target_only": True,
+            "site_trial_next_target_joint_rad": prefix[1],
+            "site_clearance_confirmed": False,
+            "controller_targets": len(prefix)-1 + suffix["controller_targets"]}
+
+
+def plan_from_snapshot(robot, state, config, min_flange_x_m=0.15,
+                       *, allow_site_low_pose=False):
     """对当前七轴状态生成新路线；返回结果不含任何录制轨迹点。"""
     require_return_state(state)
     start = validate_joints(state["joint_rad"], config["zero_exclusion_radius_rad"])
@@ -122,6 +217,8 @@ def plan_from_snapshot(robot, state, config, min_flange_x_m=0.15):
         raise ValueError("本现场左侧装仅允许基座 X 非负的回位路线")
     start_x_m = float(state["flange_pose_m_rad"][0])
     if start_x_m < min_flange_x_m:
+        if allow_site_low_pose:
+            return _plan_site_low_exit(robot, state, config, min_flange_x_m)
         raise ValueError(
             f"当前法兰 X={start_x_m:.3f} m 低于通用回 S1 门槛 "
             f"{min_flange_x_m:.3f} m；此入口不能从桌边低位启动。"
@@ -183,25 +280,29 @@ def require_return_state(state):
     return state
 
 
-def prepare(config_path=DEFAULT_CONFIG, min_flange_x_m=0.15, robot_factory=None):
+def prepare(config_path=DEFAULT_CONFIG, min_flange_x_m=0.15, robot_factory=None,
+            *, allow_site_low_pose=False):
     config_path = Path(config_path)
     config = load_config(config_path)
     if config["mount"] != "left":
         raise ValueError("当前现场路线只适用于左侧安装")
     with connected(config, robot_factory) as robot:
         state = read_state(robot)
-        route = plan_from_snapshot(robot, state, config, min_flange_x_m)
+        route = plan_from_snapshot(robot, state, config, min_flange_x_m,
+                                   allow_site_low_pose=allow_site_low_pose)
     return {"schema_version": 1, "kind": "live_planned_return_to_s1",
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
-            "start_state": state, "target_name": "S1", "speed_percent": 5,
+            "start_state": state, "target_name": "S1",
+            "speed_percent": 2 if route.get("site_low_pose_trial") else 5,
             "source_recording": None, "reversed_recording": False,
             "environment_checked": False, "controller_actual_path_known": False,
             **route}
 
 
 def run(plan_path, config_path=DEFAULT_CONFIG, robot_factory=None,
-        countdown_s=5):
+        countdown_s=5, *, site_clearance_confirmed=False,
+        complete_site_route=False):
     plan_path = Path(plan_path)
     config_path = Path(config_path)
     config = load_config(config_path)
@@ -210,16 +311,24 @@ def run(plan_path, config_path=DEFAULT_CONFIG, robot_factory=None,
             plan.get("kind") != "live_planned_return_to_s1" or
             plan.get("config_sha256") != hashlib.sha256(config_path.read_bytes()).hexdigest() or
             plan.get("target_joint_rad") != config["safe_start_joint_rad"] or
-            plan.get("speed_percent") != 5 or
+            plan.get("speed_percent") !=
+            (2 if plan.get("site_low_pose_trial") else 5) or
             plan.get("source_recording") is not None or
             plan.get("reversed_recording") is not False):
         raise ValueError("回位计划版本、目标或配置不匹配")
+    if plan.get("site_low_pose_trial") and not site_clearance_confirmed:
+        raise ValueError("非 H0 低位恢复须现场确认整条连杆、桌边、线缆和支撑范围；未发送运动指令")
+    if complete_site_route and not plan.get("site_low_pose_trial"):
+        raise ValueError("完整低位路线选项仅适用于非 H0 低位候选；未发送运动指令")
     report = {"schema_version": 1, "kind": "live_planned_return_to_s1",
               "plan": str(plan_path), "started_at_utc": datetime.now(timezone.utc).isoformat(),
-              "completed": False, "controller_targets": plan["controller_targets"]}
+              "completed": False, "controller_targets": plan["controller_targets"],
+              "site_clearance_confirmed": bool(site_clearance_confirmed),
+              "complete_site_route_requested": bool(complete_site_route)}
     report_path = _write_new(RUN_DIR, "nero_planned_return_run_", report)
     interrupted = False
     previous_handlers = None
+    intentional_site_pause = False
 
     def stop(_signum, _frame):
         nonlocal interrupted
@@ -228,7 +337,9 @@ def run(plan_path, config_path=DEFAULT_CONFIG, robot_factory=None,
     try:
         with connected(config, robot_factory) as robot:
             state = read_state(robot)
-            current = plan_from_snapshot(robot, state, config, plan["min_flange_x_m"])
+            current = plan_from_snapshot(
+                robot, state, config, plan["min_flange_x_m"],
+                allow_site_low_pose=bool(plan.get("site_low_pose_trial")))
             if max(abs(a-b) for a, b in zip(state["joint_rad"],
                                              plan["start_joint_rad"])) > START_TOLERANCE_RAD:
                 raise RuntimeError("实时起点已变化；未发送运动指令")
@@ -247,23 +358,72 @@ def run(plan_path, config_path=DEFAULT_CONFIG, robot_factory=None,
                 time.sleep(1)
             if interrupted:
                 raise InterruptedError("倒计时取消；未发送运动指令")
+            if plan.get("site_low_pose_trial"):
+                # First site trial: a new live sample is required immediately
+                # before the first command, after the human preparation time.
+                fresh_state = read_state(robot)
+                fresh_route = plan_from_snapshot(
+                    robot, fresh_state, config, plan["min_flange_x_m"],
+                    allow_site_low_pose=True)
+                if (max(abs(a-b) for a,b in zip(
+                        fresh_state["joint_rad"], plan["start_joint_rad"])) >
+                        START_TOLERANCE_RAD or
+                        fresh_route["strategy"] != plan["strategy"] or
+                        len(fresh_route["route_joint_rad"]) !=
+                        len(plan["route_joint_rad"]) or
+                        any(max(abs(a-b) for a,b in zip(x,y)) > .005
+                            for x,y in zip(fresh_route["route_joint_rad"],
+                                           plan["route_joint_rad"]))):
+                    raise RuntimeError("倒计时后实时姿态或低位路线已变化；未发送运动指令")
             if plan["controller_targets"]:
                 report["motion_attempted"] = True
-                execute_route(robot, config, plan["route_joint_rad"],
-                              lambda: interrupted, speed_percent=5,
-                              target_tolerance_rad=TARGET_TOLERANCE_RAD,
-                              waypoint_timeout_s=20, waypoint_max_timeout_s=120,
-                              pause_on_stationary_timeout=True,
-                              path_mode="joint_box", joint_box_margin_rad=0.03)
+                def stop_for_site_review(index, _target):
+                    nonlocal intentional_site_pause
+                    intentional_site_pause = bool(plan.get("site_low_pose_trial")
+                                                  and not complete_site_route
+                                                  and index == 1)
+                    return intentional_site_pause
+
+                try:
+                    execute_route(
+                        robot, config, plan["route_joint_rad"],
+                        lambda: interrupted,
+                        speed_percent=plan["speed_percent"],
+                        target_tolerance_rad=TARGET_TOLERANCE_RAD,
+                        waypoint_timeout_s=20, waypoint_max_timeout_s=120,
+                        pause_on_stationary_timeout=True,
+                        path_mode="joint_box", joint_box_margin_rad=0.03,
+                        stop_after_waypoint=stop_for_site_review,
+                        on_command=lambda index,target: report.update(
+                            last_command_attempt={"index":index,"joint_rad":target}),
+                        on_waypoint=lambda index,target: report.update(
+                            last_reached_target={"index":index,"joint_rad":target}),
+                        on_emergency_stop=lambda reason: report.update(
+                            emergency_stop_requested=True,
+                            emergency_stop_reason=reason))
+                except RoutePaused:
+                    if not intentional_site_pause:
+                        raise
             else:
                 report["motion_attempted"] = False
             final = read_state(robot)
-            error = max(abs(a-b) for a, b in zip(final["joint_rad"],
-                                                   config["safe_start_joint_rad"]))
-            report.update(final_state=final, final_max_joint_error_rad=error)
-            if not final["ready_for_motion"] or error > TARGET_TOLERANCE_RAD:
-                raise RuntimeError("到位后独立状态或 S1 关节误差不合格")
-            report["completed"] = True
+            if intentional_site_pause:
+                error = max(abs(a-b) for a,b in zip(
+                    final["joint_rad"], plan["route_joint_rad"][1]))
+                report.update(final_state=final,
+                              last_target_max_joint_error_rad=error,
+                              site_trial_stage_completed=error <= TARGET_TOLERANCE_RAD
+                              and final["ready_for_motion"])
+                if not report["site_trial_stage_completed"]:
+                    raise RuntimeError("低位单目标到位后状态或误差不合格")
+                print("低位单目标到位；暂停供现场检查，未继续回 S1。", flush=True)
+            else:
+                error = max(abs(a-b) for a, b in zip(final["joint_rad"],
+                                                       config["safe_start_joint_rad"]))
+                report.update(final_state=final, final_max_joint_error_rad=error)
+                if not final["ready_for_motion"] or error > TARGET_TOLERANCE_RAD:
+                    raise RuntimeError("到位后独立状态或 S1 关节误差不合格")
+                report["completed"] = True
     except Exception as exc:
         report.update(error=str(exc), error_type=type(exc).__name__)
         raise RuntimeError(f"新规划回 S1 未完成：{exc}；报告 {report_path}") from exc

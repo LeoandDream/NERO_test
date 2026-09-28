@@ -118,6 +118,8 @@ def parser_create():
         if action == "init":
             item.add_argument("--target", choices=("S1","C2","H0"),
                               help="已验证的命名起点；交互时可从列表选择")
+            item.add_argument("--complete-low-route", action="store_true",
+                              help="仅非 H0 低位：一次命令逐目标执行完整受监护路线；不接受 --yes")
         if action == "cube-sweep":
             item.add_argument("--duration-s", type=float,
                               help="拖动边界录制时长；交互默认 30 秒")
@@ -250,9 +252,28 @@ def quick_dispatch(args, api, *, is_tty=None, input_fn=input):
                 raise ValueError("必须选择已验证的 S1、C2 或 H0")
         planned=api.plan_start(target)
         print("命名目标预检：",json.dumps(display_result(planned),ensure_ascii=False),flush=True)
+        full_low = bool(getattr(args, "complete_low_route", False))
+        if full_low and not planned["plan"].get("site_low_pose_trial"):
+            raise ValueError("--complete-low-route 只适用于非 H0 低位候选；未发送运动指令")
         if planned["plan"]["already_at_target"]:
             return {"plan_path":planned["plan_path"],"already_at_target":True}
-        prompt = ("将从 S1 沿经双向验收的 move_j 路线回 H0，"
+        if planned["plan"].get("site_low_pose_trial") and args.yes:
+            raise ValueError("首次非 H0 低位试验须现场查看路线并键入确认；不接受 --yes")
+        prompt = ("当前是非 H0 低位，本次仅有基于 12:09 UTC 姿态的站点候选路线。"
+                  f"本次以 2% 连续执行 {planned['plan']['controller_targets']} 个 move_j 目标，"
+                  "逐目标核对反馈，最终独立验收到 S1；中途不自动复位或失能。"
+                  "这条完整路线尚无实机验收。请确认法兰未接触桌边，"
+                  "底座/工具/线缆布局一致，全部连杆、腕部、桌边和支撑的"
+                  "整片实际扫过范围清空，并全程现场监护。"
+                  if full_low else
+                  "当前是非 H0 低位，本次仅有基于 12:09 UTC 姿态的站点候选路线。"
+                  "这次只以 2% 执行一个 move_j 目标，随后暂停；"
+                  "低位前三段逐次向 Y 负向退让并到通用回 S1 区域。"
+                  "这条路线尚无实机验收。请确认法兰当前未接触桌边，"
+                  "底座/工具/线缆布局一致，全部连杆、腕部、桌边和支撑"
+                  "的实际扫过范围清空，并全程现场监护。"
+                  if planned["plan"].get("site_low_pose_trial") else
+                  "将从 S1 沿经双向验收的 move_j 路线回 H0，"
                   "最后仅 J1 以 2% 速度靠近桌边；到位后保持使能。"
                   "请确认完整活动范围及终点实体承托。"
                   if target == "H0" else
@@ -260,8 +281,11 @@ def quick_dispatch(args, api, *, is_tty=None, input_fn=input):
                   "桌面、线缆和支撑的完整活动范围。")
         _confirm(prompt,
                  approved=args.yes,is_tty=tty,input_fn=input_fn)
+        run_kwargs = {"site_clearance_confirmed": True,
+                      "complete_site_route": full_low} if planned["plan"].get(
+                          "site_low_pose_trial") else {}
         return {"plan_path":planned["plan_path"],
-                "result":api.run_start(planned["plan_path"])}
+                "result":api.run_start(planned["plan_path"], **run_kwargs)}
     if args.action in ("teach","demo"):
         seconds = args.max_seconds if args.max_seconds is not None else 5
         preview = api.teach_preflight(seconds)

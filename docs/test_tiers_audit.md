@@ -74,3 +74,30 @@
 | `lab/tests/test_optimized_home.py` | `BLOCKED_BY_FACTORY`：`setUpClass` 调真实 `robot_instance`。 | 测试 fixture → `continuous_session.robot_instance` → `AgxArmFactory.create_arm`；测试运行会触到 SDK 工厂，不能因后续只做 FK 而视为离线。 | **否**；无命令/结果。 | `CODE_CONFIRMED` 的阻塞原因；本轮未审 SDK 构造全链。 |
 
 该子集运行时未检测到 CAN 输出、SDK 设备创建、接口探测或非预期文件。`-B` 禁用新 `.pyc`；现存 `__pycache__` 的文件时间均早于本次运行。**Full test discovery 仍为 `UNKNOWN_SIDE_EFFECT`。** 未列入本节的 29 个文件沿用上表的 Step 2B 候选状态，不因这 2 个测试通过而升级。
+
+## Step 3A：纯内存快照解析的显式 T1 测试（2026-09-27）
+
+基线 HEAD `caf3c2bd9769546ac31064912fd3ba453eab7284`；以下结果针对该 HEAD **加本轮未提交工作树**，并非该提交已包含新代码。解释器 `/home/leo/miniconda3/envs/nero-py310/bin/python` 3.10.21，工作目录 `/home/leo/nero_dh116_ws`。`src/nero_runtime/__init__.py`、`src/nero_runtime/snapshot.py`、`tests/test_runtime_snapshot.py` 的 SHA-256 依次为 `5787847c8459d585874c0d75a41264cc3ca228e4d7c25f45de5a87af7afe87d8`、`1bc19cbfef69163c7804cf453048ca599d06689a0cf5cba89015b55e5e0d3efd`、`64f29039978a6e6c1c2f837980ee4f8af26fe801fb4d7ce896d0341c5229c9de`。
+
+| File | 静态分类与依据 | 实际执行 | 结果与证据范围 | 剩余风险 |
+| --- | --- | --- | --- | --- |
+| `tests/test_runtime_snapshot.py` | `SAFE_CANDIDATE`，T1；执行前静态解析完整导入链：测试脚本 → `nero_runtime.__init__`（仅文档字符串）→ `snapshot.py` → 标准库 `dataclasses`、`math`、`typing`。测试本身仅导入标准库及新模块；fixture 为合成 dict/list，未调用旧项目模块、SDK、CAN 或设备工厂。唯一子进程明确运行 `python -B -S -c` 导入新包/模块并检查 `sys.modules`；无项目 CLI、动态设备导入或危险异常清理。 | **是**；`PYTHONPATH="$PWD/src" /home/leo/miniconda3/envs/nero-py310/bin/python -B -S tests/test_runtime_snapshot.py -v`；另用相同命令将 stdout/stderr 重定向至 `/tmp/nero_step3a_test_stdout.txt`、`/tmp/nero_step3a_test_stderr.txt` 保存原始输出。 | 两次显式运行各 15 tests，15 pass / 0 fail / 0 error / 0 skip；第二次 2026-09-27 09:37:20 UTC，exit 0，unittest 用时 0.023 s；stdout 0 字节，stderr 仅 15 个 `ok`、`Ran 15 tests`、`OK`。仅对上述字节与合成数据的状态解析及导入隔离为 `OFFLINE_TESTED`。 | 未接 SDK 或真实反馈；`time_basis` 由调用方保证，消息不构成原子同步快照；不覆盖旧 `read_state`、运动许可或整套测试。 |
+
+测试覆盖完整/故障/失能反馈、缺失与坏格式、7 轴身份、过期/未来时间、未解释状态码、输入拷贝、单采样不产生停稳/FK/许可结论和独立进程导入隔离。未导入旧实验代码，未执行 full discover。**Full test discovery 仍为 `UNKNOWN_SIDE_EFFECT`。** 完整离线执行与文件保护记录见仓库外整改记录《08 状态快照内核实现与离线验证 20260927 173740.md》。
+
+## 非 H0 低位候选的本次限定离线检查（2026-09-27）
+
+本次仅对 `lab/planned_return.py` 的选定纯规划函数做 AST 抽取，在内存中以 Fake FK 和合成状态调用；没有 import 该项目模块或 SDK/CAN，也没有构造设备工厂。检查了已记录起点及前两目标后的姿态、偏离起点的拒绝、通用低 X 拒绝；另以注入的 `connected`、`read_state`、`execute_route` 模拟 `run`，确认现场许可缺失时零连接/零目标、有许可时只执行首目标并暂停。结论仅为这些合成分支的 `OFFLINE_TESTED`；实体碰撞、CAN 模式切换、真实到位和急停路径均未测试。随后用 `/home/leo/miniconda3/envs/nero-py310/bin/python -B` 对 `planned_return.py`、`api.py`、`cli.py` 文本执行 `compile(...)`，3/3 通过且无项目导入；`git diff --check` 通过。没有运行 `lab/tests/test_planned_return.py`，其 `setUpClass` 使用 SDK 工厂，继续保持 `UNKNOWN_SIDE_EFFECT`；整套 discover 仍未运行。
+
+用户明确选择“一次命令跑完整路线”后，新增 CLI 显式 `--complete-low-route`。用 `/home/leo/miniconda3/envs/nero-py310/bin/python -B` 仅执行 `quick init --help` 验证参数可见；再在注入的内存 `connected/read_state/execute_route` 下对真实保存的阶段 1 计划模拟两次 `planned_return.run`：默认确认模式只回调 1 个目标并记录 `completed=false`，完整模式回调 5 个目标并记录 `completed=true`，两者均未调用真实设备工厂、CAN Bus 或指令发布器。该结果仅覆盖分支与报告语义；真实轨迹、异常急停和实体避障均未测试。没有执行项目整套测试。
+
+## Step 3B：有限采集适配与快照组合（2026-09-27）
+
+基线为 `main@caf3c2bd9769546ac31064912fd3ba453eab7284` 加当前未提交工作树。执行前 AST 核对 `src/nero_runtime/__init__.py` 无导入，`snapshot.py` 仅导入标准库，`acquisition.py` 仅导入标准库与 `.snapshot`；两个目标测试脚本只导入标准库及这些纯模块。新测试的合成源只在内存返回 `SimpleNamespace`，子进程仅以 `-B -S -c` 导入新包并检查未加载 `pyAgxArm`、`can`、`experiments`；无 SDK patch 时序、设备工厂、CAN 或控制异常清理。两个显式脚本均在该静态链下为 `SAFE_CANDIDATE`，实际运行后仅对各自命题为 T1 `OFFLINE_TESTED`。
+
+| File | 实际命令与范围 | 结果及证据限定 | 剩余风险 |
+| --- | --- | --- | --- |
+| `tests/test_runtime_snapshot.py` | `PYTHONPATH="$PWD/src" /home/leo/miniconda3/envs/nero-py310/bin/python -B -S tests/test_runtime_snapshot.py -v > /tmp/nero_step3b_snapshot_stdout.txt 2> /tmp/nero_step3b_snapshot_stderr.txt`；2026-09-27 13:35:17 UTC。 | exit 0，15 pass / 0 fail / 0 error / 0 skip；unittest 0.022 s。3A 的 `__init__.py`、`snapshot.py`、测试文件 SHA-256 仍分别为 `5787847c8459d585874c0d75a41264cc3ca228e4d7c25f45de5a87af7afe87d8`、`1bc19cbfef69163c7804cf453048ca599d06689a0cf5cba89015b55e5e0d3efd`、`64f29039978a6e6c1c2f837980ee4f8af26fe801fb4d7ce896d0341c5229c9de`。这是本轮另一次显式回归，不改变上节 Step 3A 原始证据。 | 仍只覆盖合成输入，不覆盖 SDK/真机。 |
+| `tests/test_runtime_acquisition.py` | `PYTHONPATH="$PWD/src" /home/leo/miniconda3/envs/nero-py310/bin/python -B -S tests/test_runtime_acquisition.py -v > /tmp/nero_step3b_acquisition_stdout.txt 2> /tmp/nero_step3b_acquisition_stderr.txt`；2026-09-27 13:35:25 UTC。 | exit 0，12 pass / 0 fail / 0 error / 0 skip；unittest 0.022 s。新 `acquisition.py` 与测试 SHA-256 分别为 `f873b1529de24753eac93d68251a85d3635087a96798883fc1d6ddc8a37c322e`、`f268bd56b7673bbca5ea660868bd0994e29a083e50c7024b8444810cfe733ec7`。测试覆盖固定读取顺序/次数、故障事实、缺失/过期/非法值、预期异常与中断、原始时间戳、复制、无许可/控制方法及独立进程导入隔离。 | SDK getter 的缓存并发修改、实际阻塞、真实时间基准和硬件均未验证。 |
+
+工作目录 `/home/leo/nero_dh116_ws`，解释器 Python 3.10.21；两次 stdout 均 0 字节，stderr 仅为 unittest 的测试名、`ok`、计数与 `OK`，无非预期输出。完整原始输出与文件范围检查见仓库外整改记录《09 反馈采集适配与安全触发溯源 20260927 215426.md》。这些测试不累计为全套测试通过；**Full test discovery 仍为 `UNKNOWN_SIDE_EFFECT`**。

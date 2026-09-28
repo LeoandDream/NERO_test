@@ -14,7 +14,7 @@
 | `experiments/single_arm/teaching/teach_session.py` | S1 限时拖动采样、退出、从实时姿态回 S1、报告。 | 录制阶段 Ctrl+C 仍可能进入自动回位；模式、采样、返回和许可耦合。 | Workflows 协调 Drag/Teach；Device 管模式；Teaching / Recording 管样本；Motion 管运动。 | active experimental; migration-candidate |
 | `experiments/single_arm/lab/recordings.py`、`complete_recording.py` | 新记录来源/哈希/完成与回位凭证校验。 | 固定目录、整配置哈希、V121 和停止原因绑定，历史原件不能直接迁移。 | Teaching / Recording；环境适用性由 Environment + Safety 判定。 | active; migration-candidate |
 | `experiments/single_arm/lab/replay.py`、`smooth_replay.py` | 逐点/连续回放准备、校验、执行与报告。 | 回放与现有执行器、实验目录耦合；源资格和单次运行需继续分开。 | Workflows 管 Replay；Teaching / Recording 管源资格；Motion 管发布/反馈。 | active experimental; migration-candidate |
-| `experiments/single_arm/lab/planned_return.py` | 从实时姿态规划/审计回 S1 关节路线。 | 当前硬编码当前站点限制，不能直接成为跨环境通用路线。 | Environment + Safety 管适用路线/许可；Motion 管执行。 | active experimental; migration-candidate |
+| `experiments/single_arm/lab/planned_return.py` | 从实时姿态规划/审计回 S1 关节路线；旧实现用法兰基座 X 门槛筛选通用候选，并为特定低位首段留有实验分支。 | `X ≥ 0.15 m` 与“X 非负”缺少可追溯标定几何依据，用户未批准为项目工作空间或全局安全边界；旧路径待整改，不得迁入正式 Runtime。低位完整路线已有控制器反馈到位，桌边/线缆实体观察和完整模型仍未验证。 | Environment + Safety 管经证据核定的站点路线/许可；Motion 管执行。 | active experimental; migration-candidate |
 | `experiments/single_arm/lab/optimized_home.py` | 当前 S1↔新 H0 专用路线与执行，保持使能。 | 新 H0 仅特定安装受监护候选，不能默认为通用 PARK。 | Environment + Safety 管站点路线；Workflows 管 Park/Start；Motion 管执行。 | active experimental; migration-candidate |
 | `experiments/single_arm/lab/start_from_h0_candidate.py` | 已失能、精确 H0 条件下单次使能并到 S1。 | 特例散落在实验入口；未来只许 validated PARK 使用。 | Workflows 管 Start 阶段；Environment + Safety 管 D5 条件；Device 管使能；Motion 管运动。 | experimental; migration-candidate |
 | `experiments/single_arm/lab/disable_at_h0_candidate.py` | H0 轻触候选现场确认后单次软件失能。 | 当前现场观察不能单靠角度自动证明承托；不是物理断电。 | Workflows 管 Disable；Environment + Safety 管 PARK/支撑前置；Device 管指令。 | experimental; migration-candidate |
@@ -50,8 +50,12 @@ Step 2B 的 [CURRENT_STATE.md](CURRENT_STATE.md) 是唯一可替换的当前**�
 
 ### 未来正式文件登记表
 
-目前无正式 Runtime 文件，故表中没有虚构的目标路径。后续获批实施时先填写再新增实现。
+Step 3A/3B 只批准下列内部状态解析、有限采集及对应离线测试；`nero_runtime` 包名不表示公共 SDK 已发布。后续文件仍须先登记。
 
 | File | Responsibility | Public/Internal | Allowed Dependencies |
 | --- | --- | --- | --- |
-| 待批准任务填写 | 待填写 | 待填写 | 待填写 |
+| `src/nero_runtime/__init__.py` | Device：纯包标识，不装配或发现设备。 | Internal | 无项目依赖；不得导入 SDK/CAN/experiments。 |
+| `src/nero_runtime/snapshot.py` | Device：调用方提供的内存反馈解析、来源时间与数据质量；不采集、不判动作许可。 | Internal | 仅 Python 标准库；不得依赖 SDK/CAN/experiments/CLI。 |
+| `tests/test_runtime_snapshot.py` | Offline Verification：合成反馈与纯模块导入隔离的 T1 测试。 | Internal test | Python 标准库和 `nero_runtime.snapshot`；不得导入旧实验模块或 SDK/CAN。 |
+| `src/nero_runtime/acquisition.py` | Device：从调用方提供的反馈源各读取一次、复制所需数据并交给现有快照解析；记录读取窗口与预期读取失败，不管理连接或许可。 | Internal | Python 标准库、`nero_runtime.snapshot`；不得导入 SDK/CAN/experiments/CLI。 |
+| `tests/test_runtime_acquisition.py` | Offline Verification：合成反馈源的次数、异常、时基、复制及采集到解析组合测试。 | Internal test | Python 标准库、`nero_runtime.acquisition`/`snapshot`；不得导入真实 SDK/CAN/旧实验模块。 |
