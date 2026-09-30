@@ -48,14 +48,57 @@ Step 2B 的 [CURRENT_STATE.md](CURRENT_STATE.md) 是唯一可替换的当前**�
 - **每个正式实现文件必须有一个主要责任 owner。** 新增或拆分正式文件前先在本图登记 `File | Responsibility | Public/Internal | Allowed Dependencies`，同时核对 [PROJECT_DESIGN.md](PROJECT_DESIGN.md) 的职责和依赖。若改变架构，先获用户批准并更新两份设计文档，再创建代码。
 - `new_manager.py`、`common2.py`、`utils_new.py`、`lab_v2/` 等仅凭泛名且无上述责任记录的新结构不得直接出现。职责可以由现有文件承担；不要求为表中每一行建立类或目录。
 
-### 未来正式文件登记表
+### v1 Runtime 文件责任与使用面
 
-Step 3A/3B 只批准下列内部状态解析、有限采集及对应离线测试；`nero_runtime` 包名不表示公共 SDK 已发布。后续文件仍须先登记。
+下表登记 Step 3A～F7 已形成的 Runtime 文件责任及 F8 使用面；`nero_runtime` 包名不表示真实机器人控制能力已晋升。只有 `__init__.__all__` 中的纯数据/文件/计划接口为顶层 public；执行函数须从对应子模块显式导入并注入受信适配。
+
+F1 功能依赖：官方固定版本 SDK 的显式连接/反馈 → `collect_snapshot`/`RobotSnapshot` → 单条命名点位 JSON → 薄 CLI。旧连续 CSV 录制器和 `lab.api` 状态入口保留其原职责，本轮不迁移或改写。
+
+F2 功能依赖：F1 点位 JSON 或显式七轴 rad → `motion.prepare_joint_route` → 上层显式前置检查/合成设备发布与反馈/停止依赖 → `motion.execute_joint_route`。CLI 只增加离线 `route show`，不连接真实发布或旧实验执行入口；旧调用方仍未切换。
+
+F3 功能依赖：显式反馈来源 → F1 `collect_snapshot`/`RobotSnapshot` → `recording.record_trajectory` → 新 JSONL 原始序列和摘要。CLI 仅在显式 `trajectory record` 时打开 F1 来源；show/list 纯文件。F3 不依赖 Motion、Drag、Teach 或 Replay，不筛掉故障/失能/负 X 事实。
+
+F4 功能依赖：上层显式许可及反馈/模式请求 callable → F1 `AcquisitionResult`/`RobotSnapshot` → `drag.enter_drag`/`inspect_drag_state`/`exit_drag`。固定 V121 SDK 的 `set_normal_mode()` 是无动作接口，故本轮不建立真实退出适配或普通 Drag CLI；请求边界只在注入的合成设备上验证，不能解除旧独立 Drag 锁定。
+
+F5 功能依赖：调用方已完成的上层许可/注入来源 → F4 确认进入 → F3 流式记录 → F4 显式退出/反馈确认 → F1 单轮终点观测。`teaching.py` 仅组合已有函数并表达阶段、取消/故障和证据；不导入 Motion、不规划 Return READY、不接真实 V121 模式适配或普通 Teach CLI。
+
+F6 功能依赖：F3 已保存的 JSONL/摘要 → `replay.prepare_replay` 完整性及候选资格校验 → 不可变关节路点计划 → F2 `JointRoute`/`execute_joint_route`。Replay 不决定现场运动许可，不保留记录时间节奏；CLI 仅可离线展示候选，不提供真实执行入口。
+
+F7 功能依赖：F1 点位原件及哈希 → 版本化 Environment Profile 中的点位/定向路线资产 → `workflows.py` 根据当前身份/反馈选择 Start、Park 或显式 Return READY 计划 → F2 `execute_joint_route`。环境状态为该版本声明，不自动证明现场适用；工作流不自行使能、失能或连接 SDK，真实动作仍缺现场证据和上层授权。
+
+F8 使用面：`__init__.py` 惰性导出纯数据、存储、候选/计划与查询函数；执行函数继续通过其已登记子模块显式导入，要求调用方注入前置检查、反馈、发布/模式请求及停止映射。惰性包导入不装配设备。白名单 runner 仅调用下表已经审计的 Runtime 测试；旧实验路径分类见 [迁移表](docs/legacy_runtime_migration.md)。
+
+| 需求 | 子功能 | 基本能力来源 | 复用/新增位置 | 离线验收 |
+| --- | --- | --- | --- | --- |
+| 看真实反馈 | 显式打开一次只读来源，采集并展示诊断 | 固定 SDK Nero V121 连接/getter；3A/3B 解析 | 新 `device.py` 生命周期；复用 `acquisition.py`/`snapshot.py`；新 `cli.py` 展示 | 合成来源全链、异常关闭、只读导入隔离 |
+| 记一个命名点 | 用一次快照捕获七轴与来源质量 | `RobotSnapshot` 的关节质量/时间 | 新 `waypoints.py`；CLI capture | 非 READY/负 X 仍记录，缺失/过期/坏值拒绝 |
+| 保存、重看、列举 | 一条普通 JSON，原件不覆盖 | 标准库 JSON/文件系统 | 新 `waypoints.py`；CLI show/list | 往返、重名、损坏/未知版本、无 SDK 展示 |
 
 | File | Responsibility | Public/Internal | Allowed Dependencies |
 | --- | --- | --- | --- |
-| `src/nero_runtime/__init__.py` | Device：纯包标识，不装配或发现设备。 | Internal | 无项目依赖；不得导入 SDK/CAN/experiments。 |
-| `src/nero_runtime/snapshot.py` | Device：调用方提供的内存反馈解析、来源时间与数据质量；不采集、不判动作许可。 | Internal | 仅 Python 标准库；不得依赖 SDK/CAN/experiments/CLI。 |
+| `src/nero_runtime/__init__.py` | Public Python surface：惰性导出明确列出的纯数据、文件与计划接口；包导入本身不装配或发现设备。 | Public selected exports | 仅 Python 标准库；只有访问导出名称时才导入已登记纯 Runtime 模块；不得导入 SDK/CAN/experiments。 |
+| `src/nero_runtime/snapshot.py` | Device：调用方提供的内存反馈解析、来源时间与数据质量；不采集、不判动作许可。 | Public selected data / internal parser | 仅 Python 标准库；不得依赖 SDK/CAN/experiments/CLI。 |
 | `tests/test_runtime_snapshot.py` | Offline Verification：合成反馈与纯模块导入隔离的 T1 测试。 | Internal test | Python 标准库和 `nero_runtime.snapshot`；不得导入旧实验模块或 SDK/CAN。 |
 | `src/nero_runtime/acquisition.py` | Device：从调用方提供的反馈源各读取一次、复制所需数据并交给现有快照解析；记录读取窗口与预期读取失败，不管理连接或许可。 | Internal | Python 标准库、`nero_runtime.snapshot`；不得导入 SDK/CAN/experiments/CLI。 |
 | `tests/test_runtime_acquisition.py` | Offline Verification：合成反馈源的次数、异常、时基、复制及采集到解析组合测试。 | Internal test | Python 标准库、`nero_runtime.acquisition`/`snapshot`；不得导入真实 SDK/CAN/旧实验模块。 |
+| `src/nero_runtime/device.py` | Device：固定 Nero V121 SDK 的显式工厂与连接生命周期；只在调用方请求时导入 SDK、打开与关闭，不发布控制指令。 | Internal | Python 标准库、调用时固定版本 `pyAgxArm`；不得依赖 experiments、CLI、运动或点位存储。 |
+| `src/nero_runtime/waypoints.py` | Environment + Safety 的观测资产：从现有快照建立命名关节点位、校验并以单条 JSON 保存/读取/列举；不授予路线或运动许可。 | Public selected pure/file API | Python 标准库、`nero_runtime.snapshot`；不得依赖 SDK/CAN/experiments/CLI。 |
+| `src/nero_runtime/cli.py` | CLI：只读 status、waypoint capture/show/list、离线 route show、trajectory record/show/list、replay show、environment show 的参数、组合和展示；不复制解析、记录存储或运动逻辑。 | Internal entry | Python 标准库及上述 Runtime 模块；只有显式 status/capture/trajectory record 才调用 `device.py`，show/list 与 route/replay/environment show 不连接或发布目标。 |
+| `tests/test_waypoints.py`、`tests/test_readonly_entry.py` | Offline Verification：合成来源到真实采集/存取/分派与导入、关闭边界。 | Internal test | Python 标准库及 `nero_runtime`；不得导入真实 SDK/CAN 或旧实验链。 |
+| `src/nero_runtime/motion.py` | Motion：准备调用者指定的七轴关节路线；在上层显式提供前置检查、单点发布、实时反馈、取消及停止处理后，顺序发布并按新反馈验收到位，返回尝试/发布/到达与停止证据。不连接或配置设备，不授予现场许可。 | Public selected data/plan; advanced injected execution | Python 标准库、`nero_runtime.snapshot`、`nero_runtime.waypoints`；不得依赖 SDK/CAN、experiments 或 CLI。 |
+| `tests/test_motion.py` | Offline Verification：F1 点位至路线准备及合成设备顺序执行、拒绝/取消/故障/停止证据与离线 CLI 预览的 T2 测试。 | Internal test | Python 标准库与 `nero_runtime`；不导入 SDK/CAN 或旧实验模块。 |
+| `src/nero_runtime/recording.py` | Teaching / Recording：从调用方提供的 F1 `AcquisitionResult` 按时长/频率流式保存每轮原始快照及读取异常，生成和验证摘要；仅结束采样，不执行 Drag、运动或 Replay 许可。 | Public selected data/read; advanced injected recording | Python 标准库、`nero_runtime.acquisition`/`snapshot`；不得依赖 SDK/CAN、experiments、Motion 或 CLI。 |
+| `tests/test_recording.py` | Offline Verification：合成来源经真实 F1 单轮采集至 F3 JSONL/摘要的 T2 正反向测试，含取消、写入故障、摘要校验和离线 CLI。 | Internal test | Python 标准库与 `nero_runtime`；不得导入真实 SDK/CAN 或旧实验模块。 |
+| `src/nero_runtime/drag.py` | Device：调用方已批准后的 Drag enter/inspect/exit 模式请求与反馈证据、取消及退出回退；不选择现场许可、记录、路线或真实 SDK 适配。 | Advanced injected execution only | Python 标准库、`nero_runtime.acquisition`/`snapshot`；不得依赖 SDK/CAN、experiments、Motion、Recording 或 CLI。 |
+| `tests/test_drag.py` | Offline Verification：真实 F1 采集与 F4 内核在合成模式请求/反馈上的正反向 T2 验证。 | Internal test | Python 标准库与 `nero_runtime.acquisition`/`snapshot`/`drag`；不得导入真实 SDK/CAN/旧实验模块。 |
+| `src/nero_runtime/teaching.py` | Robot API / Workflows：组合确认 Drag、F3 轨迹记录、显式退出及终点观测，保留阶段与完整结果；不是完整 Teach v1。 | Advanced injected execution only | Python 标准库、`nero_runtime.drag`/`recording`/`acquisition`/`snapshot`；不得依赖 Device 真实来源、SDK/CAN、Motion、CLI 或 experiments。 |
+| `tests/test_teaching.py` | Offline Verification：F1→F4→F3→F4→F1 的真实合成全链与取消、故障、退出未确认及原件保留 T2 测试。 | Internal test | Python 标准库与 `nero_runtime` 纯注入模块；不得导入真实 SDK/CAN 或旧实验链。 |
+| `src/nero_runtime/replay.py` | Teaching / Recording：核对 F3 原件并提取有序关节路点候选，组合 F2 路线与执行结果；不授予现场许可或另建运动循环。 | Public selected data/plan; advanced injected execution | Python 标准库、`nero_runtime.recording`/`motion`；不得依赖 SDK/CAN、Device、Drag、CLI 或 experiments。 |
+| `tests/test_replay.py` | Offline Verification：F1→F3→F6→F2 合成全链、原件篡改与故障/取消边界 T2 测试。 | Internal test | Python 标准库与 `nero_runtime` 纯注入模块；不得导入真实 SDK/CAN 或旧实验链。 |
+| `src/nero_runtime/environment.py` | Environment + Safety：严格读取/保存单文件版本化 Profile，核对 F1 点位原件哈希、身份和定向路线引用；不推断现场许可或生成运动。 | Public selected data/file API | Python 标准库、`nero_runtime.waypoints`；不得依赖 SDK/CAN、Motion、CLI 或 experiments。 |
+| `tests/test_environment.py` | Offline Verification：合成 F1 点位至 Profile 存储/校验、篡改、身份与引用边界 T2 测试。 | Internal test | Python 标准库、`nero_runtime.snapshot`/`waypoints`/`environment`；不得导入真实 SDK/CAN 或旧实验链。 |
+| `src/nero_runtime/workflows.py` | Robot API / Workflows：根据显式环境身份与实时快照准备 Start/Park/Return READY，组合 F5 终点与 Return，并委托 F2 执行；不提供真实适配或通用规划。 | Public selected data/plan; advanced injected execution | Python 标准库、`nero_runtime.environment`/`motion`/`snapshot`/`teaching`；不得依赖 SDK/CAN、CLI 或 experiments。 |
+| `tests/test_workflows.py` | Offline Verification：F1 原件→F7 Profile/命名计划→F2 FakeRig 执行及 F5 合成终点组合 T2 测试。 | Internal test | Python 标准库与 `nero_runtime` 纯注入模块和已审合成测试辅助；不得导入真实 SDK/CAN 或旧实验链。 |
+| `tests/test_public_surface.py` | Offline Verification：惰性 package export、隔离导入、Runtime 依赖方向及状态/迁移边界 T1/T2 测试。 | Internal test | Python 标准库与 `nero_runtime`；不导入真实 SDK/CAN 或旧实验模块。 |
+| `tests/test_runtime_cli.py` | Offline Verification：CLI 帮助、离线分支设备隔离和未晋升命令缺席 T2 测试。 | Internal test | Python 标准库、纯 Runtime 与已审合成测试辅助；不导入真实 SDK/CAN 或旧实验模块。 |
+| `scripts/test_runtime_offline.sh` | Offline Verification：只按已审白名单逐文件执行 Runtime 测试，失败即停止；不发现旧实验测试。 | Internal runner | POSIX shell、当前 Python、`src/nero_runtime` 与显式 `tests/test_*.py` 白名单；不得使用 discover 或连接设备。 |

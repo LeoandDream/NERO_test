@@ -1,8 +1,108 @@
-# Nero 单臂实验：零基础命令行手册
+# NERO 单臂 Runtime 与实验记录
 
-本仓库使用 Python 3.10、SocketCAN 和 `pyAgxArm` 控制左侧安装的 Nero。下面的命令都在**工作区根目录**执行。第一次做实验，按“准备 → 看状态 → 到 S1 → 示教 → 回放 → 回家”的顺序；其他实验放在后面的命令索引。
+`src/nero_runtime/` 是单臂 NERO 的正式软件责任边界：状态与点位、关节路点 Motion、Recording、Drag Core、Guided Recording、Replay、Environment Profile 和命名 Start/Park/Return READY 均有**限定离线验证**。真实设备的运动、Drag、Start/Park/Return、Teach/Replay 尚未完成 Field Validation，也没有普通真实动作 CLI；旧事故路线继续锁定。[当前项目状态](CURRENT_STATE.md)与[设计契约](PROJECT_DESIGN.md)分别记录证据和操作规则。
 
-**Step 3C 当前入口变化：**旧通用回 S1 的 `X≥0.15 m` 默认已移除。`return plan` 和非 H0 姿态的 `starts plan/quick init --target S1` 现在只生成 `candidate_only` 候选；`return run`、这类候选的 `starts run/quick init` 会在控制指令前拒绝。依赖自动回 S1 的新 `teach --run/quick teach/demo` 也在拖动前拒绝，直到有经核定的环境与路线依据。下方原有实机示教/通用回位步骤记录历史流程，**当前不可照其动作命令执行**。精确匹配的 H0↔S1 专用分流未因本项修改解锁或重认证。
+| 入口 | 可做什么 | 当前边界 |
+| --- | --- | --- |
+| `PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli --help` | 查看正式 CLI | `status`、`waypoint capture`、`trajectory record` 会显式连接只读来源，仍待真实只读现场核验。 |
+| `waypoint/route/trajectory/replay/environment show` 等 | 只读本地资产与离线候选 | 不连接机器人，不授予运动许可。 |
+| `from nero_runtime import RobotSnapshot, prepare_replay, load_environment_profile` | 使用惰性导出的纯 Python 数据/计划接口 | `import nero_runtime` 不装配设备；执行函数须从子模块显式导入并注入受信适配。 |
+| `PYTHON=/home/leo/miniconda3/envs/nero-py310/bin/python scripts/test_runtime_offline.sh` | 运行审计过的 Runtime 测试白名单 | 不使用全量 discover；[测试审计](docs/test_tiers_audit.md)限定证据范围。 |
+
+环境资产格式和身份边界见 [F7 设计](PROJECT_DESIGN.md)；旧实验入口的保留、锁定与迁移条件见[迁移表](docs/legacy_runtime_migration.md)。现有合成 Profile 的 `validated` 只是测试声明，**不是现实站点批准**。
+
+**Step 3C 旧入口变化：**旧通用回 S1 的 `X≥0.15 m` 默认已移除。旧 `return plan` 和非 H0 姿态的 `starts plan/quick init --target S1` 只生成 `candidate_only` 候选；相关动作入口在发送前拒绝。下方旧实机操作说明是历史实验资料，不能作为新 Runtime 的真机使用指引。
+
+## F1：只读状态与命名观测点位
+
+使用已有 Python 3.10 `nero-py310` 环境，在仓库根目录运行。源码包尚未安装，故每条命令只为本次调用设置 `PYTHONPATH`。**F1 及审阅修正仅在合成来源下完成离线测试；下面的 status/capture 会真实连接 CAN，尚未获得本轮现场读取授权，也未实机验收。**show/list 只读本地文件，不导入 SDK。
+
+```bash
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli --help
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli status --channel can0
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli waypoint capture --name inspection-1 --output /path/to/inspection-1.json --channel can0
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli waypoint show /path/to/inspection-1.json
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli waypoint list /path/to
+```
+
+status/capture 仅在显式调用时按固定 Nero V121 SDK 配置打开来源、读取缓存并关闭通信；不会使能、运动、切拖动、reset、失能或发送保持目标。两者默认最多等待 2 秒，可用 `--wait-seconds` 调整（0～10 秒）；status 等控制器状态与七轴反馈质量都有效，capture 只等七轴。截止时 status 显示最后一轮部分快照及缺项，capture 若仍缺有效七轴则不生成点位；同名文件拒绝覆盖。输出显示七轴 rad、可用的法兰位置 m、逐轴 enabled/undervoltage/driver_error（缺项为“未知”）、来源时刻和质量、故障/缺项与实际路径。法兰位姿不是 TCP，工具与法兰坐标系未在 F1 标定；SDK 多帧缓存的组合时间戳不能证明每轴同步、停稳或安全。故障、失能和负 X 不妨碍展示或保存有效的关节观测；名为 READY/PARK 的文件也只是观测记录，不改变 S1/H0 配置或获得运动许可。
+
+Python 调用复用相同实现，例如在另行获准的只读现场会话中：
+
+```python
+import time
+from nero_runtime.device import connected_nero
+from nero_runtime.acquisition import collect_snapshot
+from nero_runtime.waypoints import capture_waypoint, save_waypoint
+
+with connected_nero("can0") as source:
+    reading = collect_snapshot(source, robot_id=None, clock_s=time.time,
+        time_basis="unix_epoch_s", max_status_age_s=1.0,
+        max_joints_age_s=1.0, max_flange_age_s=1.0, max_driver_age_s=1.0)
+point = capture_waypoint("inspection-1", reading.snapshot,
+    source="pyAgxArm Nero V121 CAN cache", read_errors=reading.read_errors)
+save_waypoint(point, "/path/to/inspection-1.json")
+```
+
+## F2：指定七轴关节路线的离线预览与内部执行
+
+离线查看既有 F1 点位文件，参数顺序即目标顺序；首个文件是**预期起点**，不会被当作第一个纠偏目标。该命令只读文件，不连接机器人：
+
+```bash
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli route show /path/to/start.json /path/to/target-1.json /path/to/target-2.json
+```
+
+输出包含 J1～J7 rad、逐段角差、点位来源与未知身份，并明确标记为数据预览。历史名称、valid 质量和负 X 位姿均不提供现场运动许可。也可从显式七轴数组准备路线，必须注明 `raw_unit="rad"`。准备时检查**全部**目标并复制数值；不排序、不插点、不自动回起点。
+
+内部 `execute_joint_route` 在上层提供前置检查、逐次新反馈、单点发布、取消与停止处理后可在合成设备上执行。例如下列调用中的 `fake_*` 是调用方的合成设备函数，数值只供离线演示，**不是真机参数或运动入口**：
+
+```python
+from nero_runtime.motion import RouteParameters, execute_joint_route, prepare_joint_route
+
+route = prepare_joint_route([0.0] * 7, [[0.1] + [0.0] * 6], raw_unit="rad")
+demo = RouteParameters(start_tolerance_rad=0.01, target_tolerance_rad=0.01,
+                       waypoint_timeout_s=0.5, poll_interval_s=0.01,
+                       settle_window_s=0.05, settle_delta_rad=0.002)
+result = execute_joint_route(
+    route, parameters=demo, preflight_check=fake_preflight,
+    read_feedback=fake_read_snapshot, publish_target=fake_move_j,
+    cancel_requested=fake_cancel, stop_motion=fake_stop,
+    monotonic_s=fake_clock, sleep_s=fake_sleep)
+```
+
+完整可运行的合成函数及成功/失败证据见 `tests/test_motion.py`。内核只在每点获得时间戳更新、误差合格且稳定窗口成立的反馈后继续；执行结果分别列尝试、已发布、已到达及停止请求/反馈确认。SDK Nero V121 的 `move_j` 可调用，但真实反馈多帧刷新、控制模式/速度、厂家关节限位钳制、安装及路径适用性、已验证停止手段和现场授权仍缺接线与实测。因此当前**没有普通用户可触发的 F2 真实运动 CLI**，旧实验入口未切换；合成成功不代表实机运动验收或任意姿态回位恢复。
+
+## F3：独立轨迹记录
+
+F3 按指定频率和时长保存每轮 F1 快照为 `<id>.jsonl`，另写 `<id>.summary.json`。show/list 只读本地文件；**record 会连接真实 CAN，本轮未获得现场采集授权，也未执行真实命令**。
+
+```bash
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli trajectory record --recording-id inspection-1 --output-directory /path/to/recordings --duration-seconds 10 --rate-hz 10 --channel can0
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli trajectory show /path/to/recordings/inspection-1.summary.json
+PYTHONPATH="$PWD/src" python -B -m nero_runtime.cli trajectory list /path/to/recordings
+```
+
+故障、失能、负 X 和 stale/missing 反馈仍以质量信息记录。中断只结束采样并保留已写原件，不发送运动、hold、失能、reset 或急停。`complete` 仅说明记录正常结束；**Recording 是观测数据，不是运动许可或 Replay approval**。真实采样频率和 SDK 多帧同步尚未实测。
+
+## F4：Drag 模式基础能力（仅合成设备）
+
+`nero_runtime.drag` 提供可注入的 `enter_drag`、`inspect_drag_state`、`exit_drag`，记录模式请求、反馈确认与切换期间七轴变化。它不录制轨迹、不运动、不自动回位，也不判断站点空间许可。固定 Nero V121 SDK 的 `set_normal_mode()` 为无动作兼容接口，退出适配和真实反馈判据尚未核实；**当前没有普通用户可用的真实 Drag CLI，独立 Drag 仍锁定**。合成用法与取消/回退证据见 `tests/test_drag.py`。
+
+## F5：Guided Recording Core（仅合成设备）
+
+`nero_runtime.teaching` 将确认进入 Drag、F3 Recording、确认退出 Drag 与只读终点观测组合起来；**它不包含 Return READY，因此不是完整 Teach v1，也没有真实 Teach CLI**。取消或故障保留已写轨迹并尝试退出，退出未确认不会报告完成。合成全链及结果见 `tests/test_teaching.py`。F3 摘要的 `effective_rate_hz` 定义为样本数除以整段实际时长，表示整段样本吞吐，不是严格的相邻样本频率。
+
+## F6：Replay Core（仅合成设备）
+
+`nero_runtime.replay` 从已核对的 F3 Recording 逐样本生成关节路点 `ReplayPlan`，第 0 轮是预期起点，后续轮按原顺序交给 F2 Motion。`replay show <recording-summary>` 仅离线展示候选。**Replay candidate 不等于现场执行许可；joint waypoint replay 不保留原始时间节奏。**当前没有真实硬件 Replay 入口。
+
+## F7：Environment 与命名工作流（仅合成设备）
+
+`nero_runtime.environment` 将 F1 点位原件及 SHA-256 登记到版本化 Profile；`nero_runtime.workflows` 从已登记的定向路线准备 Start、Park 或显式 Return READY，并把执行交给 F2。`environment show <profile>` 仅离线核对和展示。**Validated route 是特定环境版本中的资产声明，不是通用空间安全证明或当前现场运动许可。**当前没有真实 Start/Park/Return/Teach run 入口。
+
+## 历史单臂实验命令（未晋升为正式 Runtime）
+
+以下章节保留原始实验操作语境和证据路径；其中带真实动作的命令须按各实验当前锁定状态及新的现场任务重新核准，不能因 F8 软件收口直接执行。完整分类见[旧入口迁移表](docs/legacy_runtime_migration.md)。
 
 > **先认清两个位置：**S1 是七轴使能时的实验起点，不是断电承托位；H0 候选位是法兰轻触朝人一侧桌边的支撑位。位置回位使用 `move_j`，电子 `reset` 只用于解除急停，不能让机械臂回到某个姿态。所有日期命名的旧计划和记录仅证明当时那次实验，不能从新的实时姿态直接重放。
 
